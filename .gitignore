@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+
+# dotenv
+.env
+
+# Lock files (optional - depends on team convention)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# VSCode settings (optional)
+.vscode/
