@@ -82,7 +82,10 @@ const AppRoutes = () => {
                         path="/candidate/*"
                         element={
                             <ProtectedRoute requiredRole="candidate">
-                                <CandidateLayout />
+                                <>
+                                    <Navbar />
+                                    <CandidateLayout />
+                                </>
                             </ProtectedRoute>
                         }
                     >
@@ -110,7 +113,10 @@ const AppRoutes = () => {
                         path="/recruiter/*"
                         element={
                             <ProtectedRoute requiredRole="recruiter">
-                                <RecruiterLayout />
+                                <>
+                                    <Navbar />
+                                    <RecruiterLayout />
+                                </>
                             </ProtectedRoute>
                         }
                     >

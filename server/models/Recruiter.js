@@ -48,10 +48,9 @@ const recruiterSchema = new mongoose.Schema(
                 validator: function (value) {
                     const today = new Date();
                     const birthDate = new Date(value);
-                    const age = today.getFullYear() - birthDate.getFullYear();
+                    let age = today.getFullYear() - birthDate.getFullYear();
                     const monthDifference =
                         today.getMonth() - birthDate.getMonth();
-
                     if (
                         monthDifference < 0 ||
                         (monthDifference === 0 &&
@@ -59,7 +58,6 @@ const recruiterSchema = new mongoose.Schema(
                     ) {
                         age--;
                     }
-
                     return age >= 18;
                 },
                 message:
@@ -132,21 +130,14 @@ const recruiterSchema = new mongoose.Schema(
                     type: String,
                     required: [true, "Company state is required"],
                 },
-                zipCode: String,
+                pincode: String,
                 country: {
                     type: String,
                     required: [true, "Company country is required"],
                 },
             },
             logo: {
-                filename: String,
-                originalName: String,
-                path: String,
-                size: Number,
-                uploadDate: {
-                    type: Date,
-                    default: Date.now,
-                },
+                type: String,
             },
         },
 
@@ -220,18 +211,14 @@ const recruiterSchema = new mongoose.Schema(
         subscription: {
             plan: {
                 type: String,
-                enum: ["free", "basic", "premium", "enterprise"],
+                enum: ["free", "basic", "premium", "enterprise", "pro"],
                 default: "free",
             },
             startDate: Date,
             endDate: Date,
-            jobPostingLimit: {
+            jobPostLimit: {
                 type: Number,
                 default: 3, // Free plan limit
-            },
-            jobPostingsUsed: {
-                type: Number,
-                default: 0,
             },
         },
 

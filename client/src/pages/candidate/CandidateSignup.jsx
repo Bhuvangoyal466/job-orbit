@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { candidateAPI } from "../../utils/api";
 import { Eye, EyeOff, Mail, Lock, User, Phone, Calendar } from "lucide-react";
-import Navbar from "../../components/Navbar";
 
 const CandidateSignup = () => {
     const [formData, setFormData] = useState({
@@ -130,7 +129,6 @@ const CandidateSignup = () => {
 
     return (
         <>
-            <Navbar />
             <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="flex justify-center">

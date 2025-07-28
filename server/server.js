@@ -6,6 +6,7 @@ require("dotenv").config();
 const connectDB = require("./config/db");
 const candidateAuthRoutes = require("./routes/authCandidate");
 const recruiterAuthRoutes = require("./routes/authRecruiter");
+const jobRoutes = require("./routes/jobs");
 
 const app = express();
 
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Routes
 app.use("/api/auth/candidate", candidateAuthRoutes);
 app.use("/api/auth/recruiter", recruiterAuthRoutes);
+app.use("/api/jobs", jobRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

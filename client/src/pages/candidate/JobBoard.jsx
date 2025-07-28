@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from "react";
 import {
     Search,
     MapPin,
@@ -7,78 +8,122 @@ import {
     Filter,
     Heart,
     ExternalLink,
+    Loader,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { jobsAPI } from "../../utils/api";
+import { useAuth } from "../../context/useAuth";
+import { Link } from "react-router-dom";
+
+// Import API URL
+const API_BASE_URL = "http://localhost:5000/api";
 
 const JobBoard = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [location, setLocation] = useState("");
     const [jobType, setJobType] = useState("all");
     const [salaryRange, setSalaryRange] = useState("all");
+    const [jobs, setJobs] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [savedJobIds, setSavedJobIds] = useState(new Set());
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalJobs, setTotalJobs] = useState(0);
+    const { user } = useAuth();
 
-    // Mock job data
-    const jobs = [
-        {
-            id: 1,
-            title: "Frontend Developer",
-            company: "TechCorp Inc.",
-            location: "New York, NY",
-            salary: "$80K - $120K",
-            type: "Full-time",
-            posted: "2 days ago",
-            description:
-                "We are looking for a skilled Frontend Developer to join our team...",
-            skills: ["React", "JavaScript", "TypeScript", "CSS"],
-            saved: false,
-        },
-        {
-            id: 2,
-            title: "React Developer",
-            company: "StartupXYZ",
-            location: "San Francisco, CA",
-            salary: "$90K - $130K",
-            type: "Full-time",
-            posted: "1 day ago",
-            description:
-                "Join our innovative team and help build the next generation of web applications...",
-            skills: ["React", "Node.js", "MongoDB", "GraphQL"],
-            saved: true,
-        },
-        {
-            id: 3,
-            title: "Software Engineer",
-            company: "BigTech Corp",
-            location: "Seattle, WA",
-            salary: "$100K - $150K",
-            type: "Full-time",
-            posted: "3 days ago",
-            description:
-                "We are seeking a talented Software Engineer to develop scalable solutions...",
-            skills: ["JavaScript", "Python", "AWS", "Docker"],
-            saved: false,
-        },
-        {
-            id: 4,
-            title: "Full Stack Developer",
-            company: "InnovateLab",
-            location: "Austin, TX",
-            salary: "$75K - $110K",
-            type: "Contract",
-            posted: "5 days ago",
-            description:
-                "Looking for a Full Stack Developer to work on exciting projects...",
-            skills: ["React", "Express.js", "PostgreSQL", "AWS"],
-            saved: false,
-        },
-    ];
+    // Fetch jobs from backend
+    useEffect(() => {
+        fetchJobs();
+        if (user) {
+            fetchSavedJobs();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
+    const fetchJobs = async (filters, isLoadMore = false) => {
+        setLoading(true);
+        try {
+            const currentPage = isLoadMore ? page + 1 : 1;
+            if (!isLoadMore) {
+                setPage(1);
+            }
+
+            const searchFilters = filters || {
+                search: searchTerm,
+                location,
+                type: jobType !== "all" ? jobType : undefined,
+                salary: salaryRange !== "all" ? salaryRange : undefined,
+                page: currentPage,
+                limit: 10,
+            };
+
+            // Just use the jobsAPI helper from our utils
+            const responseData = await jobsAPI.getJobs(searchFilters);
+
+            // responseData could either be just the jobs array or the full pagination object
+            const newJobs = Array.isArray(responseData)
+                ? responseData
+                : responseData.jobs || [];
+            const pages = responseData.totalPages || 1;
+            const total = responseData.totalJobs || newJobs.length;
+
+            if (isLoadMore && jobs.length > 0) {
+                setJobs([...jobs, ...newJobs]);
+            } else {
+                setJobs(newJobs);
+            }
+
+            if (!isLoadMore) {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+
+            setPage(currentPage);
+            setTotalPages(pages);
+            setTotalJobs(total);
+            setError(null);
+        } catch (err) {
+            console.error("Failed to fetch jobs:", err);
+            setError("Failed to load jobs. Please try again later.");
+            toast.error("Could not load jobs");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchSavedJobs = async () => {
+        try {
+            const savedJobs = await jobsAPI.getSavedJobs();
+            const savedIds = new Set(savedJobs.map((job) => job._id));
+            setSavedJobIds(savedIds);
+        } catch (err) {
+            console.error("Failed to fetch saved jobs:", err);
+        }
+    };
+
+    // Filter jobs based on search criteria
     const filteredJobs = jobs.filter((job) => {
         const matchesSearch =
             job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            job.company.toLowerCase().includes(searchTerm.toLowerCase());
+            (job.company?.name &&
+                job.company.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase()));
         const matchesLocation =
             location === "" ||
-            job.location.toLowerCase().includes(location.toLowerCase());
+            (job.location?.city &&
+                job.location.city
+                    .toLowerCase()
+                    .includes(location.toLowerCase())) ||
+            (job.location?.state &&
+                job.location.state
+                    .toLowerCase()
+                    .includes(location.toLowerCase())) ||
+            (job.location?.country &&
+                job.location.country
+                    .toLowerCase()
+                    .includes(location.toLowerCase())) ||
+            (job.location?.remote && location.toLowerCase().includes("remote"));
         const matchesType =
             jobType === "all" ||
             job.type.toLowerCase() === jobType.toLowerCase();
@@ -86,19 +131,50 @@ const JobBoard = () => {
         return matchesSearch && matchesLocation && matchesType;
     });
 
-    const handleApply = (job) => {
-        toast.success(`Applied to "${job.title}" at ${job.company}!`);
+    // Handle job application
+    const handleApply = async (job) => {
+        if (!user) {
+            toast.info("Please login to apply for jobs");
+            return;
+        }
+
+        try {
+            await jobsAPI.applyJob(job._id, { coverLetter: "" });
+            toast.success(
+                `Applied to "${job.title}" at ${
+                    job.company?.name || "Company"
+                }!`
+            );
+            fetchJobs(); // Refresh jobs to update status
+        } catch (err) {
+            console.error("Failed to apply:", err);
+            toast.error("Failed to apply for job. Please try again.");
+        }
     };
 
-    const handleSaveJob = (job) => {
-        toast.success(`"${job.title}" at ${job.company} saved to your list!`);
-    };
+    // Handle saving a job
+    const toggleSave = async (job) => {
+        if (!user) {
+            toast.info("Please login to save jobs");
+            return;
+        }
 
-    const toggleSave = (job) => {
-        if (job.saved) {
-            toast.info(`Removed "${job.title}" from saved jobs`);
-        } else {
-            toast.success(`"${job.title}" saved to your list!`);
+        const isJobSaved = savedJobIds.has(job._id);
+
+        try {
+            if (isJobSaved) {
+                await jobsAPI.unsaveJob(job._id);
+                savedJobIds.delete(job._id);
+                setSavedJobIds(new Set(savedJobIds));
+                toast.info(`Removed "${job.title}" from saved jobs`);
+            } else {
+                await jobsAPI.saveJob(job._id);
+                setSavedJobIds(new Set(savedJobIds.add(job._id)));
+                toast.success(`"${job.title}" saved to your list!`);
+            }
+        } catch (err) {
+            console.error("Failed to toggle job save:", err);
+            toast.error("Failed to update saved jobs. Please try again.");
         }
     };
 
@@ -181,7 +257,16 @@ const JobBoard = () => {
 
                     {/* Search Button */}
                     <div className="flex items-end">
-                        <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button
+                            onClick={() =>
+                                fetchJobs({
+                                    search: searchTerm,
+                                    location,
+                                    type: jobType,
+                                })
+                            }
+                            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
                             <Filter className="h-5 w-5 inline mr-2" />
                             Search
                         </button>
@@ -205,97 +290,184 @@ const JobBoard = () => {
 
             {/* Job Listings */}
             <div className="space-y-4">
-                {filteredJobs.map((job) => (
-                    <div
-                        key={job.id}
-                        className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
-                    >
-                        <div className="flex items-start justify-between">
-                            <div className="flex-1">
-                                <div className="flex items-center space-x-2 mb-2">
-                                    <h3 className="text-xl font-semibold text-gray-900">
-                                        {job.title}
-                                    </h3>
-                                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                        {job.type}
-                                    </span>
-                                </div>
-
-                                <p className="text-lg text-gray-700 mb-2">
-                                    {job.company}
-                                </p>
-
-                                <div className="flex items-center space-x-4 text-sm text-gray-600 mb-3">
-                                    <div className="flex items-center space-x-1">
-                                        <MapPin className="h-4 w-4" />
-                                        <span>{job.location}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                        <DollarSign className="h-4 w-4" />
-                                        <span>{job.salary}</span>
-                                    </div>
-                                    <div className="flex items-center space-x-1">
-                                        <Clock className="h-4 w-4" />
-                                        <span>{job.posted}</span>
-                                    </div>
-                                </div>
-
-                                <p className="text-gray-600 mb-4">
-                                    {job.description}
-                                </p>
-
-                                {/* Skills */}
-                                <div className="flex flex-wrap gap-2 mb-4">
-                                    {job.skills.map((skill, index) => (
-                                        <span
-                                            key={index}
-                                            className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
-                                        >
-                                            {skill}
+                {loading ? (
+                    <div className="flex justify-center items-center py-20">
+                        <Loader className="h-8 w-8 animate-spin text-blue-500" />
+                        <span className="ml-2 text-gray-600">
+                            Loading jobs...
+                        </span>
+                    </div>
+                ) : error ? (
+                    <div className="text-center py-20">
+                        <p className="text-red-500 mb-2">{error}</p>
+                        <button
+                            onClick={fetchJobs}
+                            className="text-blue-500 hover:underline"
+                        >
+                            Try again
+                        </button>
+                    </div>
+                ) : filteredJobs.length === 0 ? (
+                    <div className="text-center py-20">
+                        <p className="text-gray-600 mb-2">
+                            No jobs match your search criteria
+                        </p>
+                        <button
+                            onClick={() => {
+                                setSearchTerm("");
+                                setLocation("");
+                                setJobType("all");
+                            }}
+                            className="text-blue-500 hover:underline"
+                        >
+                            Clear filters
+                        </button>
+                    </div>
+                ) : (
+                    filteredJobs.map((job) => (
+                        <div
+                            key={job._id}
+                            className="bg-white shadow rounded-lg p-6 hover:shadow-md transition-shadow"
+                        >
+                            <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <h3 className="text-xl font-semibold text-gray-900">
+                                            {job.title}
+                                        </h3>
+                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                            {job.type}
                                         </span>
-                                    ))}
-                                </div>
+                                    </div>
 
-                                {/* Actions */}
-                                <div className="flex items-center space-x-3">
-                                    <button
-                                        onClick={() => handleApply(job)}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        Apply Now
-                                    </button>
-                                    <button
-                                        onClick={() => toggleSave(job)}
-                                        className={`px-4 py-2 rounded-md border ${
-                                            job.saved
-                                                ? "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
-                                                : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                                        }`}
-                                    >
-                                        <Heart
-                                            className={`h-4 w-4 inline mr-1 ${
-                                                job.saved ? "fill-current" : ""
+                                    <p className="text-lg text-gray-700 mb-2">
+                                        {job.company?.name || "Company"}
+                                    </p>
+
+                                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-3">
+                                        <div className="flex items-center space-x-1">
+                                            <MapPin className="h-4 w-4" />
+                                            <span>
+                                                {job.location?.remote
+                                                    ? "Remote"
+                                                    : [
+                                                          job.location?.city,
+                                                          job.location?.state,
+                                                          job.location?.country,
+                                                      ]
+                                                          .filter(Boolean)
+                                                          .join(", ") ||
+                                                      "Location not specified"}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center space-x-1">
+                                            <DollarSign className="h-4 w-4" />
+                                            <span>
+                                                {job.salary?.min &&
+                                                job.salary?.max
+                                                    ? `${
+                                                          job.salary.currency ||
+                                                          "USD"
+                                                      } ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
+                                                    : "Salary not specified"}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center space-x-1">
+                                            <Clock className="h-4 w-4" />
+                                            <span>
+                                                {new Date(
+                                                    job.createdAt
+                                                ).toLocaleDateString()}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <p className="text-gray-600 mb-4">
+                                        {job.description.length > 200
+                                            ? `${job.description.substring(
+                                                  0,
+                                                  200
+                                              )}...`
+                                            : job.description}
+                                    </p>
+
+                                    {/* Skills */}
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {job.skills.map((skill, index) => (
+                                            <span
+                                                key={index}
+                                                className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full"
+                                            >
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+
+                                    {/* Actions */}
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <button
+                                            onClick={() => handleApply(job)}
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            disabled={!user}
+                                        >
+                                            Apply Now
+                                        </button>
+                                        <button
+                                            onClick={() => toggleSave(job)}
+                                            className={`px-4 py-2 rounded-md border ${
+                                                savedJobIds.has(job._id)
+                                                    ? "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
+                                                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
                                             }`}
-                                        />
-                                        {job.saved ? "Saved" : "Save"}
-                                    </button>
-                                    <button className="text-blue-600 hover:text-blue-500">
-                                        <ExternalLink className="h-4 w-4 inline mr-1" />
-                                        View Details
-                                    </button>
+                                            disabled={!user}
+                                        >
+                                            <Heart
+                                                className={`h-4 w-4 inline mr-1 ${
+                                                    savedJobIds.has(job._id)
+                                                        ? "fill-current"
+                                                        : ""
+                                                }`}
+                                            />
+                                            {savedJobIds.has(job._id)
+                                                ? "Saved"
+                                                : "Save"}
+                                        </button>
+                                        <Link
+                                            to={`/jobs/${job._id}`}
+                                            className="text-blue-600 hover:text-blue-500"
+                                        >
+                                            <ExternalLink className="h-4 w-4 inline mr-1" />
+                                            View Details
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
 
             {/* Load More */}
-            <div className="text-center">
-                <button className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300">
-                    Load More Jobs
-                </button>
-            </div>
+            {filteredJobs.length > 0 && (
+                <div className="text-center">
+                    <button
+                        className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300"
+                        onClick={() => fetchJobs(null, true)}
+                        disabled={loading || page >= totalPages}
+                    >
+                        {loading ? (
+                            <>
+                                <Loader className="h-4 w-4 animate-spin inline mr-2" />
+                                Loading...
+                            </>
+                        ) : page >= totalPages ? (
+                            "No More Jobs"
+                        ) : (
+                            "Load More Jobs"
+                        )}
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

@@ -165,3 +165,58 @@ export const authUtils = {
         localStorage.setItem("user", JSON.stringify(userData));
     },
 };
+
+// Jobs API calls
+export const jobsAPI = {
+    // Get all jobs
+    getJobs: async (filters = {}) => {
+        const queryParams = new URLSearchParams();
+
+        if (filters.search) queryParams.append("search", filters.search);
+        if (filters.location) queryParams.append("location", filters.location);
+        if (filters.type && filters.type !== "all")
+            queryParams.append("type", filters.type);
+        if (filters.salary) queryParams.append("salary", filters.salary);
+        if (filters.page) queryParams.append("page", filters.page);
+        if (filters.limit) queryParams.append("limit", filters.limit);
+
+        const queryString = queryParams.toString()
+            ? `?${queryParams.toString()}`
+            : "";
+        const response = await makeRequest(`/jobs${queryString}`);
+        // Handle both the paginated response and the array response formats
+        return response.jobs || response || [];
+    },
+
+    // Get a specific job by ID
+    getJob: async (jobId) => {
+        return makeRequest(`/jobs/${jobId}`);
+    },
+
+    // Apply to a job
+    applyJob: async (jobId, applicationData) => {
+        return makeRequest(`/jobs/${jobId}/apply`, {
+            method: "POST",
+            body: JSON.stringify(applicationData),
+        });
+    },
+
+    // Save a job (for candidates)
+    saveJob: async (jobId) => {
+        return makeRequest(`/jobs/${jobId}/save`, {
+            method: "POST",
+        });
+    },
+
+    // Unsave a job (for candidates)
+    unsaveJob: async (jobId) => {
+        return makeRequest(`/jobs/${jobId}/unsave`, {
+            method: "DELETE",
+        });
+    },
+
+    // Get saved jobs (for candidates)
+    getSavedJobs: async () => {
+        return makeRequest("/jobs/saved");
+    },
+};
