@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Upload, FileText, Check, AlertCircle } from "lucide-react";
+import { toast } from "react-toastify";
 
 const UploadResume = () => {
     const [dragActive, setDragActive] = useState(false);
@@ -52,6 +53,14 @@ const UploadResume = () => {
             });
             setParsing(false);
         }, 2000);
+    };
+
+    const handleSaveResumeData = () => {
+        toast.success("Resume data saved successfully!");
+    };
+
+    const handleEditInformation = () => {
+        toast.info("Edit mode enabled. You can now modify the information.");
     };
 
     return (
@@ -211,10 +220,16 @@ const UploadResume = () => {
                         </div>
 
                         <div className="flex justify-end space-x-4">
-                            <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                            <button
+                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                                onClick={handleEditInformation}
+                            >
                                 Edit Information
                             </button>
-                            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            <button
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                onClick={handleSaveResumeData}
+                            >
                                 Save Resume Data
                             </button>
                         </div>

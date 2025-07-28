@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { User, Mail, Phone, FileText, Eye, Check, X } from "lucide-react";
+import { toast } from "react-toastify";
 
 const ManageApplicants = () => {
     const [selectedStatus, setSelectedStatus] = useState("all");
@@ -59,6 +60,22 @@ const ManageApplicants = () => {
             : applicants.filter(
                   (app) => app.status.toLowerCase() === selectedStatus
               );
+
+    const handleViewApplication = (applicant) => {
+        toast.info(`Viewing application for ${applicant.name}`);
+    };
+
+    const handleViewResume = (applicant) => {
+        toast.info(`Opening resume for ${applicant.name}`);
+    };
+
+    const handleAcceptApplicant = (applicant) => {
+        toast.success(`${applicant.name} has been accepted!`);
+    };
+
+    const handleRejectApplicant = (applicant) => {
+        toast.error(`${applicant.name} has been rejected.`);
+    };
 
     return (
         <div className="space-y-6">
@@ -143,16 +160,36 @@ const ManageApplicants = () => {
                                     </span>
 
                                     <div className="flex items-center space-x-2">
-                                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md">
+                                        <button
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                                            onClick={() =>
+                                                handleViewApplication(applicant)
+                                            }
+                                        >
                                             <Eye className="h-4 w-4" />
                                         </button>
-                                        <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md">
+                                        <button
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                                            onClick={() =>
+                                                handleViewResume(applicant)
+                                            }
+                                        >
                                             <FileText className="h-4 w-4" />
                                         </button>
-                                        <button className="p-2 text-green-600 hover:bg-green-50 rounded-md">
+                                        <button
+                                            className="p-2 text-green-600 hover:bg-green-50 rounded-md"
+                                            onClick={() =>
+                                                handleAcceptApplicant(applicant)
+                                            }
+                                        >
                                             <Check className="h-4 w-4" />
                                         </button>
-                                        <button className="p-2 text-red-600 hover:bg-red-50 rounded-md">
+                                        <button
+                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md"
+                                            onClick={() =>
+                                                handleRejectApplicant(applicant)
+                                            }
+                                        >
                                             <X className="h-4 w-4" />
                                         </button>
                                     </div>

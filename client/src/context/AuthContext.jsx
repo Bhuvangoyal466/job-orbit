@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AuthContext } from "./AuthContextContext";
+import { authUtils } from "../utils/api";
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -7,33 +8,49 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         // Check if user is logged in from localStorage
-        const token = localStorage.getItem("token");
-        const userData = localStorage.getItem("user");
+        const token = authUtils.getToken();
+        const userData = authUtils.getUser();
 
         if (token && userData) {
-            setUser(JSON.parse(userData));
+            setUser(userData);
         }
         setLoading(false);
     }, []);
 
     const login = async (userData, token) => {
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(userData));
-        setUser(userData);
+        try {
+            authUtils.setAuth(userData, token);
+            setUser(userData);
+        } catch (error) {
+            console.error("Login error:", error);
+            throw error;
+        }
     };
 
     const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        authUtils.clearAuth();
         setUser(null);
     };
+
+    const updateUser = (updatedUserData) => {
+        const newUserData = { ...user, ...updatedUserData };
+        authUtils.setAuth(newUserData, authUtils.getToken());
+        setUser(newUserData);
+    };
+
+    const isCandidate = () => user?.role === "candidate";
+    const isRecruiter = () => user?.role === "recruiter";
 
     const value = {
         user,
         login,
         logout,
+        updateUser,
         loading,
         isAuthenticated: !!user,
+        isCandidate,
+        isRecruiter,
+        token: authUtils.getToken(),
     };
 
     return (

@@ -8,6 +8,7 @@ import {
     Heart,
     ExternalLink,
 } from "lucide-react";
+import { toast } from "react-toastify";
 
 const JobBoard = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -85,14 +86,20 @@ const JobBoard = () => {
         return matchesSearch && matchesLocation && matchesType;
     });
 
-    const handleApply = (jobId) => {
-        alert(`Applied to job ${jobId}! (This would integrate with backend)`);
+    const handleApply = (job) => {
+        toast.success(`Applied to "${job.title}" at ${job.company}!`);
     };
 
-    const toggleSave = (jobId) => {
-        alert(
-            `Toggled save for job ${jobId}! (This would integrate with backend)`
-        );
+    const handleSaveJob = (job) => {
+        toast.success(`"${job.title}" at ${job.company} saved to your list!`);
+    };
+
+    const toggleSave = (job) => {
+        if (job.saved) {
+            toast.info(`Removed "${job.title}" from saved jobs`);
+        } else {
+            toast.success(`"${job.title}" saved to your list!`);
+        }
     };
 
     return (
@@ -252,13 +259,13 @@ const JobBoard = () => {
                                 {/* Actions */}
                                 <div className="flex items-center space-x-3">
                                     <button
-                                        onClick={() => handleApply(job.id)}
+                                        onClick={() => handleApply(job)}
                                         className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         Apply Now
                                     </button>
                                     <button
-                                        onClick={() => toggleSave(job.id)}
+                                        onClick={() => toggleSave(job)}
                                         className={`px-4 py-2 rounded-md border ${
                                             job.saved
                                                 ? "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"

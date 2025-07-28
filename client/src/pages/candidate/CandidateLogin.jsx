@@ -1,6 +1,9 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../../context/useAuth";
+import { candidateAPI } from "../../utils/api";
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 
 const CandidateLogin = () => {
@@ -10,13 +13,19 @@ const CandidateLogin = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     const from = location.state?.from?.pathname || "/candidate/dashboard";
+
+    // Check for success message from signup
+    React.useEffect(() => {
+        if (location.state?.message) {
+            toast.success(location.state.message);
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -28,25 +37,33 @@ const CandidateLogin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError("");
 
         try {
-            // Simulate API call - replace with actual authentication
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            // Mock successful login
-            const userData = {
-                id: "1",
-                name: "John Doe",
+            // Call the backend API for candidate login
+            const response = await candidateAPI.login({
                 email: formData.email,
-                role: "candidate",
-            };
-            const token = "mock-jwt-token";
+                password: formData.password,
+            });
 
+            // Extract user data and token from response
+            const { token, data } = response;
+            const userData = {
+                id: data.candidate._id,
+                name: data.candidate.fullName,
+                email: data.candidate.email,
+                firstName: data.candidate.firstName,
+                lastName: data.candidate.lastName,
+                role: "candidate",
+                profileCompleteness: data.candidate.profileCompleteness,
+                isEmailVerified: data.candidate.isEmailVerified,
+            };
+
+            // Login using auth context
             await login(userData, token);
+            toast.success("Login successful! Welcome back.");
             navigate(from, { replace: true });
-        } catch (err) {
-            setError("Invalid email or password");
+        } catch (error) {
+            toast.error("Invalid email or password");
         } finally {
             setLoading(false);
         }
@@ -69,12 +86,6 @@ const CandidateLogin = () => {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                                {error}
-                            </div>
-                        )}
-
                         <div>
                             <label
                                 htmlFor="email"

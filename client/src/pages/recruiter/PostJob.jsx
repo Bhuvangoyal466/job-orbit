@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PostJob = () => {
     const [formData, setFormData] = useState({
@@ -22,7 +23,9 @@ const PostJob = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert("Job posted successfully! (This would integrate with backend)");
+        toast.success(
+            "Job posted successfully! (This would integrate with backend)"
+        );
     };
 
     return (

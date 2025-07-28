@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import { useAuth } from "../../context/useAuth";
+import { recruiterAPI } from "../../utils/api";
 import { Eye, EyeOff, Mail, Lock, Building2 } from "lucide-react";
 
 const RecruiterLogin = () => {
@@ -10,13 +12,19 @@ const RecruiterLogin = () => {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
 
     const { login } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     const from = location.state?.from?.pathname || "/recruiter/dashboard";
+
+    // Check for success message from signup
+    React.useEffect(() => {
+        if (location.state?.message) {
+            toast.success(location.state.message);
+        }
+    }, [location.state]);
 
     const handleChange = (e) => {
         setFormData((prev) => ({
@@ -28,26 +36,37 @@ const RecruiterLogin = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError("");
 
         try {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            // Mock successful login
-            const userData = {
-                id: "2",
-                name: "Jane Smith",
+            // Call the backend API for recruiter login
+            const response = await recruiterAPI.login({
                 email: formData.email,
-                role: "recruiter",
-                company: "TechCorp Inc.",
-            };
-            const token = "mock-jwt-token-recruiter";
+                password: formData.password,
+            });
 
+            // Extract user data and token from response
+            const { token, data } = response;
+            const userData = {
+                id: data.recruiter._id,
+                name: data.recruiter.fullName,
+                email: data.recruiter.email,
+                firstName: data.recruiter.firstName,
+                lastName: data.recruiter.lastName,
+                role: "recruiter",
+                company: data.recruiter.companyDisplayName,
+                position: data.recruiter.position,
+                profileCompleteness: data.recruiter.profileCompleteness,
+                isEmailVerified: data.recruiter.isEmailVerified,
+                isCompanyVerified: data.recruiter.isCompanyVerified,
+            };
+
+            // Login using auth context
             await login(userData, token);
+            toast.success("Login successful! Welcome back.");
             navigate(from, { replace: true });
-        } catch {
-            setError("Invalid email or password");
+        } catch (error) {
+            console.error("Login error:", error);
+            toast.error(error.message || "Invalid email or password");
         } finally {
             setLoading(false);
         }
@@ -70,12 +89,6 @@ const RecruiterLogin = () => {
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
-                        {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                                {error}
-                            </div>
-                        )}
-
                         <div>
                             <label
                                 htmlFor="email"

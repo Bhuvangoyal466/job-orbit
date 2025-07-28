@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Plus, FileText, Edit, Trash2, Eye } from "lucide-react";
+import { toast } from "react-toastify";
 
 const CoverLetters = () => {
     const [templates] = useState([
@@ -29,6 +30,20 @@ const CoverLetters = () => {
     const [selectedTemplate, setSelectedTemplate] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
 
+    const handleNewTemplate = () => {
+        setIsEditing(true);
+        toast.info("Creating new cover letter template");
+    };
+
+    const handleSaveTemplate = () => {
+        toast.success("Cover letter template saved successfully!");
+        setIsEditing(false);
+    };
+
+    const handleDeleteTemplate = (templateName) => {
+        toast.success(`"${templateName}" template deleted successfully!`);
+    };
+
     return (
         <div className="space-y-6">
             <div className="mb-8">
@@ -51,7 +66,7 @@ const CoverLetters = () => {
                                     Templates
                                 </h2>
                                 <button
-                                    onClick={() => setIsEditing(true)}
+                                    onClick={handleNewTemplate}
                                     className="flex items-center space-x-1 text-blue-600 hover:text-blue-500 text-sm"
                                 >
                                     <Plus className="h-4 w-4" />
@@ -120,7 +135,14 @@ const CoverLetters = () => {
                                                         : "Edit"}
                                                 </span>
                                             </button>
-                                            <button className="p-1 text-red-600 hover:bg-red-50 rounded-md">
+                                            <button
+                                                className="p-1 text-red-600 hover:bg-red-50 rounded-md"
+                                                onClick={() =>
+                                                    handleDeleteTemplate(
+                                                        selectedTemplate.name
+                                                    )
+                                                }
+                                            >
                                                 <Trash2 className="h-4 w-4" />
                                             </button>
                                         </div>
@@ -163,7 +185,10 @@ const CoverLetters = () => {
                                                 >
                                                     Cancel
                                                 </button>
-                                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                                <button
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                                    onClick={handleSaveTemplate}
+                                                >
                                                     Save Template
                                                 </button>
                                             </div>
