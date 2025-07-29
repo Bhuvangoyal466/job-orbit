@@ -1,28 +1,69 @@
 import React, { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Plus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const PostJob = () => {
     const [formData, setFormData] = useState({
         title: "",
-        company: "",
-        location: "",
-        type: "full-time",
-        salary: "",
         description: "",
-        requirements: "",
+        type: "full-time",
+        salary: {
+            min: "",
+            max: "",
+            currency: "USD",
+        },
+        location: {
+            city: "",
+            state: "",
+            country: "",
+            remote: false,
+        },
+        skills: [],
+        company: {
+            name: "",
+            logo: "",
+            website: "",
+            industry: "",
+            size: "",
+        },
+        perks: [],
+        benefits: [],
+        applicationDeadline: "",
+        numberOfOpenings: 1,
     });
 
+    // For handling skills, perks, and benefits
+    const [skill, setSkill] = useState("");
+    const [perk, setPerk] = useState("");
+    const [benefit, setBenefit] = useState("");
+
     const handleChange = (e) => {
-        setFormData((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
+        const { name, value, type, checked } = e.target;
+
+        // Handle nested objects
+        if (name.includes(".")) {
+            const [parent, child] = name.split(".");
+            setFormData((prev) => ({
+                ...prev,
+                [parent]: {
+                    ...prev[parent],
+                    [child]: type === "checkbox" ? checked : value,
+                },
+            }));
+        } else {
+            setFormData((prev) => ({
+                ...prev,
+                [name]: type === "checkbox" ? checked : value,
+            }));
+        }
     };
+
+    // Form submit handler
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(formData); // For debugging
         toast.success(
             "Job posted successfully! (This would integrate with backend)"
         );
@@ -48,106 +89,521 @@ const PostJob = () => {
             </div>
 
             <div className="bg-white shadow rounded-lg p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Job Title
-                            </label>
-                            <input
-                                type="text"
-                                name="title"
-                                required
-                                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value={formData.title}
-                                onChange={handleChange}
-                            />
+                <form onSubmit={handleSubmit} className="space-y-8">
+                    {/* Job basics section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">
+                            Job Basics
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Job Title
+                                </label>
+                                <input
+                                    type="text"
+                                    name="title"
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.title}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Job Type
+                                </label>
+                                <select
+                                    name="type"
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.type}
+                                    onChange={handleChange}
+                                >
+                                    <option value="full-time">Full-time</option>
+                                    <option value="part-time">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                    <option value="internship">
+                                        Internship
+                                    </option>
+                                    <option value="remote">Remote</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
+
+                        <div className="mt-6">
                             <label className="block text-sm font-medium text-gray-700">
-                                Company
+                                Job Description
                             </label>
-                            <input
-                                type="text"
-                                name="company"
+                            <textarea
+                                name="description"
+                                rows="6"
                                 required
+                                maxLength={3000}
                                 className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value={formData.company}
+                                value={formData.description}
                                 onChange={handleChange}
+                                placeholder="Detailed job description (max 3000 characters)"
                             />
+                            <p className="text-sm text-gray-500 mt-1">
+                                {formData.description.length}/3000 characters
+                            </p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Location
-                            </label>
+                    {/* Company details section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">
+                            Company Details
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Company Name
+                                </label>
+                                <input
+                                    type="text"
+                                    name="company.name"
+                                    required
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.company.name}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Company Website
+                                </label>
+                                <input
+                                    type="url"
+                                    name="company.website"
+                                    placeholder="https://example.com"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.company.website}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 mt-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Company Logo URL
+                                </label>
+                                <input
+                                    type="url"
+                                    name="company.logo"
+                                    placeholder="https://example.com/logo.png"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.company.logo}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Industry
+                                </label>
+                                <input
+                                    type="text"
+                                    name="company.industry"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.company.industry}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Company Size
+                                </label>
+                                <input
+                                    type="text"
+                                    name="company.size"
+                                    placeholder="e.g., 50-100 employees"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.company.size}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Location section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">Location</h2>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    City
+                                </label>
+                                <input
+                                    type="text"
+                                    name="location.city"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.location.city}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    State/Province
+                                </label>
+                                <input
+                                    type="text"
+                                    name="location.state"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.location.state}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Country
+                                </label>
+                                <input
+                                    type="text"
+                                    name="location.country"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.location.country}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mt-4">
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    id="remoteOption"
+                                    name="location.remote"
+                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                    checked={formData.location.remote}
+                                    onChange={handleChange}
+                                />
+                                <label
+                                    htmlFor="remoteOption"
+                                    className="ml-2 block text-sm text-gray-700"
+                                >
+                                    Remote position
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Salary section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">
+                            Salary Range
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Minimum Salary
+                                </label>
+                                <input
+                                    type="number"
+                                    name="salary.min"
+                                    placeholder="e.g., 50000"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.salary.min}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Maximum Salary
+                                </label>
+                                <input
+                                    type="number"
+                                    name="salary.max"
+                                    placeholder="e.g., 80000"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.salary.max}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Currency
+                                </label>
+                                <select
+                                    name="salary.currency"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.salary.currency}
+                                    onChange={handleChange}
+                                >
+                                    <option value="USD">USD - US Dollar</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">
+                                        GBP - British Pound
+                                    </option>
+                                    <option value="CAD">
+                                        CAD - Canadian Dollar
+                                    </option>
+                                    <option value="AUD">
+                                        AUD - Australian Dollar
+                                    </option>
+                                    <option value="INR">
+                                        INR - Indian Rupee
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Skills section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">
+                            Required Skills
+                        </h2>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {formData.skills.map((skill, index) => (
+                                <span
+                                    key={index}
+                                    className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md flex items-center"
+                                >
+                                    {skill}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                skills: prev.skills.filter(
+                                                    (_, i) => i !== index
+                                                ),
+                                            }));
+                                        }}
+                                        className="ml-1 text-blue-500 hover:text-blue-700"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </span>
+                            ))}
+                        </div>
+                        <div className="flex">
                             <input
                                 type="text"
-                                name="location"
-                                required
-                                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value={formData.location}
-                                onChange={handleChange}
+                                placeholder="Add a skill"
+                                className="flex-grow border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                value={skill}
+                                onChange={(e) => setSkill(e.target.value)}
+                                onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault();
+                                        if (skill.trim()) {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                skills: [
+                                                    ...prev.skills,
+                                                    skill.trim(),
+                                                ],
+                                            }));
+                                            setSkill("");
+                                        }
+                                    }
+                                }}
                             />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Job Type
-                            </label>
-                            <select
-                                name="type"
-                                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value={formData.type}
-                                onChange={handleChange}
+                            <button
+                                type="button"
+                                className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700"
+                                onClick={() => {
+                                    if (skill.trim()) {
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            skills: [
+                                                ...prev.skills,
+                                                skill.trim(),
+                                            ],
+                                        }));
+                                        setSkill("");
+                                    }
+                                }}
                             >
-                                <option value="full-time">Full-time</option>
-                                <option value="part-time">Part-time</option>
-                                <option value="contract">Contract</option>
-                                <option value="internship">Internship</option>
-                            </select>
+                                <Plus className="h-5 w-5" />
+                            </button>
                         </div>
+                    </div>
+
+                    {/* Perks and Benefits section */}
+                    <div className="border-b pb-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">
-                                Salary Range
-                            </label>
-                            <input
-                                type="text"
-                                name="salary"
-                                placeholder="e.g., $80K - $120K"
-                                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                value={formData.salary}
-                                onChange={handleChange}
-                            />
+                            <h2 className="text-lg font-semibold mb-4">
+                                Perks
+                            </h2>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                                {formData.perks.map((item, index) => (
+                                    <span
+                                        key={index}
+                                        className="bg-green-100 text-green-800 px-2 py-1 rounded-md flex items-center"
+                                    >
+                                        {item}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    perks: prev.perks.filter(
+                                                        (_, i) => i !== index
+                                                    ),
+                                                }));
+                                            }}
+                                            className="ml-1 text-green-500 hover:text-green-700"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="flex">
+                                <input
+                                    type="text"
+                                    placeholder="Add a perk"
+                                    className="flex-grow border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                                    value={perk}
+                                    onChange={(e) => setPerk(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            if (perk.trim()) {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    perks: [
+                                                        ...prev.perks,
+                                                        perk.trim(),
+                                                    ],
+                                                }));
+                                                setPerk("");
+                                            }
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="bg-green-600 text-white px-3 py-2 rounded-r-md hover:bg-green-700"
+                                    onClick={() => {
+                                        if (perk.trim()) {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                perks: [
+                                                    ...prev.perks,
+                                                    perk.trim(),
+                                                ],
+                                            }));
+                                            setPerk("");
+                                        }
+                                    }}
+                                >
+                                    <Plus className="h-5 w-5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 className="text-lg font-semibold mb-4">
+                                Benefits
+                            </h2>
+                            <div className="flex flex-wrap gap-2 mb-3">
+                                {formData.benefits.map((item, index) => (
+                                    <span
+                                        key={index}
+                                        className="bg-purple-100 text-purple-800 px-2 py-1 rounded-md flex items-center"
+                                    >
+                                        {item}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    benefits:
+                                                        prev.benefits.filter(
+                                                            (_, i) =>
+                                                                i !== index
+                                                        ),
+                                                }));
+                                            }}
+                                            className="ml-1 text-purple-500 hover:text-purple-700"
+                                        >
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                            <div className="flex">
+                                <input
+                                    type="text"
+                                    placeholder="Add a benefit"
+                                    className="flex-grow border border-gray-300 rounded-l-md px-3 py-2 focus:outline-none focus:ring-purple-500 focus:border-purple-500"
+                                    value={benefit}
+                                    onChange={(e) => setBenefit(e.target.value)}
+                                    onKeyPress={(e) => {
+                                        if (e.key === "Enter") {
+                                            e.preventDefault();
+                                            if (benefit.trim()) {
+                                                setFormData((prev) => ({
+                                                    ...prev,
+                                                    benefits: [
+                                                        ...prev.benefits,
+                                                        benefit.trim(),
+                                                    ],
+                                                }));
+                                                setBenefit("");
+                                            }
+                                        }
+                                    }}
+                                />
+                                <button
+                                    type="button"
+                                    className="bg-purple-600 text-white px-3 py-2 rounded-r-md hover:bg-purple-700"
+                                    onClick={() => {
+                                        if (benefit.trim()) {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                benefits: [
+                                                    ...prev.benefits,
+                                                    benefit.trim(),
+                                                ],
+                                            }));
+                                            setBenefit("");
+                                        }
+                                    }}
+                                >
+                                    <Plus className="h-5 w-5" />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Job Description
-                        </label>
-                        <textarea
-                            name="description"
-                            rows="6"
-                            required
-                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Requirements
-                        </label>
-                        <textarea
-                            name="requirements"
-                            rows="4"
-                            className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                            value={formData.requirements}
-                            onChange={handleChange}
-                        />
+                    {/* Additional job details section */}
+                    <div className="border-b pb-6">
+                        <h2 className="text-lg font-semibold mb-4">
+                            Additional Details
+                        </h2>
+                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Application Deadline
+                                </label>
+                                <input
+                                    type="date"
+                                    name="applicationDeadline"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.applicationDeadline}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Number of Openings
+                                </label>
+                                <input
+                                    type="number"
+                                    name="numberOfOpenings"
+                                    min="1"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    value={formData.numberOfOpenings}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     <div className="flex justify-end space-x-4">

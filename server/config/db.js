@@ -15,15 +15,15 @@ const connectDB = async () => {
             useUnifiedTopology: true,
         });
 
-        console.log(`📦 MongoDB Connected: ${conn.connection.host}`);
+        console.log(`MongoDB Connected`);
 
         // Handle connection events
         mongoose.connection.on("error", (err) => {
-            console.error("❌ MongoDB connection error:", err);
+            console.error("MongoDB connection error:", err);
         });
 
         mongoose.connection.on("disconnected", () => {
-            console.log("🔌 MongoDB disconnected");
+            console.log("MongoDB disconnected");
         });
 
         // Graceful shutdown
@@ -40,7 +40,7 @@ const connectDB = async () => {
             }
         });
     } catch (error) {
-        console.error("❌ MongoDB connection failed:", error.message);
+        console.error("MongoDB connection failed:", error.message);
         process.exit(1);
     }
 };
