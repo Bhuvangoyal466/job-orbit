@@ -17,6 +17,21 @@ const connectDB = async () => {
 
         console.log(`MongoDB Connected`);
 
+        // Recreate indexes on startup
+        const Job = require("../models/Job");
+        try {
+            // Drop existing indexes on the jobs collection to ensure clean recreation
+            await mongoose.connection.db.collection("jobs").dropIndexes();
+
+            // The indexes will be recreated automatically when the model is used
+        } catch (error) {
+            // It's okay if there are no indexes to drop yet
+            console.log(
+                "No existing indexes to drop or error dropping indexes:",
+                error.message
+            );
+        }
+
         // Handle connection events
         mongoose.connection.on("error", (err) => {
             console.error("MongoDB connection error:", err);

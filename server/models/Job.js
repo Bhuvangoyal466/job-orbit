@@ -40,13 +40,7 @@ const jobSchema = new mongoose.Schema(
                 default: false,
             },
         },
-        skills: [
-            {
-                type: String,
-                required: true,
-                trim: true,
-            },
-        ],
+        skills: [String],
         recruiter: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Recruiter",
@@ -107,6 +101,9 @@ const jobSchema = new mongoose.Schema(
     }
 );
 
-jobSchema.index({ title: "text", description: "text", skills: 1 });
+// Create text index on title and description only, not on the skills array
+jobSchema.index({ title: "text", description: "text" });
+// Create a separate index on skills for filtering
+jobSchema.index({ skills: 1 });
 
 module.exports = mongoose.model("Job", jobSchema);

@@ -108,7 +108,7 @@ exports.getJobById = async (req, res) => {
 exports.applyToJob = async (req, res) => {
     try {
         // Check if the user is a candidate
-        if (req.user.role !== "candidate") {
+        if (req.userType !== "candidate") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to apply for jobs" });
@@ -121,11 +121,9 @@ exports.applyToJob = async (req, res) => {
 
         // Check if job is active
         if (!job.isActive) {
-            return res
-                .status(400)
-                .json({
-                    message: "This job is no longer accepting applications",
-                });
+            return res.status(400).json({
+                message: "This job is no longer accepting applications",
+            });
         }
 
         // Check if already applied
@@ -172,7 +170,7 @@ exports.applyToJob = async (req, res) => {
 exports.saveJob = async (req, res) => {
     try {
         // Check if the user is a candidate
-        if (req.user.role !== "candidate") {
+        if (req.userType !== "candidate") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to save jobs" });
@@ -206,7 +204,7 @@ exports.saveJob = async (req, res) => {
 exports.unsaveJob = async (req, res) => {
     try {
         // Check if the user is a candidate
-        if (req.user.role !== "candidate") {
+        if (req.userType !== "candidate") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to unsave jobs" });
@@ -239,7 +237,7 @@ exports.unsaveJob = async (req, res) => {
 exports.getSavedJobs = async (req, res) => {
     try {
         // Check if the user is a candidate
-        if (req.user.role !== "candidate") {
+        if (req.userType !== "candidate") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to view saved jobs" });
@@ -264,7 +262,7 @@ exports.getSavedJobs = async (req, res) => {
 exports.createJob = async (req, res) => {
     try {
         // Check if the user is a recruiter
-        if (req.user.role !== "recruiter") {
+        if (req.userType !== "recruiter") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to create jobs" });
@@ -321,7 +319,7 @@ exports.createJob = async (req, res) => {
 exports.updateJob = async (req, res) => {
     try {
         // Check if the user is a recruiter
-        if (req.user.role !== "recruiter") {
+        if (req.userType !== "recruiter") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to update jobs" });
@@ -371,7 +369,7 @@ exports.updateJob = async (req, res) => {
 exports.deleteJob = async (req, res) => {
     try {
         // Check if the user is a recruiter
-        if (req.user.role !== "recruiter") {
+        if (req.userType !== "recruiter") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to delete jobs" });
@@ -408,7 +406,7 @@ exports.deleteJob = async (req, res) => {
 exports.getRecruiterJobs = async (req, res) => {
     try {
         // Check if the user is a recruiter
-        if (req.user.role !== "recruiter") {
+        if (req.userType !== "recruiter") {
             return res
                 .status(403)
                 .json({ message: "Not authorized to view recruiter jobs" });
@@ -456,12 +454,10 @@ exports.getRecruiterJobs = async (req, res) => {
 exports.updateApplicationStatus = async (req, res) => {
     try {
         // Check if the user is a recruiter
-        if (req.user.role !== "recruiter") {
-            return res
-                .status(403)
-                .json({
-                    message: "Not authorized to update application status",
-                });
+        if (req.userType !== "recruiter") {
+            return res.status(403).json({
+                message: "Not authorized to update application status",
+            });
         }
 
         const { candidateId, status } = req.body;
@@ -493,11 +489,9 @@ exports.updateApplicationStatus = async (req, res) => {
 
         // Check if the user is the job owner
         if (job.recruiter.toString() !== req.user.id) {
-            return res
-                .status(403)
-                .json({
-                    message: "Not authorized to update this job's applications",
-                });
+            return res.status(403).json({
+                message: "Not authorized to update this job's applications",
+            });
         }
 
         // Find the applicant

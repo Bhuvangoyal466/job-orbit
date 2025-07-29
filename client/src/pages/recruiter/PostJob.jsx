@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { ArrowLeft, Plus, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { recruiterAPI } from "../../utils/api";
 
 const PostJob = () => {
     const [formData, setFormData] = useState({
@@ -60,13 +61,29 @@ const PostJob = () => {
     };
 
     // Form submit handler
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData); // For debugging
-        toast.success(
-            "Job posted successfully! (This would integrate with backend)"
-        );
+        setIsSubmitting(true);
+
+        try {
+            const response = await recruiterAPI.createJob(formData);
+
+            console.log("Job posted successfully:", response);
+            toast.success("Job posted successfully!");
+
+            // Redirect to the recruiter dashboard
+            navigate("/recruiter/dashboard");
+        } catch (error) {
+            console.error("Error posting job:", error);
+            toast.error(
+                error.message || "Failed to post job. Please try again."
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -615,9 +632,10 @@ const PostJob = () => {
                         </Link>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+                            disabled={isSubmitting}
                         >
-                            Post Job
+                            {isSubmitting ? "Posting..." : "Post Job"}
                         </button>
                     </div>
                 </form>
