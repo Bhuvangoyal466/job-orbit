@@ -11,6 +11,7 @@ import RecruiterLayout from "../layouts/RecruiterLayout";
 import Home from "../pages/common/Home";
 import About from "../pages/common/About";
 import NotFound from "../pages/common/NotFound";
+import JobDetails from "../pages/common/JobDetails";
 
 // Candidate Pages
 import CandidateLogin from "../pages/candidate/CandidateLogin";
@@ -53,6 +54,20 @@ const AppRoutes = () => {
                                 <Navbar />
                                 <div className="flex-grow">
                                     <About />
+                                </div>
+                                <Footer />
+                            </>
+                        }
+                    />
+
+                    {/* Job Details Page - Public but with auth context */}
+                    <Route
+                        path="/jobs/:id"
+                        element={
+                            <>
+                                <Navbar />
+                                <div className="flex-grow">
+                                    <JobDetails />
                                 </div>
                                 <Footer />
                             </>

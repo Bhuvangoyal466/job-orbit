@@ -8,6 +8,7 @@ router.get("/", jobController.getAllJobs);
 
 // Candidate authenticated routes - Place specific routes BEFORE wildcard routes
 router.get("/saved", protect, jobController.getSavedJobs);
+router.get("/applications", protect, jobController.getCandidateApplications);
 
 // Recruiter authenticated routes - Place specific routes BEFORE wildcard routes
 router.get("/recruiter/myjobs", protect, jobController.getRecruiterJobs);

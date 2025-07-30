@@ -9,6 +9,7 @@ import {
     Heart,
     ExternalLink,
     Loader,
+    IndianRupee,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { jobsAPI } from "../../utils/api";
@@ -331,13 +332,24 @@ const JobBoard = () => {
                         >
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <div className="flex items-center space-x-2 mb-2">
-                                        <h3 className="text-xl font-semibold text-gray-900">
-                                            {job.title}
-                                        </h3>
-                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                            {job.type}
-                                        </span>
+                                    <div
+                                        className="flex items-center 
+                                    justify-between space-x-2 mb-2"
+                                    >
+                                        <div>
+                                            <h3 className="text-xl font-semibold inline text-gray-900">
+                                                {job.title}
+                                            </h3>
+                                            <span className="px-2 ml-5 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                                {job.type}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <img
+                                                className="logo"
+                                                src={job.company.logo}
+                                            ></img>
+                                        </div>
                                     </div>
 
                                     <p className="text-lg text-gray-700 mb-2">
@@ -361,14 +373,18 @@ const JobBoard = () => {
                                             </span>
                                         </div>
                                         <div className="flex items-center space-x-1">
-                                            <DollarSign className="h-4 w-4" />
+                                            <IndianRupee className="h-4 w-4" />
                                             <span>
                                                 {job.salary?.min &&
                                                 job.salary?.max
                                                     ? `${
                                                           job.salary.currency ||
-                                                          "USD"
-                                                      } ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
+                                                          "INR"
+                                                      } ${job.salary.min.toLocaleString(
+                                                          "en-IN"
+                                                      )} - ${job.salary.max.toLocaleString(
+                                                          "en-IN"
+                                                      )}`
                                                     : "Salary not specified"}
                                             </span>
                                         </div>

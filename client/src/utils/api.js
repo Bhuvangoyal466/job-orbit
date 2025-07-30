@@ -227,4 +227,9 @@ export const jobsAPI = {
     getSavedJobs: async () => {
         return makeRequest("/jobs/saved");
     },
+
+    // Get candidate's job applications
+    getApplications: async () => {
+        return makeRequest("/jobs/applications");
+    },
 };

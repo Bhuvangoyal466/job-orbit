@@ -107,6 +107,15 @@ exports.getJobById = async (req, res) => {
 // @access  Private (Candidates only)
 exports.applyToJob = async (req, res) => {
     try {
+        console.log(
+            "Apply to job - User:",
+            req.user.id,
+            "User Type:",
+            req.userType
+        );
+        console.log("Apply to job - Job ID:", req.params.id);
+        console.log("Apply to job - Request body:", req.body);
+
         // Check if the user is a candidate
         if (req.userType !== "candidate") {
             return res
@@ -118,6 +127,8 @@ exports.applyToJob = async (req, res) => {
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
+
+        console.log("Job found:", job.title);
 
         // Check if job is active
         if (!job.isActive) {
@@ -132,6 +143,7 @@ exports.applyToJob = async (req, res) => {
         );
 
         if (alreadyApplied) {
+            console.log("User already applied to this job");
             return res
                 .status(400)
                 .json({ message: "You have already applied to this job" });
@@ -148,14 +160,26 @@ exports.applyToJob = async (req, res) => {
             coverLetter: coverLetter || "",
         });
 
+        console.log("Added applicant to job, saving job...");
         await job.save();
+        console.log("Job saved successfully");
 
         // Also update the candidate's applications
-        await Candidate.findByIdAndUpdate(req.user.id, {
+        console.log("Updating candidate applications...");
+        const candidateUpdate = await Candidate.findByIdAndUpdate(req.user.id, {
             $push: {
-                jobApplications: { jobId: job._id, appliedAt: new Date() },
+                applications: {
+                    jobId: job._id,
+                    appliedDate: new Date(),
+                    status: "applied",
+                    coverLetter: coverLetter || "",
+                },
             },
         });
+        console.log(
+            "Candidate update result:",
+            candidateUpdate ? "Success" : "Failed"
+        );
 
         res.json({ message: "Successfully applied to job", job });
     } catch (error) {
@@ -444,6 +468,55 @@ exports.getRecruiterJobs = async (req, res) => {
         });
     } catch (error) {
         console.error("Error getting recruiter jobs:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Get candidate's job applications
+// @route   GET /api/jobs/applications
+// @access  Private (Candidates only)
+exports.getCandidateApplications = async (req, res) => {
+    try {
+        // Check if the user is a candidate
+        if (req.userType !== "candidate") {
+            return res
+                .status(403)
+                .json({ message: "Not authorized to view applications" });
+        }
+
+        // Find the candidate with populated job applications
+        const candidate = await Candidate.findById(req.user.id);
+
+        if (!candidate) {
+            return res.status(404).json({ message: "Candidate not found" });
+        }
+
+        // Get job IDs from candidate's applications
+        const jobIds = candidate.applications.map((app) => app.jobId);
+
+        // Find all jobs the candidate has applied to
+        const jobs = await Job.find({
+            _id: { $in: jobIds },
+            isActive: true,
+        }).populate("recruiter", "company");
+
+        // Map jobs with application status
+        const applications = candidate.applications.map((app) => {
+            const job = jobs.find(
+                (j) => j._id.toString() === app.jobId.toString()
+            );
+            return {
+                _id: app._id,
+                job: job || { title: "Job no longer available" },
+                status: app.status,
+                appliedAt: app.appliedDate,
+                coverLetter: app.coverLetter,
+            };
+        });
+
+        res.json(applications);
+    } catch (error) {
+        console.error("Error getting applications:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
