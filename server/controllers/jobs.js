@@ -164,6 +164,14 @@ exports.applyToJob = async (req, res) => {
         await job.save();
         console.log("Job saved successfully");
 
+        // Update recruiter's totalApplicationsReceived stat
+        const Recruiter = require("../models/Recruiter");
+        const recruiter = await Recruiter.findById(job.recruiter);
+        if (recruiter) {
+            recruiter.stats.totalApplicationsReceived += 1;
+            await recruiter.save();
+        }
+
         // Also update the candidate's applications
         console.log("Updating candidate applications...");
         const candidateUpdate = await Candidate.findByIdAndUpdate(req.user.id, {
@@ -324,6 +332,27 @@ exports.createJob = async (req, res) => {
         });
 
         const job = await newJob.save();
+
+        // Update recruiter's jobPostings array and stats
+        const Recruiter = require("../models/Recruiter");
+        const recruiter = await Recruiter.findById(req.user.id);
+        if (recruiter) {
+            // Add job to recruiter's jobPostings array
+            recruiter.jobPostings.push(job._id);
+
+            // Update stats
+            recruiter.stats.totalJobsPosted += 1;
+            recruiter.stats.activeJobs += 1;
+
+            // Update subscription usage if applicable
+            if (recruiter.subscription.jobPostingLimit !== -1) {
+                recruiter.subscription.jobPostingsUsed =
+                    (recruiter.subscription.jobPostingsUsed || 0) + 1;
+            }
+
+            await recruiter.save();
+        }
+
         res.status(201).json(job);
     } catch (error) {
         console.error("Error creating job:", error);
@@ -414,8 +443,19 @@ exports.deleteJob = async (req, res) => {
         }
 
         // Instead of deleting, set isActive to false
+        const wasActive = job.isActive;
         job.isActive = false;
         await job.save();
+
+        // Update recruiter's stats if the job was previously active
+        if (wasActive) {
+            const Recruiter = require("../models/Recruiter");
+            const recruiter = await Recruiter.findById(req.user.id);
+            if (recruiter && recruiter.stats.activeJobs > 0) {
+                recruiter.stats.activeJobs -= 1;
+                await recruiter.save();
+            }
+        }
 
         res.json({ message: "Job successfully removed" });
     } catch (error) {
@@ -578,9 +618,22 @@ exports.updateApplicationStatus = async (req, res) => {
                 .json({ message: "Candidate not found in job applicants" });
         }
 
+        // Get the current status before updating
+        const currentStatus = job.applicants[applicantIndex].status;
+
         // Update the status
         job.applicants[applicantIndex].status = status;
         await job.save();
+
+        // Update recruiter's totalHires count if status changed to "hired"
+        if (status === "hired" && currentStatus !== "hired") {
+            const Recruiter = require("../models/Recruiter");
+            const recruiter = await Recruiter.findById(job.recruiter);
+            if (recruiter) {
+                recruiter.stats.totalHires += 1;
+                await recruiter.save();
+            }
+        }
 
         res.json({
             message: "Application status updated successfully",
