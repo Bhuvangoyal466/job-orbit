@@ -266,7 +266,7 @@ const JobBoard = () => {
                                     type: jobType,
                                 })
                             }
-                            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                         >
                             <Filter className="h-5 w-5 inline mr-2" />
                             Search
@@ -303,7 +303,7 @@ const JobBoard = () => {
                         <p className="text-red-500 mb-2">{error}</p>
                         <button
                             onClick={fetchJobs}
-                            className="text-blue-500 hover:underline"
+                            className="text-blue-500 hover:underline cursor-pointer"
                         >
                             Try again
                         </button>
@@ -319,7 +319,7 @@ const JobBoard = () => {
                                 setLocation("");
                                 setJobType("all");
                             }}
-                            className="text-blue-500 hover:underline"
+                            className="text-blue-500 hover:underline cursor-pointer"
                         >
                             Clear filters
                         </button>
@@ -423,14 +423,14 @@ const JobBoard = () => {
                                     <div className="flex flex-wrap items-center gap-3">
                                         <button
                                             onClick={() => handleApply(job)}
-                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                                             disabled={!user}
                                         >
                                             Apply Now
                                         </button>
                                         <button
                                             onClick={() => toggleSave(job)}
-                                            className={`px-4 py-2 rounded-md border ${
+                                            className={`px-4 py-2 rounded-md border cursor-pointer ${
                                                 savedJobIds.has(job._id)
                                                     ? "border-red-300 text-red-700 bg-red-50 hover:bg-red-100"
                                                     : "border-gray-300 text-gray-700 hover:bg-gray-50"
@@ -467,7 +467,7 @@ const JobBoard = () => {
             {filteredJobs.length > 0 && (
                 <div className="text-center">
                     <button
-                        className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300"
+                        className="bg-gray-200 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-300 cursor-pointer"
                         onClick={() => fetchJobs(null, true)}
                         disabled={loading || page >= totalPages}
                     >

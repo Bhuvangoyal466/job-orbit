@@ -275,7 +275,7 @@ const JobDetails = () => {
                             <button
                                 onClick={handleSaveJob}
                                 disabled={!user || !isCandidate()}
-                                className={`inline-flex items-center justify-center px-4 py-2 rounded-md ${
+                                className={`inline-flex items-center justify-center px-4 py-2 rounded-md cursor-pointer ${
                                     isSaved
                                         ? "bg-red-50 text-red-700 border border-red-300 hover:bg-red-100"
                                         : "bg-gray-50 text-gray-700 border border-gray-300 hover:bg-gray-100"
@@ -401,7 +401,7 @@ const JobDetails = () => {
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center justify-center"
+                                    className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center justify-center cursor-pointer"
                                     disabled={isApplying}
                                 >
                                     {isApplying ? (

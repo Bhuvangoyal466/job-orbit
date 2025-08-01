@@ -67,7 +67,7 @@ const CoverLetters = () => {
                                 </h2>
                                 <button
                                     onClick={handleNewTemplate}
-                                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-500 text-sm"
+                                    className="flex items-center space-x-1 text-blue-600 hover:text-blue-500 text-sm cursor-pointer"
                                 >
                                     <Plus className="h-4 w-4" />
                                     <span>New</span>
@@ -122,7 +122,7 @@ const CoverLetters = () => {
                                                 onClick={() =>
                                                     setIsEditing(!isEditing)
                                                 }
-                                                className="flex items-center space-x-1 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md"
+                                                className="flex items-center space-x-1 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
                                             >
                                                 {isEditing ? (
                                                     <Eye className="h-4 w-4" />
@@ -136,7 +136,7 @@ const CoverLetters = () => {
                                                 </span>
                                             </button>
                                             <button
-                                                className="p-1 text-red-600 hover:bg-red-50 rounded-md"
+                                                className="p-1 text-red-600 hover:bg-red-50 rounded-md cursor-pointer"
                                                 onClick={() =>
                                                     handleDeleteTemplate(
                                                         selectedTemplate.name
@@ -181,12 +181,12 @@ const CoverLetters = () => {
                                                     onClick={() =>
                                                         setIsEditing(false)
                                                     }
-                                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer"
                                                 >
                                                     Cancel
                                                 </button>
                                                 <button
-                                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
                                                     onClick={handleSaveTemplate}
                                                 >
                                                     Save Template
@@ -201,10 +201,10 @@ const CoverLetters = () => {
                                                 </pre>
                                             </div>
                                             <div className="mt-6 flex justify-end space-x-3">
-                                                <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                                                <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer">
                                                     Download as PDF
                                                 </button>
-                                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer">
                                                     Use for Application
                                                 </button>
                                             </div>
@@ -224,7 +224,7 @@ const CoverLetters = () => {
                                 </p>
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                    className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
                                 >
                                     <Plus className="h-4 w-4" />
                                     <span>Create New Template</span>

@@ -257,7 +257,7 @@ const ApplicationTracker = () => {
                                     >
                                         {application.status}
                                     </span>
-                                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md">
+                                    <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer">
                                         <Eye className="h-4 w-4" />
                                     </button>
                                 </div>

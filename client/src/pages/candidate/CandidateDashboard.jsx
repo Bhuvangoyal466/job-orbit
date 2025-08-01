@@ -232,7 +232,7 @@ const CandidateDashboard = () => {
                         <p className="text-red-700">{error}</p>
                         <button
                             onClick={() => window.location.reload()}
-                            className="mt-2 text-blue-600 hover:underline"
+                            className="mt-2 text-blue-600 hover:underline cursor-pointer"
                         >
                             Try again
                         </button>

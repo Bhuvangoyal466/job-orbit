@@ -389,7 +389,7 @@ const PostJob = () => {
                                                 ),
                                             }));
                                         }}
-                                        className="ml-1 text-blue-500 hover:text-blue-700"
+                                        className="ml-1 text-blue-500 hover:text-blue-700 cursor-pointer"
                                     >
                                         <X className="h-4 w-4" />
                                     </button>
@@ -421,7 +421,7 @@ const PostJob = () => {
                             />
                             <button
                                 type="button"
-                                className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700"
+                                className="bg-blue-600 text-white px-3 py-2 rounded-r-md hover:bg-blue-700 cursor-pointer"
                                 onClick={() => {
                                     if (skill.trim()) {
                                         setFormData((prev) => ({
@@ -463,7 +463,7 @@ const PostJob = () => {
                                                     ),
                                                 }));
                                             }}
-                                            className="ml-1 text-green-500 hover:text-green-700"
+                                            className="ml-1 text-green-500 hover:text-green-700 cursor-pointer"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -495,7 +495,7 @@ const PostJob = () => {
                                 />
                                 <button
                                     type="button"
-                                    className="bg-green-600 text-white px-3 py-2 rounded-r-md hover:bg-green-700"
+                                    className="bg-green-600 text-white px-3 py-2 rounded-r-md hover:bg-green-700 cursor-pointer"
                                     onClick={() => {
                                         if (perk.trim()) {
                                             setFormData((prev) => ({
@@ -537,7 +537,7 @@ const PostJob = () => {
                                                         ),
                                                 }));
                                             }}
-                                            className="ml-1 text-purple-500 hover:text-purple-700"
+                                            className="ml-1 text-purple-500 hover:text-purple-700 cursor-pointer"
                                         >
                                             <X className="h-4 w-4" />
                                         </button>
@@ -569,7 +569,7 @@ const PostJob = () => {
                                 />
                                 <button
                                     type="button"
-                                    className="bg-purple-600 text-white px-3 py-2 rounded-r-md hover:bg-purple-700"
+                                    className="bg-purple-600 text-white px-3 py-2 rounded-r-md hover:bg-purple-700 cursor-pointer"
                                     onClick={() => {
                                         if (benefit.trim()) {
                                             setFormData((prev) => ({
@@ -632,7 +632,7 @@ const PostJob = () => {
                         </Link>
                         <button
                             type="submit"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400"
+                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400 cursor-pointer"
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? "Posting..." : "Post Job"}

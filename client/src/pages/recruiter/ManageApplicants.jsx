@@ -161,7 +161,7 @@ const ManageApplicants = () => {
 
                                     <div className="flex items-center space-x-2">
                                         <button
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
                                             onClick={() =>
                                                 handleViewApplication(applicant)
                                             }
@@ -169,7 +169,7 @@ const ManageApplicants = () => {
                                             <Eye className="h-4 w-4" />
                                         </button>
                                         <button
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md"
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
                                             onClick={() =>
                                                 handleViewResume(applicant)
                                             }
@@ -177,7 +177,7 @@ const ManageApplicants = () => {
                                             <FileText className="h-4 w-4" />
                                         </button>
                                         <button
-                                            className="p-2 text-green-600 hover:bg-green-50 rounded-md"
+                                            className="p-2 text-green-600 hover:bg-green-50 rounded-md cursor-pointer"
                                             onClick={() =>
                                                 handleAcceptApplicant(applicant)
                                             }
@@ -185,7 +185,7 @@ const ManageApplicants = () => {
                                             <Check className="h-4 w-4" />
                                         </button>
                                         <button
-                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md"
+                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer"
                                             onClick={() =>
                                                 handleRejectApplicant(applicant)
                                             }

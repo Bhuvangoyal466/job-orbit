@@ -221,13 +221,13 @@ const UploadResume = () => {
 
                         <div className="flex justify-end space-x-4">
                             <button
-                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 cursor-pointer"
                                 onClick={handleEditInformation}
                             >
                                 Edit Information
                             </button>
                             <button
-                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 cursor-pointer"
                                 onClick={handleSaveResumeData}
                             >
                                 Save Resume Data

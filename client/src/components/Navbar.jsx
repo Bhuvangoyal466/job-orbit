@@ -99,7 +99,7 @@ const Navbar = () => {
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                                    className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer"
                                 >
                                     <LogOut className="h-4 w-4" />
                                     <span>Logout</span>
@@ -112,7 +112,7 @@ const Navbar = () => {
                     <div className="md:hidden flex items-center">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"
+                            className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 cursor-pointer"
                         >
                             {isOpen ? (
                                 <X className="h-6 w-6" />
@@ -200,7 +200,7 @@ const Navbar = () => {
                                 </div>
                                 <button
                                     onClick={handleLogout}
-                                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors"
+                                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors cursor-pointer"
                                 >
                                     Logout
                                 </button>

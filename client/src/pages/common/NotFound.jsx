@@ -31,7 +31,7 @@ const NotFound = () => {
 
                     <button
                         onClick={() => window.history.back()}
-                        className="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors"
+                        className="inline-flex items-center px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
                     >
                         <ArrowLeft className="mr-2 h-5 w-5" />
                         Go Back
