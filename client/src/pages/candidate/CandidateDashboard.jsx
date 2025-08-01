@@ -15,7 +15,7 @@ import {
     AlertCircle,
     Loader,
 } from "lucide-react";
-import { jobsAPI, candidateAPI } from "../../utils/api";
+import { jobsAPI } from "../../utils/api";
 import { useAuth } from "../../context/useAuth";
 
 const CandidateDashboard = () => {
@@ -49,7 +49,7 @@ const CandidateDashboard = () => {
     ]);
 
     const [recentApplications, setRecentApplications] = useState([]);
-    const [savedJobs, setSavedJobs] = useState([]);
+    const [, setSavedJobs] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -59,7 +59,22 @@ const CandidateDashboard = () => {
                 setError(null);
 
                 // Fetch job applications
-                const applications = await jobsAPI.getApplications();
+                const applicationsResponse = await jobsAPI.getApplications();
+
+                // Extract applications array from response
+                const applications =
+                    applicationsResponse.applications ||
+                    applicationsResponse ||
+                    [];
+
+                // Ensure applications is an array
+                if (!Array.isArray(applications)) {
+                    console.error(
+                        "Applications is not an array:",
+                        applications
+                    );
+                    throw new Error("Invalid applications data format");
+                }
 
                 // Fetch saved jobs
                 const saved = await jobsAPI.getSavedJobs();
@@ -67,12 +82,12 @@ const CandidateDashboard = () => {
 
                 // Map the applications to the format expected by the UI
                 const formattedApplications = applications.map((app) => ({
-                    id: app._id,
-                    jobId: app.job?._id,
-                    company: app.job?.company?.name || "Unknown Company",
-                    position: app.job?.title || "Unknown Position",
+                    id: app.id,
+                    jobId: app.jobId,
+                    company: app.company,
+                    position: app.position,
                     status: mapStatusToUI(app.status),
-                    date: app.appliedAt,
+                    date: app.appliedDate,
                     statusColor: getStatusColor(app.status),
                 }));
 

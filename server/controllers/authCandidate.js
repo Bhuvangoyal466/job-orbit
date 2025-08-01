@@ -128,7 +128,7 @@ const loginCandidate = async (req, res, next) => {
         const candidate = await Candidate.findOne({ email }).select(
             "+password"
         );
-        console.log("Candidate found:", candidate);
+        // console.log("Candidate found:", candidate);
         if (!candidate) {
             return res.status(401).json({
                 success: false,

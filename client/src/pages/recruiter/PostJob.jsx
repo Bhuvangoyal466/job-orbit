@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import { ArrowLeft, Plus, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -71,7 +72,7 @@ const PostJob = () => {
         try {
             const response = await recruiterAPI.createJob(formData);
 
-            console.log("Job posted successfully:", response);
+            // console.log("Job posted successfully:", response);
             toast.success("Job posted successfully!");
 
             // Redirect to the recruiter dashboard

@@ -107,14 +107,14 @@ exports.getJobById = async (req, res) => {
 // @access  Private (Candidates only)
 exports.applyToJob = async (req, res) => {
     try {
-        console.log(
-            "Apply to job - User:",
-            req.user.id,
-            "User Type:",
-            req.userType
-        );
-        console.log("Apply to job - Job ID:", req.params.id);
-        console.log("Apply to job - Request body:", req.body);
+        // console.log(
+        //     "Apply to job - User:",
+        //     req.user.id,
+        //     "User Type:",
+        //     req.userType
+        // );
+        // console.log("Apply to job - Job ID:", req.params.id);
+        // console.log("Apply to job - Request body:", req.body);
 
         // Check if the user is a candidate
         if (req.userType !== "candidate") {
@@ -128,7 +128,7 @@ exports.applyToJob = async (req, res) => {
             return res.status(404).json({ message: "Job not found" });
         }
 
-        console.log("Job found:", job.title);
+        // console.log("Job found:", job.title);
 
         // Check if job is active
         if (!job.isActive) {
@@ -143,7 +143,7 @@ exports.applyToJob = async (req, res) => {
         );
 
         if (alreadyApplied) {
-            console.log("User already applied to this job");
+            // console.log("User already applied to this job");
             return res
                 .status(400)
                 .json({ message: "You have already applied to this job" });
@@ -160,9 +160,9 @@ exports.applyToJob = async (req, res) => {
             coverLetter: coverLetter || "",
         });
 
-        console.log("Added applicant to job, saving job...");
+        // console.log("Added applicant to job, saving job...");
         await job.save();
-        console.log("Job saved successfully");
+        // console.log("Job saved successfully");
 
         // Update recruiter's totalApplicationsReceived stat
         const Recruiter = require("../models/Recruiter");
@@ -173,7 +173,7 @@ exports.applyToJob = async (req, res) => {
         }
 
         // Also update the candidate's applications
-        console.log("Updating candidate applications...");
+        // console.log("Updating candidate applications...");
         const candidateUpdate = await Candidate.findByIdAndUpdate(req.user.id, {
             $push: {
                 applications: {
@@ -524,37 +524,100 @@ exports.getCandidateApplications = async (req, res) => {
                 .json({ message: "Not authorized to view applications" });
         }
 
-        // Find the candidate with populated job applications
-        const candidate = await Candidate.findById(req.user.id);
+        const { status, page = 1, limit = 50 } = req.query;
 
-        if (!candidate) {
-            return res.status(404).json({ message: "Candidate not found" });
-        }
-
-        // Get job IDs from candidate's applications
-        const jobIds = candidate.applications.map((app) => app.jobId);
-
-        // Find all jobs the candidate has applied to
-        const jobs = await Job.find({
-            _id: { $in: jobIds },
+        // Find all jobs where the candidate has applied
+        const query = {
+            "applicants.candidateId": req.user.id,
             isActive: true,
-        }).populate("recruiter", "company");
+        };
 
-        // Map jobs with application status
-        const applications = candidate.applications.map((app) => {
-            const job = jobs.find(
-                (j) => j._id.toString() === app.jobId.toString()
+        // Get jobs with applicants populated
+        const jobs = await Job.find(query)
+            .populate("recruiter", "company")
+            .select(
+                "title description salary location company createdAt applicants"
+            )
+            .sort({ "applicants.appliedAt": -1 });
+
+        // Extract applications for this candidate
+        let applications = [];
+
+        jobs.forEach((job) => {
+            const candidateApplication = job.applicants.find(
+                (app) => app.candidateId.toString() === req.user.id
             );
-            return {
-                _id: app._id,
-                job: job || { title: "Job no longer available" },
-                status: app.status,
-                appliedAt: app.appliedDate,
-                coverLetter: app.coverLetter,
-            };
+
+            if (candidateApplication) {
+                applications.push({
+                    id: candidateApplication._id,
+                    jobId: job._id,
+                    position: job.title,
+                    company:
+                        job.company?.name ||
+                        job.recruiter?.company?.name ||
+                        "Unknown Company",
+                    location: job.location?.city
+                        ? `${job.location.city}, ${
+                              job.location.state || job.location.country || ""
+                          }`
+                              .trim()
+                              .replace(/,$/, "")
+                        : job.location?.remote
+                        ? "Remote"
+                        : "Not specified",
+                    appliedDate: candidateApplication.appliedAt,
+                    status: candidateApplication.status,
+                    salary:
+                        job.salary?.min && job.salary?.max
+                            ? `$${job.salary.min.toLocaleString()} - $${job.salary.max.toLocaleString()}`
+                            : "Not disclosed",
+                    coverLetter: candidateApplication.coverLetter,
+                    jobDescription: job.description,
+                });
+            }
         });
 
-        res.json(applications);
+        // Filter by status if provided
+        if (status && status !== "all") {
+            applications = applications.filter((app) => app.status === status);
+        }
+
+        // Sort by applied date (newest first)
+        applications.sort(
+            (a, b) => new Date(b.appliedDate) - new Date(a.appliedDate)
+        );
+
+        // Pagination
+        const skip = (page - 1) * limit;
+        const paginatedApplications = applications.slice(
+            skip,
+            skip + parseInt(limit)
+        );
+
+        // Calculate statistics
+        const stats = {
+            total: applications.length,
+            applied: applications.filter((app) => app.status === "applied")
+                .length,
+            underReview: applications.filter(
+                (app) => app.status === "under-review"
+            ).length,
+            interviewed: applications.filter(
+                (app) => app.status === "interviewed"
+            ).length,
+            hired: applications.filter((app) => app.status === "hired").length,
+            rejected: applications.filter((app) => app.status === "rejected")
+                .length,
+        };
+
+        res.json({
+            applications: paginatedApplications,
+            stats,
+            totalApplications: applications.length,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(applications.length / parseInt(limit)),
+        });
     } catch (error) {
         console.error("Error getting applications:", error);
         res.status(500).json({ message: "Server error", error: error.message });
@@ -625,12 +688,34 @@ exports.updateApplicationStatus = async (req, res) => {
         job.applicants[applicantIndex].status = status;
         await job.save();
 
-        // Update recruiter's totalHires count if status changed to "hired"
+        // Also update the status in the candidate's applications array
+        const Candidate = require("../models/Candidate");
+        await Candidate.findOneAndUpdate(
+            {
+                _id: candidateId,
+                "applications.jobId": job._id,
+            },
+            {
+                $set: {
+                    "applications.$.status": status,
+                },
+            }
+        );
+
+        // Update recruiter's totalHires count if status changed to/from "hired"
+        const Recruiter = require("../models/Recruiter");
         if (status === "hired" && currentStatus !== "hired") {
-            const Recruiter = require("../models/Recruiter");
+            // Incrementing hire count
             const recruiter = await Recruiter.findById(job.recruiter);
             if (recruiter) {
                 recruiter.stats.totalHires += 1;
+                await recruiter.save();
+            }
+        } else if (currentStatus === "hired" && status !== "hired") {
+            // Decrementing hire count (e.g., when a hired candidate is rejected)
+            const recruiter = await Recruiter.findById(job.recruiter);
+            if (recruiter && recruiter.stats.totalHires > 0) {
+                recruiter.stats.totalHires -= 1;
                 await recruiter.save();
             }
         }
@@ -641,6 +726,88 @@ exports.updateApplicationStatus = async (req, res) => {
         });
     } catch (error) {
         console.error("Error updating application status:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Get all applicants for recruiter's jobs
+// @route   GET /api/jobs/recruiter/applicants
+// @access  Private (Recruiters only)
+exports.getRecruiterApplicants = async (req, res) => {
+    try {
+        // Check if the user is a recruiter
+        if (req.userType !== "recruiter") {
+            return res
+                .status(403)
+                .json({ message: "Not authorized to view applicants" });
+        }
+
+        const { status, jobId, page = 1, limit = 50 } = req.query;
+        const query = { recruiter: req.user.id, isActive: true };
+
+        // Filter by specific job if provided
+        if (jobId) {
+            query._id = jobId;
+        }
+
+        // Get recruiter's jobs with applicants
+        const jobs = await Job.find(query)
+            .populate({
+                path: "applicants.candidateId",
+                select: "firstName lastName email phone dateOfBirth education experience skills profile",
+            })
+            .select("title applicants createdAt");
+
+        // Flatten all applicants from all jobs
+        let allApplicants = [];
+
+        jobs.forEach((job) => {
+            job.applicants.forEach((applicant) => {
+                if (applicant.candidateId) {
+                    allApplicants.push({
+                        id: applicant._id,
+                        candidateId: applicant.candidateId._id,
+                        jobId: job._id,
+                        jobTitle: job.title,
+                        name: `${applicant.candidateId.firstName} ${applicant.candidateId.lastName}`,
+                        email: applicant.candidateId.email,
+                        phone: applicant.candidateId.phone,
+                        status: applicant.status,
+                        appliedDate: applicant.appliedAt,
+                        coverLetter: applicant.coverLetter,
+                        candidate: applicant.candidateId,
+                    });
+                }
+            });
+        });
+
+        // Filter by status if provided
+        if (status && status !== "all") {
+            allApplicants = allApplicants.filter(
+                (applicant) => applicant.status === status
+            );
+        }
+
+        // Sort by application date (newest first)
+        allApplicants.sort(
+            (a, b) => new Date(b.appliedDate) - new Date(a.appliedDate)
+        );
+
+        // Pagination
+        const skip = (page - 1) * limit;
+        const paginatedApplicants = allApplicants.slice(
+            skip,
+            skip + parseInt(limit)
+        );
+
+        res.json({
+            applicants: paginatedApplicants,
+            totalApplicants: allApplicants.length,
+            currentPage: parseInt(page),
+            totalPages: Math.ceil(allApplicants.length / parseInt(limit)),
+        });
+    } catch (error) {
+        console.error("Error getting recruiter applicants:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };

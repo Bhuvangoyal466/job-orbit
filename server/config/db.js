@@ -15,7 +15,7 @@ const connectDB = async () => {
             useUnifiedTopology: true,
         });
 
-        console.log(`MongoDB Connected`);
+        // console.log(`MongoDB Connected`);
 
         // Recreate indexes on startup
         const Job = require("../models/Job");
@@ -26,10 +26,10 @@ const connectDB = async () => {
             // The indexes will be recreated automatically when the model is used
         } catch (error) {
             // It's okay if there are no indexes to drop yet
-            console.log(
-                "No existing indexes to drop or error dropping indexes:",
-                error.message
-            );
+            // console.log(
+            //     "No existing indexes to drop or error dropping indexes:",
+            //     error.message
+            // );
         }
 
         // Handle connection events

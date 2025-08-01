@@ -75,6 +75,14 @@ export const candidateAPI = {
     getDashboard: async () => {
         return makeRequest("/auth/candidate/dashboard");
     },
+
+    // Get candidate applications
+    getApplications: async (params = {}) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return makeRequest(
+            `/jobs/applications${queryParams ? `?${queryParams}` : ""}`
+        );
+    },
 };
 
 // Recruiter API calls
@@ -140,6 +148,30 @@ export const recruiterAPI = {
             method: "POST",
             body: JSON.stringify(jobData),
         });
+    },
+
+    // Get all applicants for recruiter's jobs
+    getApplicants: async (params = {}) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return makeRequest(
+            `/jobs/recruiter/applicants${queryParams ? `?${queryParams}` : ""}`
+        );
+    },
+
+    // Update application status
+    updateApplicationStatus: async (jobId, candidateId, status) => {
+        return makeRequest(`/jobs/${jobId}/status`, {
+            method: "PUT",
+            body: JSON.stringify({ candidateId, status }),
+        });
+    },
+
+    // Get recruiter's posted jobs
+    getMyJobs: async (params = {}) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return makeRequest(
+            `/jobs/recruiter/myjobs${queryParams ? `?${queryParams}` : ""}`
+        );
     },
 };
 

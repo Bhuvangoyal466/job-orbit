@@ -12,6 +12,11 @@ router.get("/applications", protect, jobController.getCandidateApplications);
 
 // Recruiter authenticated routes - Place specific routes BEFORE wildcard routes
 router.get("/recruiter/myjobs", protect, jobController.getRecruiterJobs);
+router.get(
+    "/recruiter/applicants",
+    protect,
+    jobController.getRecruiterApplicants
+);
 
 // Routes with parameter must come AFTER specific routes
 router.get("/:id", jobController.getJobById);

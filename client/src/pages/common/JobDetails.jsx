@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
@@ -32,12 +33,12 @@ const JobDetails = () => {
     const { user, isCandidate } = useAuth();
 
     // Debug logging to help troubleshoot
-    console.log("JobDetails Debug:", {
-        user,
-        isCandidate: isCandidate(),
-        userRole: user?.role,
-        isAuthenticated: !!user,
-    });
+    // console.log("JobDetails Debug:", {
+    //     user,
+    //     isCandidate: isCandidate(),
+    //     userRole: user?.role,
+    //     isAuthenticated: !!user,
+    // });
 
     useEffect(() => {
         fetchJobDetails();
@@ -106,8 +107,8 @@ const JobDetails = () => {
     const handleApplyJob = async (e) => {
         e.preventDefault();
 
-        console.log("Handle Apply Job - User:", user);
-        console.log("Handle Apply Job - Is Candidate:", isCandidate());
+        // console.log("Handle Apply Job - User:", user);
+        // console.log("Handle Apply Job - Is Candidate:", isCandidate());
 
         if (!user) {
             toast.info("Please login as a candidate to apply for jobs");
@@ -121,15 +122,15 @@ const JobDetails = () => {
 
         try {
             setIsApplying(true);
-            console.log(
-                "Applying to job:",
-                id,
-                "with cover letter:",
-                coverLetter
-            );
+            // console.log(
+            //     "Applying to job:",
+            //     id,
+            //     "with cover letter:",
+            //     coverLetter
+            // );
 
             const response = await jobsAPI.applyJob(id, { coverLetter });
-            console.log("Apply job response:", response);
+            // console.log("Apply job response:", response);
 
             toast.success("Application submitted successfully");
             fetchJobDetails(); // Refresh job details to update application status
@@ -218,14 +219,14 @@ const JobDetails = () => {
                                         "https://via.placeholder.com/64x64/e5e7eb/6b7280?text=?"
                                     }
                                     alt={job.company?.name || "Company Logo"}
-                                    className="h-10 w-auto"
+                                    className="h-10 w-auto "
                                 />
                             </div>
-                            <div className="flex items-center space-x-2 mb-2">
-                                <h1 className="text-3xl font-bold text-gray-900">
+                            <div className="flex items-center mr-10 space-x-2 mb-2">
+                                <h1 className="text-3xl font-bold mr-10 text-gray-900 w-4/5">
                                     {job.title}
                                 </h1>
-                                <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                <span className="px-2 w-1/5 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                                     {job.type}
                                 </span>
                             </div>
@@ -255,7 +256,11 @@ const JobDetails = () => {
                                         {job.salary?.min && job.salary?.max
                                             ? `${
                                                   job.salary.currency || "USD"
-                                              } ${job.salary.min.toLocaleString()} - ${job.salary.max.toLocaleString()}`
+                                              } ${job.salary.min.toLocaleString(
+                                                  "en-IN"
+                                              )} - ${job.salary.max.toLocaleString(
+                                                  "en-IN"
+                                              )}`
                                             : "Salary not specified"}
                                     </span>
                                 </div>
@@ -350,10 +355,10 @@ const JobDetails = () => {
 
                     {/* Skills Required */}
                     <div className="bg-white shadow rounded-lg p-6">
-                        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                        <h2 className="text-xl mb-5 font-semibold text-gray-900">
                             Skills Required
                         </h2>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap items-center justify-center gap-2">
                             {job.skills && job.skills.length > 0 ? (
                                 job.skills.map((skill, index) => (
                                     <span
@@ -384,7 +389,7 @@ const JobDetails = () => {
                                 <div className="mb-4">
                                     <label
                                         htmlFor="coverLetter"
-                                        className="block text-sm font-medium text-gray-700 mb-1"
+                                        className="block text-sm font-medium text-gray-700 mb-5"
                                     >
                                         Cover Letter (Optional)
                                     </label>
