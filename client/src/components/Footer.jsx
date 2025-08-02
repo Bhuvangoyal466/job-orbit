@@ -115,7 +115,7 @@ const Footer = () => {
                     {/* Contact Info */}
                     <div>
                         <h3 className="text-lg font-semibold mb-4">Contact</h3>
-                        <div className="space-y-2">
+                        <div className="space-y-2 items-center justify-center flex flex-col">
                             <div className="flex items-center space-x-2">
                                 <Mail className="h-4 w-4 text-blue-400" />
                                 <span className="text-gray-300">

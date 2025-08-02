@@ -88,9 +88,16 @@ const Navbar = () => {
                             </>
                         ) : (
                             <div className="flex items-center space-x-4">
-                                <span className="text-sm text-gray-700">
+                                <Link
+                                    to={
+                                        user.role === "candidate"
+                                            ? "/candidate/dashboard"
+                                            : "/recruiter/dashboard"
+                                    }
+                                    className="text-sm text-gray-700 hover:text-blue-600 transition-colors"
+                                >
                                     Welcome, {user.name || user.email}
-                                </span>
+                                </Link>
                                 <div className="flex items-center space-x-2">
                                     <User className="h-5 w-5 text-gray-500" />
                                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
@@ -190,14 +197,22 @@ const Navbar = () => {
                             </>
                         ) : (
                             <div className="border-t border-gray-200 pt-4">
-                                <div className="px-3 py-2">
+                                <Link
+                                    to={
+                                        user.role === "candidate"
+                                            ? "/candidate/dashboard"
+                                            : "/recruiter/dashboard"
+                                    }
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     <div className="text-base font-medium text-gray-800">
                                         {user.name || user.email}
                                     </div>
                                     <div className="text-sm text-gray-500">
                                         {user.role}
                                     </div>
-                                </div>
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors cursor-pointer"

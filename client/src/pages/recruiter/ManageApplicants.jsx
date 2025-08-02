@@ -185,38 +185,38 @@ const ManageApplicants = () => {
 
         return (
             <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
                 onClick={closeModal}
             >
                 <div
-                    className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+                    className="bg-white rounded-lg max-w-4xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
                     onClick={(e) => e.stopPropagation()}
                 >
                     {/* Modal Header */}
-                    <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                        <div className="flex items-center space-x-4">
-                            <div className="bg-blue-100 rounded-full p-3">
-                                <User className="h-8 w-8 text-blue-600" />
+                    <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+                        <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                            <div className="bg-blue-100 rounded-full p-2 sm:p-3 flex-shrink-0">
+                                <User className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                             </div>
-                            <div>
-                                <h2 className="text-2xl font-bold text-gray-900">
+                            <div className="min-w-0 flex-1">
+                                <h2 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
                                     {selectedApplicant.name}
                                 </h2>
-                                <p className="text-gray-600">
+                                <p className="text-sm sm:text-base text-gray-600 truncate">
                                     Application for {selectedApplicant.jobTitle}
                                 </p>
                             </div>
                         </div>
                         <button
                             onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2"
                         >
-                            <XIcon className="h-6 w-6" />
+                            <XIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                         </button>
                     </div>
 
                     {/* Modal Content */}
-                    <div className="p-6 space-y-6">
+                    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                         {/* Application Status and Date */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div className="bg-gray-50 rounded-lg p-4">
@@ -586,12 +586,12 @@ const ManageApplicants = () => {
                         )}
 
                         {/* Action Buttons */}
-                        <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+                        <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200">
                             <button
                                 onClick={() =>
                                     handleViewResume(selectedApplicant)
                                 }
-                                className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:bg-gray-200 "
+                                className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 hover:bg-gray-200"
                             >
                                 <FileText className="h-4 w-4 mr-2" />
                                 View Resume
@@ -604,7 +604,7 @@ const ManageApplicants = () => {
                                         );
                                         closeModal();
                                     }}
-                                    className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                                 >
                                     <Check className="h-4 w-4 mr-2" />
                                     Accept/Hire
@@ -615,7 +615,7 @@ const ManageApplicants = () => {
                                     handleRejectApplicant(selectedApplicant);
                                     closeModal();
                                 }}
-                                className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                             >
                                 <X className="h-4 w-4 mr-2" />
                                 {selectedApplicant.status === "hired"
@@ -743,8 +743,9 @@ const ManageApplicants = () => {
                             const isUpdating = updatingStatus[statusKey];
 
                             return (
-                                <div key={applicant.id} className="p-6">
-                                    <div className="flex items-center justify-between">
+                                <div key={applicant.id} className="p-4 sm:p-6">
+                                    {/* Desktop Layout */}
+                                    <div className="hidden md:flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
                                             <div className="bg-gray-100 rounded-full p-3">
                                                 <User className="h-8 w-8 text-gray-600" />
@@ -840,6 +841,128 @@ const ManageApplicants = () => {
                                                 )}
                                                 <button
                                                     className={`p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer disabled:opacity-50 ${
+                                                        applicant.status ===
+                                                        "hired"
+                                                            ? "ring-1 ring-red-300"
+                                                            : ""
+                                                    }`}
+                                                    onClick={() =>
+                                                        handleRejectApplicant(
+                                                            applicant
+                                                        )
+                                                    }
+                                                    disabled={isUpdating}
+                                                    title={
+                                                        applicant.status ===
+                                                        "hired"
+                                                            ? "Revoke Hire/Reject"
+                                                            : "Reject"
+                                                    }
+                                                >
+                                                    <X className="h-4 w-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Mobile Layout */}
+                                    <div className="md:hidden space-y-4">
+                                        <div className="flex items-start space-x-3">
+                                            <div className="bg-gray-100 rounded-full p-2 flex-shrink-0">
+                                                <User className="h-6 w-6 text-gray-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <h3 className="text-base font-semibold text-gray-900 truncate">
+                                                    {applicant.name}
+                                                </h3>
+                                                <p className="text-sm text-gray-600 truncate">
+                                                    {applicant.jobTitle}
+                                                </p>
+                                                <div className="mt-2 space-y-1">
+                                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                                        <Mail className="h-3 w-3 flex-shrink-0" />
+                                                        <span className="truncate">
+                                                            {applicant.email}
+                                                        </span>
+                                                    </div>
+                                                    {applicant.phone && (
+                                                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                                            <Phone className="h-3 w-3 flex-shrink-0" />
+                                                            <span>
+                                                                {
+                                                                    applicant.phone
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                    <p className="text-xs text-gray-400">
+                                                        Applied:{" "}
+                                                        {new Date(
+                                                            applicant.appliedDate
+                                                        ).toLocaleDateString()}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Status and Actions for Mobile */}
+                                        <div className="flex items-center justify-between">
+                                            <span
+                                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                                    applicant.status
+                                                )} ${
+                                                    applicant.status === "hired"
+                                                        ? "ring-2 ring-green-300"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {formatStatus(applicant.status)}
+                                                {applicant.status ===
+                                                    "hired" && (
+                                                    <Check className="h-3 w-3 ml-1" />
+                                                )}
+                                            </span>
+
+                                            <div className="flex items-center space-x-1">
+                                                <button
+                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                                                    onClick={() =>
+                                                        handleViewApplication(
+                                                            applicant
+                                                        )
+                                                    }
+                                                    title="View Application"
+                                                >
+                                                    <Eye className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                                                    onClick={() =>
+                                                        handleViewResume(
+                                                            applicant
+                                                        )
+                                                    }
+                                                    title="View Resume"
+                                                >
+                                                    <FileText className="h-4 w-4" />
+                                                </button>
+                                                {applicant.status !==
+                                                    "hired" && (
+                                                    <button
+                                                        className="p-1.5 text-green-600 hover:bg-green-50 rounded cursor-pointer disabled:opacity-50"
+                                                        onClick={() =>
+                                                            handleAcceptApplicant(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        disabled={isUpdating}
+                                                        title="Accept/Hire"
+                                                    >
+                                                        <Check className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                                <button
+                                                    className={`p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50 ${
                                                         applicant.status ===
                                                         "hired"
                                                             ? "ring-1 ring-red-300"
