@@ -7,6 +7,7 @@ const {
     getCurrentRecruiter,
     updateRecruiterProfile,
     changePassword,
+    resetPassword,
     updateSubscription,
     deactivateAccount,
     getDashboardStats,
@@ -235,6 +236,23 @@ const subscriptionValidation = [
 // Public routes
 router.post("/register", registerValidation, registerRecruiter);
 router.post("/login", loginValidation, loginRecruiter);
+
+// Reset password validation
+const resetPasswordValidation = [
+    body("email")
+        .isEmail()
+        .normalizeEmail()
+        .withMessage("Please provide a valid email"),
+    body("newPassword")
+        .isLength({ min: 6 })
+        .withMessage("Password must be at least 6 characters")
+        .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+        .withMessage(
+            "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+        ),
+];
+
+router.post("/reset-password", resetPasswordValidation, resetPassword);
 
 // Protected routes (require authentication)
 router.use(protect); // Apply auth middleware to all routes below

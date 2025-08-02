@@ -163,7 +163,7 @@ const CandidateLogin = () => {
 
                             <div className="text-sm">
                                 <Link
-                                    to="/forgot-password"
+                                    to="/forgot-password?type=candidate"
                                     className="font-medium text-blue-600 hover:text-blue-500"
                                 >
                                     Forgot your password?

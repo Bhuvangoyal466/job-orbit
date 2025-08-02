@@ -71,6 +71,14 @@ export const candidateAPI = {
         });
     },
 
+    // Reset password (forgot password)
+    resetPassword: async (resetData) => {
+        return makeRequest("/auth/candidate/reset-password", {
+            method: "POST",
+            body: JSON.stringify(resetData),
+        });
+    },
+
     // Get dashboard stats
     getDashboard: async () => {
         return makeRequest("/auth/candidate/dashboard");
@@ -121,6 +129,14 @@ export const recruiterAPI = {
         return makeRequest("/auth/recruiter/password", {
             method: "PUT",
             body: JSON.stringify(passwordData),
+        });
+    },
+
+    // Reset password (forgot password)
+    resetPassword: async (resetData) => {
+        return makeRequest("/auth/recruiter/reset-password", {
+            method: "POST",
+            body: JSON.stringify(resetData),
         });
     },
 

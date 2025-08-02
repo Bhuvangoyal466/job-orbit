@@ -313,6 +313,60 @@ const changePassword = async (req, res, next) => {
     }
 };
 
+// @desc    Reset password (forgot password)
+// @route   POST /api/auth/candidate/reset-password
+// @access  Public
+const resetPassword = async (req, res, next) => {
+    try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation failed",
+                errors: errors.array(),
+            });
+        }
+
+        const { email, newPassword } = req.body;
+
+        // Check if candidate exists
+        const candidate = await Candidate.findOne({
+            email: email.toLowerCase(),
+        });
+
+        if (!candidate) {
+            return res.status(404).json({
+                success: false,
+                message: "No candidate found with this email address",
+            });
+        }
+
+        // Check if account is active
+        if (!candidate.isActive) {
+            return res.status(400).json({
+                success: false,
+                message: "This account has been deactivated",
+            });
+        }
+
+        // Update password
+        candidate.password = newPassword;
+        await candidate.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Password has been reset successfully",
+        });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error during password reset",
+        });
+    }
+};
+
 // @desc    Deactivate candidate account
 // @route   DELETE /api/auth/candidate/account
 // @access  Private
@@ -396,6 +450,7 @@ module.exports = {
     getCurrentCandidate,
     updateCandidateProfile,
     changePassword,
+    resetPassword,
     deactivateAccount,
     getDashboardStats,
 };

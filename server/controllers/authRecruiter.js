@@ -315,6 +315,60 @@ const changePassword = async (req, res, next) => {
     }
 };
 
+// @desc    Reset password (forgot password)
+// @route   POST /api/auth/recruiter/reset-password
+// @access  Public
+const resetPassword = async (req, res, next) => {
+    try {
+        // Check for validation errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation failed",
+                errors: errors.array(),
+            });
+        }
+
+        const { email, newPassword } = req.body;
+
+        // Check if recruiter exists
+        const recruiter = await Recruiter.findOne({
+            email: email.toLowerCase(),
+        });
+
+        if (!recruiter) {
+            return res.status(404).json({
+                success: false,
+                message: "No recruiter found with this email address",
+            });
+        }
+
+        // Check if account is active
+        if (!recruiter.isActive) {
+            return res.status(400).json({
+                success: false,
+                message: "This account has been deactivated",
+            });
+        }
+
+        // Update password
+        recruiter.password = newPassword;
+        await recruiter.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Password has been reset successfully",
+        });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error during password reset",
+        });
+    }
+};
+
 // @desc    Update subscription plan
 // @route   PUT /api/auth/recruiter/subscription
 // @access  Private
@@ -484,6 +538,7 @@ module.exports = {
     getCurrentRecruiter,
     updateRecruiterProfile,
     changePassword,
+    resetPassword,
     updateSubscription,
     deactivateAccount,
     getDashboardStats,

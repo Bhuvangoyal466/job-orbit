@@ -166,7 +166,7 @@ const RecruiterLogin = () => {
 
                             <div className="text-sm">
                                 <Link
-                                    to="/forgot-password"
+                                    to="/forgot-password?type=recruiter"
                                     className="font-medium text-blue-600 hover:text-blue-500"
                                 >
                                     Forgot your password?
