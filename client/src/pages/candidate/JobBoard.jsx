@@ -31,6 +31,7 @@ const JobBoard = () => {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [totalJobs, setTotalJobs] = useState(0);
+    const [sortBy, setSortBy] = useState("saved-first");
     const { user } = useAuth();
 
     // Fetch jobs from backend
@@ -103,34 +104,74 @@ const JobBoard = () => {
     };
 
     // Filter jobs based on search criteria
-    const filteredJobs = jobs.filter((job) => {
-        const matchesSearch =
-            job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (job.company?.name &&
-                job.company.name
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase()));
-        const matchesLocation =
-            location === "" ||
-            (job.location?.city &&
-                job.location.city
-                    .toLowerCase()
-                    .includes(location.toLowerCase())) ||
-            (job.location?.state &&
-                job.location.state
-                    .toLowerCase()
-                    .includes(location.toLowerCase())) ||
-            (job.location?.country &&
-                job.location.country
-                    .toLowerCase()
-                    .includes(location.toLowerCase())) ||
-            (job.location?.remote && location.toLowerCase().includes("remote"));
-        const matchesType =
-            jobType === "all" ||
-            job.type.toLowerCase() === jobType.toLowerCase();
+    const filteredJobs = jobs
+        .filter((job) => {
+            const matchesSearch =
+                job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (job.company?.name &&
+                    job.company.name
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase()));
+            const matchesLocation =
+                location === "" ||
+                (job.location?.city &&
+                    job.location.city
+                        .toLowerCase()
+                        .includes(location.toLowerCase())) ||
+                (job.location?.state &&
+                    job.location.state
+                        .toLowerCase()
+                        .includes(location.toLowerCase())) ||
+                (job.location?.country &&
+                    job.location.country
+                        .toLowerCase()
+                        .includes(location.toLowerCase())) ||
+                (job.location?.remote &&
+                    location.toLowerCase().includes("remote"));
+            const matchesType =
+                jobType === "all" ||
+                job.type.toLowerCase() === jobType.toLowerCase();
 
-        return matchesSearch && matchesLocation && matchesType;
-    });
+            return matchesSearch && matchesLocation && matchesType;
+        })
+        .sort((a, b) => {
+            // Apply sorting based on selected sort option
+            switch (sortBy) {
+                case "saved-first": {
+                    // Sort saved jobs first
+                    const aIsSaved = savedJobIds.has(a._id);
+                    const bIsSaved = savedJobIds.has(b._id);
+
+                    if (aIsSaved && !bIsSaved) return -1;
+                    if (!aIsSaved && bIsSaved) return 1;
+                    return new Date(b.createdAt) - new Date(a.createdAt); // Then by most recent
+                }
+
+                case "most-recent":
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+
+                case "salary-high": {
+                    const aSalaryMax = a.salary?.max || 0;
+                    const bSalaryMax = b.salary?.max || 0;
+                    return bSalaryMax - aSalaryMax;
+                }
+
+                case "salary-low": {
+                    const aSalaryMin = a.salary?.min || Infinity;
+                    const bSalaryMin = b.salary?.min || Infinity;
+                    return aSalaryMin - bSalaryMin;
+                }
+
+                case "company-az": {
+                    const aCompany = (a.company?.name || "").toLowerCase();
+                    const bCompany = (b.company?.name || "").toLowerCase();
+                    return aCompany.localeCompare(bCompany);
+                }
+
+                default:
+                    return 0;
+            }
+        });
 
     // Handle job application
     const handleApply = async (job) => {
@@ -281,11 +322,16 @@ const JobBoard = () => {
                     Showing {filteredJobs.length} job
                     {filteredJobs.length !== 1 ? "s" : ""}
                 </p>
-                <select className="border border-gray-300 rounded-md px-3 py-1 text-sm">
-                    <option>Most Recent</option>
-                    <option>Salary: High to Low</option>
-                    <option>Salary: Low to High</option>
-                    <option>Company A-Z</option>
+                <select
+                    className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                >
+                    <option value="saved-first">Saved Jobs First</option>
+                    <option value="most-recent">Most Recent</option>
+                    <option value="salary-high">Salary: High to Low</option>
+                    <option value="salary-low">Salary: Low to High</option>
+                    <option value="company-az">Company A-Z</option>
                 </select>
             </div>
 

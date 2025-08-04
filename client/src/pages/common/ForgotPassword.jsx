@@ -114,10 +114,7 @@ const ForgotPassword = () => {
                     );
                 }, 2000);
             } else {
-                toast.error(
-                    error.message ||
-                        "Failed to reset password. Please try again."
-                );
+                toast.error("Failed to reset password. Please try again.");
             }
         } finally {
             setLoading(false);
