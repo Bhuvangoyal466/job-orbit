@@ -63,7 +63,7 @@ const ApplicationTracker = () => {
     const getStatusIcon = (status) => {
         switch (status) {
             case "applied":
-                return <Clock className="h-5 w-5 text-blue-600" />;
+                return <Clock className="h-5 clw-5 text-blue-600" />;
             case "under-review":
                 return <AlertCircle className="h-5 w-5 text-yellow-600" />;
             case "interviewed":
