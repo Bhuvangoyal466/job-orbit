@@ -8,7 +8,6 @@ import {
     Calendar,
     Search,
     Upload,
-    MessageSquare,
     Clock,
     CheckCircle,
     XCircle,
@@ -189,13 +188,6 @@ const CandidateDashboard = () => {
             icon: Upload,
             link: "/candidate/upload-resume",
             color: "bg-green-500",
-        },
-        {
-            title: "Cover Letters",
-            description: "Manage templates",
-            icon: MessageSquare,
-            link: "/candidate/cover-letters",
-            color: "bg-purple-500",
         },
         {
             title: "Applications",

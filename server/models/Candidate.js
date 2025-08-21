@@ -164,7 +164,6 @@ const candidateSchema = new mongoose.Schema(
                     ],
                     default: "applied",
                 },
-                coverLetter: String,
             },
         ],
 

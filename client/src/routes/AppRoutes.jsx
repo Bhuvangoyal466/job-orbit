@@ -21,7 +21,6 @@ import CandidateDashboard from "../pages/candidate/CandidateDashboard";
 import JobBoard from "../pages/candidate/JobBoard";
 import UploadResume from "../pages/candidate/UploadResume";
 import ApplicationTracker from "../pages/candidate/ApplicationTracker";
-import CoverLetters from "../pages/candidate/CoverLetters";
 
 // Recruiter Pages
 import RecruiterLogin from "../pages/recruiter/RecruiterLogin";
@@ -121,10 +120,6 @@ const AppRoutes = () => {
                         <Route
                             path="applications"
                             element={<ApplicationTracker />}
-                        />
-                        <Route
-                            path="cover-letters"
-                            element={<CoverLetters />}
                         />
                     </Route>
 

@@ -181,7 +181,7 @@ const JobBoard = () => {
         }
 
         try {
-            await jobsAPI.applyJob(job._id, { coverLetter: "" });
+            await jobsAPI.applyJob(job._id, {});
             toast.success(
                 `Applied to "${job.title}" at ${
                     job.company?.name || "Company"

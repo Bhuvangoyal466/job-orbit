@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const candidateAuthRoutes = require("./routes/authCandidate");
 const recruiterAuthRoutes = require("./routes/authRecruiter");
 const jobRoutes = require("./routes/jobs");
+const resumeRoutes = require("./routes/resume");
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/api/auth/candidate", candidateAuthRoutes);
 app.use("/api/auth/recruiter", recruiterAuthRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/candidate", resumeRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

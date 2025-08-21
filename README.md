@@ -8,12 +8,11 @@ A full-stack MERN application that provides an intelligent job board platform wi
 - ✅ **User Authentication**: Secure JWT-based authentication
 - ✅ **Profile Management**: Complete candidate profile system with education, experience, and skills
 - ✅ **Job Board**: Advanced job search with filters (location, type, salary, skills)
-- ✅ **Job Applications**: Apply to jobs with cover letters
+- ✅ **Job Applications**: Apply to jobs instantly
 - ✅ **Application Tracker**: Real-time tracking of job applications with status updates
 - ✅ **Saved Jobs**: Bookmark and manage favorite job listings
 - ✅ **Dashboard Analytics**: Visual insights into application progress
 - 🔄 **Resume Parser**: AI-powered resume parsing (PDF/DOCX support) - *Coming Soon*
-- 🔄 **Cover Letter Manager**: Template management system - *Coming Soon*
 
 ### For Recruiters
 - ✅ **Recruiter Portal**: Dedicated dashboard for hiring managers
@@ -131,7 +130,7 @@ job-orbit/
   - Live stats for recruiters (active jobs, applications, hires)
   - Application tracking for candidates
 - ✅ Application workflow management
-  - Apply to jobs with cover letters
+  - Apply to jobs instantly
   - Save/bookmark jobs
   - Status updates (applied → under-review → interviewed → hired/rejected)
 
@@ -276,7 +275,7 @@ To test the application:
 1. **Register/Login** → Create candidate account
 2. **Complete Profile** → Add education, experience, skills
 3. **Browse Jobs** → Search with advanced filters
-4. **Apply to Jobs** → Submit applications with cover letters
+4. **Apply to Jobs** → Submit applications instantly
 5. **Track Applications** → Monitor status updates in real-time
 6. **Save Jobs** → Bookmark interesting positions
 7. **Dashboard Analytics** → View application insights

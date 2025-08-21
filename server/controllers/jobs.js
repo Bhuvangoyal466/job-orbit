@@ -149,15 +149,11 @@ exports.applyToJob = async (req, res) => {
                 .json({ message: "You have already applied to this job" });
         }
 
-        // Get cover letter from request body
-        const { coverLetter } = req.body;
-
         // Add candidate to applicants
         job.applicants.push({
             candidateId: req.user.id,
             status: "applied",
             appliedAt: Date.now(),
-            coverLetter: coverLetter || "",
         });
 
         // console.log("Added applicant to job, saving job...");
@@ -180,7 +176,6 @@ exports.applyToJob = async (req, res) => {
                     jobId: job._id,
                     appliedDate: new Date(),
                     status: "applied",
-                    coverLetter: coverLetter || "",
                 },
             },
         });
@@ -572,7 +567,6 @@ exports.getCandidateApplications = async (req, res) => {
                         job.salary?.min && job.salary?.max
                             ? `$${job.salary.min.toLocaleString()} - $${job.salary.max.toLocaleString()}`
                             : "Not disclosed",
-                    coverLetter: candidateApplication.coverLetter,
                     jobDescription: job.description,
                 });
             }
@@ -800,7 +794,6 @@ exports.getRecruiterApplicants = async (req, res) => {
                         phone: applicant.candidateId.phone,
                         status: applicant.status,
                         appliedDate: applicant.appliedAt,
-                        coverLetter: applicant.coverLetter,
                         candidate: applicant.candidateId,
                     });
                 }

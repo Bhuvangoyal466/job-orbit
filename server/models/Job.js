@@ -82,7 +82,6 @@ const jobSchema = new mongoose.Schema(
                     type: Date,
                     default: Date.now,
                 },
-                coverLetter: String,
             },
         ],
         savedBy: [

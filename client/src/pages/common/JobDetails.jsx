@@ -29,7 +29,6 @@ const JobDetails = () => {
     const [error, setError] = useState(null);
     const [isSaved, setIsSaved] = useState(false);
     const [isApplying, setIsApplying] = useState(false);
-    const [coverLetter, setCoverLetter] = useState("");
     const { user, isCandidate } = useAuth();
 
     // Debug logging to help troubleshoot
@@ -124,12 +123,10 @@ const JobDetails = () => {
             setIsApplying(true);
             // console.log(
             //     "Applying to job:",
-            //     id,
-            //     "with cover letter:",
-            //     coverLetter
+            //     id
             // );
 
-            const response = await jobsAPI.applyJob(id, { coverLetter });
+            const response = await jobsAPI.applyJob(id, {});
             // console.log("Apply job response:", response);
 
             toast.success("Application submitted successfully");
@@ -386,24 +383,6 @@ const JobDetails = () => {
                                 Apply for this Job
                             </h2>
                             <form onSubmit={handleApplyJob}>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="coverLetter"
-                                        className="block text-sm font-medium text-gray-700 mb-5"
-                                    >
-                                        Cover Letter (Optional)
-                                    </label>
-                                    <textarea
-                                        id="coverLetter"
-                                        rows="6"
-                                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Add a cover letter to your application..."
-                                        value={coverLetter}
-                                        onChange={(e) =>
-                                            setCoverLetter(e.target.value)
-                                        }
-                                    ></textarea>
-                                </div>
                                 <button
                                     type="submit"
                                     className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center justify-center cursor-pointer"

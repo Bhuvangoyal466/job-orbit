@@ -579,21 +579,6 @@ const ManageApplicants = () => {
                             </div>
                         )}
 
-                        {/* Cover Letter */}
-                        {selectedApplicant.coverLetter && (
-                            <div className="bg-gray-50 rounded-lg p-4">
-                                <h3 className="font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                                    <FileText className="h-5 w-5 text-gray-500" />
-                                    <span>Cover Letter</span>
-                                </h3>
-                                <div className="bg-white rounded-lg p-4 border">
-                                    <p className="text-gray-700 whitespace-pre-wrap">
-                                        {selectedApplicant.coverLetter}
-                                    </p>
-                                </div>
-                            </div>
-                        )}
-
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-4 pt-4 border-t border-gray-200">
                             <button

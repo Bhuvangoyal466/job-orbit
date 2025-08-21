@@ -94,10 +94,6 @@ const About = () => {
                                 </li>
                                 <li className="flex items-start">
                                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                                    Cover letter template management
-                                </li>
-                                <li className="flex items-start">
-                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
                                     Advanced job matching algorithms
                                 </li>
                             </ul>

@@ -91,6 +91,39 @@ export const candidateAPI = {
             `/jobs/applications${queryParams ? `?${queryParams}` : ""}`
         );
     },
+
+    // Upload resume (PDF)
+    uploadResume: async (file) => {
+        const formData = new FormData();
+        formData.append("resume", file);
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            `${API_BASE_URL}/candidate/upload-resume`,
+            {
+                method: "POST",
+                headers: {
+                    Authorization: token ? `Bearer ${token}` : undefined,
+                },
+                body: formData,
+            }
+        );
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || "Upload failed");
+        return data;
+    },
+
+    // Get candidate profile (all fields)
+    getFullProfile: async () => {
+        return makeRequest("/candidate/profile");
+    },
+
+    // Update candidate profile (all fields except password)
+    updateFullProfile: async (userData) => {
+        return makeRequest("/candidate/profile", {
+            method: "PUT",
+            body: JSON.stringify(userData),
+        });
+    },
 };
 
 // Recruiter API calls

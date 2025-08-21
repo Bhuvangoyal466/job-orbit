@@ -355,18 +355,6 @@ const ApplicationTracker = () => {
                                                 <p className="text-sm text-gray-600 mt-2">
                                                     Salary: {application.salary}
                                                 </p>
-                                                {application.coverLetter && (
-                                                    <p className="text-sm text-gray-500 mt-2 italic">
-                                                        Cover Letter:{" "}
-                                                        {application.coverLetter.substring(
-                                                            0,
-                                                            100
-                                                        )}
-                                                        {application.coverLetter
-                                                            .length > 100 &&
-                                                            "..."}
-                                                    </p>
-                                                )}
                                             </div>
                                         </div>
                                     </div>
