@@ -86,9 +86,20 @@ const ManageApplicants = () => {
         }
     };
 
+    // Helper function to check if hiring is possible for a job
+    const canHireForJob = (jobId, applicants) => {
+        const jobApplicants = applicants.filter((app) => app.jobId === jobId);
+        const job = jobApplicants[0]; // Get job info from first applicant
+        if (!job || !job.numberOfOpenings) return true; // Default to true if info not available
+
+        const hiredCount = jobApplicants.filter(
+            (app) => app.status === "hired"
+        ).length;
+        return hiredCount < job.numberOfOpenings;
+    };
+
     const updateApplicationStatus = async (applicant, newStatus) => {
         const statusKey = `${applicant.jobId}-${applicant.candidateId}`;
-        const wasHired = applicant.status === "hired";
 
         try {
             setUpdatingStatus((prev) => ({ ...prev, [statusKey]: true }));
@@ -108,16 +119,9 @@ const ManageApplicants = () => {
                 )
             );
 
-            // Show appropriate success message
-            if (wasHired && newStatus === "rejected") {
-                toast.success(
-                    `Hire revoked for ${applicant.name}. Status changed to rejected.`
-                );
-            } else {
-                toast.success(
-                    `Application status updated to ${formatStatus(newStatus)}`
-                );
-            }
+            toast.success(
+                `Application status updated to ${formatStatus(newStatus)}`
+            );
         } catch (err) {
             toast.error(err.message || "Failed to update application status");
         } finally {
@@ -136,17 +140,22 @@ const ManageApplicants = () => {
     };
 
     const handleAcceptApplicant = (applicant) => {
+        // Prevent hiring if candidate was previously rejected
+        if (applicant.status === "rejected") {
+            toast.error("Cannot hire a candidate who has been rejected");
+            return;
+        }
+
+        // Check if positions are available for this job
+        if (!canHireForJob(applicant.jobId, applicants)) {
+            toast.error("All positions for this job have been filled");
+            return;
+        }
+
         updateApplicationStatus(applicant, "hired");
     };
 
     const handleRejectApplicant = (applicant) => {
-        // If the applicant is currently hired, show a confirmation
-        if (applicant.status === "hired") {
-            const confirmed = window.confirm(
-                `Are you sure you want to revoke the hire for ${applicant.name}? This action will change their status to rejected.`
-            );
-            if (!confirmed) return;
-        }
         updateApplicationStatus(applicant, "rejected");
     };
 
@@ -596,32 +605,41 @@ const ManageApplicants = () => {
                                 <FileText className="h-4 w-4 mr-2" />
                                 View Resume
                             </button>
-                            {selectedApplicant.status !== "hired" && (
+                            {selectedApplicant.status !== "hired" &&
+                                selectedApplicant.status !== "rejected" &&
+                                canHireForJob(
+                                    selectedApplicant.jobId,
+                                    applicants
+                                ) && (
+                                    <button
+                                        onClick={() => {
+                                            handleAcceptApplicant(
+                                                selectedApplicant
+                                            );
+                                            closeModal();
+                                        }}
+                                        className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    >
+                                        <Check className="h-4 w-4 mr-2" />
+                                        Accept/Hire
+                                    </button>
+                                )}
+                            {selectedApplicant.status !== "rejected" && (
                                 <button
                                     onClick={() => {
-                                        handleAcceptApplicant(
+                                        handleRejectApplicant(
                                             selectedApplicant
                                         );
                                         closeModal();
                                     }}
-                                    className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                                    className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                 >
-                                    <Check className="h-4 w-4 mr-2" />
-                                    Accept/Hire
+                                    <X className="h-4 w-4 mr-2" />
+                                    {selectedApplicant.status === "hired"
+                                        ? "Revoke Hire"
+                                        : "Reject"}
                                 </button>
                             )}
-                            <button
-                                onClick={() => {
-                                    handleRejectApplicant(selectedApplicant);
-                                    closeModal();
-                                }}
-                                className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                            >
-                                <X className="h-4 w-4 mr-2" />
-                                {selectedApplicant.status === "hired"
-                                    ? "Revoke Hire"
-                                    : "Reject"}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -824,43 +842,47 @@ const ManageApplicants = () => {
                                                 >
                                                     <FileText className="h-4 w-4" />
                                                 </button>
+                                                {applicant.status !== "hired" &&
+                                                    applicant.status !==
+                                                        "rejected" &&
+                                                    canHireForJob(
+                                                        applicant.jobId,
+                                                        applicants
+                                                    ) && (
+                                                        <button
+                                                            className="p-2 text-green-600 hover:bg-green-50 rounded-md cursor-pointer disabled:opacity-50"
+                                                            onClick={() =>
+                                                                handleAcceptApplicant(
+                                                                    applicant
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                isUpdating
+                                                            }
+                                                            title="Accept/Hire"
+                                                        >
+                                                            <Check className="h-4 w-4" />
+                                                        </button>
+                                                    )}
                                                 {applicant.status !==
-                                                    "hired" && (
-                                                    <button
-                                                        className="p-2 text-green-600 hover:bg-green-50 rounded-md cursor-pointer disabled:opacity-50"
-                                                        onClick={() =>
-                                                            handleAcceptApplicant(
-                                                                applicant
-                                                            )
-                                                        }
-                                                        disabled={isUpdating}
-                                                        title="Accept/Hire"
-                                                    >
-                                                        <Check className="h-4 w-4" />
-                                                    </button>
-                                                )}
-                                                <button
-                                                    className={`p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer disabled:opacity-50 ${
-                                                        applicant.status ===
-                                                        "hired"
-                                                            ? "ring-1 ring-red-300"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() =>
-                                                        handleRejectApplicant(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    disabled={isUpdating}
-                                                    title={
-                                                        applicant.status ===
-                                                        "hired"
-                                                            ? "Revoke Hire/Reject"
-                                                            : "Reject"
-                                                    }
-                                                >
-                                                    <X className="h-4 w-4" />
-                                                </button>
+                                                    "rejected" &&
+                                                    applicant.status !==
+                                                        "hired" && (
+                                                        <button
+                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer disabled:opacity-50"
+                                                            onClick={() =>
+                                                                handleRejectApplicant(
+                                                                    applicant
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                isUpdating
+                                                            }
+                                                            title="Reject"
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </button>
+                                                    )}
                                             </div>
                                         </div>
                                     </div>
@@ -946,43 +968,47 @@ const ManageApplicants = () => {
                                                 >
                                                     <FileText className="h-4 w-4" />
                                                 </button>
+                                                {applicant.status !== "hired" &&
+                                                    applicant.status !==
+                                                        "rejected" &&
+                                                    canHireForJob(
+                                                        applicant.jobId,
+                                                        applicants
+                                                    ) && (
+                                                        <button
+                                                            className="p-1.5 text-green-600 hover:bg-green-50 rounded cursor-pointer disabled:opacity-50"
+                                                            onClick={() =>
+                                                                handleAcceptApplicant(
+                                                                    applicant
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                isUpdating
+                                                            }
+                                                            title="Accept/Hire"
+                                                        >
+                                                            <Check className="h-4 w-4" />
+                                                        </button>
+                                                    )}
                                                 {applicant.status !==
-                                                    "hired" && (
-                                                    <button
-                                                        className="p-1.5 text-green-600 hover:bg-green-50 rounded cursor-pointer disabled:opacity-50"
-                                                        onClick={() =>
-                                                            handleAcceptApplicant(
-                                                                applicant
-                                                            )
-                                                        }
-                                                        disabled={isUpdating}
-                                                        title="Accept/Hire"
-                                                    >
-                                                        <Check className="h-4 w-4" />
-                                                    </button>
-                                                )}
-                                                <button
-                                                    className={`p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50 ${
-                                                        applicant.status ===
-                                                        "hired"
-                                                            ? "ring-1 ring-red-300"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() =>
-                                                        handleRejectApplicant(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    disabled={isUpdating}
-                                                    title={
-                                                        applicant.status ===
-                                                        "hired"
-                                                            ? "Revoke Hire/Reject"
-                                                            : "Reject"
-                                                    }
-                                                >
-                                                    <X className="h-4 w-4" />
-                                                </button>
+                                                    "rejected" &&
+                                                    applicant.status !==
+                                                        "hired" && (
+                                                        <button
+                                                            className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50"
+                                                            onClick={() =>
+                                                                handleRejectApplicant(
+                                                                    applicant
+                                                                )
+                                                            }
+                                                            disabled={
+                                                                isUpdating
+                                                            }
+                                                            title="Reject"
+                                                        >
+                                                            <X className="h-4 w-4" />
+                                                        </button>
+                                                    )}
                                             </div>
                                         </div>
                                     </div>

@@ -379,12 +379,6 @@ const ApplicationTracker = () => {
                                         >
                                             {formatStatus(application.status)}
                                         </span>
-                                        <button
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
-                                            title="View Job Details"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                        </button>
                                     </div>
                                 </div>
                             </div>

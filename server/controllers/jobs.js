@@ -684,6 +684,31 @@ exports.updateApplicationStatus = async (req, res) => {
         // Get the current status before updating
         const currentStatus = job.applicants[applicantIndex].status;
 
+        // Prevent hiring already rejected candidates
+        if (currentStatus === "rejected" && status === "hired") {
+            return res.status(400).json({
+                message: "Cannot hire a candidate who has been rejected",
+            });
+        }
+
+        // Prevent rejecting already hired candidates (they should be revoked first)
+        if (currentStatus === "hired" && status === "rejected") {
+            // This is allowed as it represents revoking a hire
+        }
+
+        // Check if we can hire more candidates for this job
+        if (status === "hired" && currentStatus !== "hired") {
+            const currentHiredCount = job.applicants.filter(
+                (app) => app.status === "hired"
+            ).length;
+
+            if (currentHiredCount >= job.numberOfOpenings) {
+                return res.status(400).json({
+                    message: "All positions for this job have been filled",
+                });
+            }
+        }
+
         // Update the status
         job.applicants[applicantIndex].status = status;
         await job.save();
@@ -756,7 +781,7 @@ exports.getRecruiterApplicants = async (req, res) => {
                 path: "applicants.candidateId",
                 select: "firstName lastName email phone dateOfBirth education experience skills profile",
             })
-            .select("title applicants createdAt");
+            .select("title applicants createdAt numberOfOpenings");
 
         // Flatten all applicants from all jobs
         let allApplicants = [];
@@ -769,6 +794,7 @@ exports.getRecruiterApplicants = async (req, res) => {
                         candidateId: applicant.candidateId._id,
                         jobId: job._id,
                         jobTitle: job.title,
+                        numberOfOpenings: job.numberOfOpenings,
                         name: `${applicant.candidateId.firstName} ${applicant.candidateId.lastName}`,
                         email: applicant.candidateId.email,
                         phone: applicant.candidateId.phone,
