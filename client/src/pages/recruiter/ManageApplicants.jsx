@@ -22,6 +22,8 @@ import { recruiterAPI } from "../../utils/api";
 
 const ManageApplicants = () => {
     const [selectedStatus, setSelectedStatus] = useState("all");
+    const [sortBy, setSortBy] = useState("appliedDate"); // New sorting state
+    const [sortOrder, setSortOrder] = useState("desc"); // New sorting order state
     const [applicants, setApplicants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -158,6 +160,45 @@ const ManageApplicants = () => {
     const handleRejectApplicant = (applicant) => {
         updateApplicationStatus(applicant, "rejected");
     };
+
+    // Sorting function for applicants
+    const sortApplicants = (applicantsToSort) => {
+        return [...applicantsToSort].sort((a, b) => {
+            let aValue, bValue;
+
+            switch (sortBy) {
+                case "name":
+                    aValue = a.name?.toLowerCase() || "";
+                    bValue = b.name?.toLowerCase() || "";
+                    break;
+                case "appliedDate":
+                    aValue = new Date(a.appliedDate);
+                    bValue = new Date(b.appliedDate);
+                    break;
+                case "profileCompleteness":
+                    aValue = a.candidate?.profileCompleteness || 0;
+                    bValue = b.candidate?.profileCompleteness || 0;
+                    break;
+                case "experience":
+                    aValue = a.candidate?.experience || 0;
+                    bValue = b.candidate?.experience || 0;
+                    break;
+                default:
+                    return 0;
+            }
+
+            if (aValue < bValue) {
+                return sortOrder === "asc" ? -1 : 1;
+            }
+            if (aValue > bValue) {
+                return sortOrder === "asc" ? 1 : -1;
+            }
+            return 0;
+        });
+    };
+
+    // Get sorted applicants
+    const sortedApplicants = sortApplicants(applicants);
 
     // Modal component for viewing application details
     const ApplicationModal = () => {
@@ -676,25 +717,64 @@ const ManageApplicants = () => {
                 </div>
             )}
 
-            {/* Filters */}
+            {/* Filters and Sorting */}
             <div className="bg-white shadow rounded-lg p-4">
-                <div className="flex items-center space-x-4">
-                    <label className="text-sm font-medium text-gray-700">
-                        Filter by status:
-                    </label>
-                    <select
-                        value={selectedStatus}
-                        onChange={(e) => setSelectedStatus(e.target.value)}
-                        className="border border-gray-300 rounded-md px-3 py-1 text-sm"
-                        disabled={loading}
-                    >
-                        <option value="all">All Statuses</option>
-                        <option value="applied">Applied</option>
-                        <option value="under-review">Under Review</option>
-                        <option value="interviewed">Interviewed</option>
-                        <option value="hired">Hired</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
+                <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    {/* Status Filter */}
+                    <div className="flex items-center space-x-2">
+                        <label className="text-sm font-medium text-gray-700">
+                            Filter by status:
+                        </label>
+                        <select
+                            value={selectedStatus}
+                            onChange={(e) => setSelectedStatus(e.target.value)}
+                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                            disabled={loading}
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="applied">Applied</option>
+                            <option value="under-review">Under Review</option>
+                            <option value="interviewed">Interviewed</option>
+                            <option value="hired">Hired</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+
+                    {/* Sort By */}
+                    <div className="flex items-center space-x-2">
+                        <label className="text-sm font-medium text-gray-700">
+                            Sort by:
+                        </label>
+                        <select
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value)}
+                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                            disabled={loading}
+                        >
+                            <option value="appliedDate">Applied Date</option>
+                            <option value="name">Name</option>
+                            <option value="profileCompleteness">
+                                Profile Completeness
+                            </option>
+                            <option value="experience">Experience</option>
+                        </select>
+                    </div>
+
+                    {/* Sort Order */}
+                    <div className="flex items-center space-x-2">
+                        <label className="text-sm font-medium text-gray-700">
+                            Order:
+                        </label>
+                        <select
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(e.target.value)}
+                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
+                            disabled={loading}
+                        >
+                            <option value="desc">Descending</option>
+                            <option value="asc">Ascending</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -741,7 +821,7 @@ const ManageApplicants = () => {
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-200">
-                        {applicants.map((applicant) => {
+                        {sortedApplicants.map((applicant) => {
                             const statusKey = `${applicant.jobId}-${applicant.candidateId}`;
                             const isUpdating = updatingStatus[statusKey];
 
@@ -784,6 +864,46 @@ const ManageApplicants = () => {
                                                         applicant.appliedDate
                                                     ).toLocaleDateString()}
                                                 </p>
+                                                {/* Profile Completeness */}
+                                                <div className="flex items-center space-x-2 mt-1">
+                                                    <span className="text-xs text-gray-500">
+                                                        Profile:
+                                                    </span>
+                                                    <div className="flex items-center space-x-1">
+                                                        <div className="w-16 bg-gray-200 rounded-full h-2">
+                                                            <div
+                                                                className={`h-2 rounded-full ${
+                                                                    (applicant
+                                                                        .candidate
+                                                                        ?.profileCompleteness ||
+                                                                        0) >= 80
+                                                                        ? "bg-green-500"
+                                                                        : (applicant
+                                                                              .candidate
+                                                                              ?.profileCompleteness ||
+                                                                              0) >=
+                                                                          60
+                                                                        ? "bg-yellow-500"
+                                                                        : "bg-red-500"
+                                                                }`}
+                                                                style={{
+                                                                    width: `${
+                                                                        applicant
+                                                                            .candidate
+                                                                            ?.profileCompleteness ||
+                                                                        0
+                                                                    }%`,
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <span className="text-xs text-gray-600">
+                                                            {applicant.candidate
+                                                                ?.profileCompleteness ||
+                                                                0}
+                                                            %
+                                                        </span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -908,6 +1028,48 @@ const ManageApplicants = () => {
                                                             applicant.appliedDate
                                                         ).toLocaleDateString()}
                                                     </p>
+                                                    {/* Profile Completeness for Mobile */}
+                                                    <div className="flex items-center space-x-2">
+                                                        <span className="text-xs text-gray-500">
+                                                            Profile:
+                                                        </span>
+                                                        <div className="flex items-center space-x-1">
+                                                            <div className="w-12 bg-gray-200 rounded-full h-1.5">
+                                                                <div
+                                                                    className={`h-1.5 rounded-full ${
+                                                                        (applicant
+                                                                            .candidate
+                                                                            ?.profileCompleteness ||
+                                                                            0) >=
+                                                                        80
+                                                                            ? "bg-green-500"
+                                                                            : (applicant
+                                                                                  .candidate
+                                                                                  ?.profileCompleteness ||
+                                                                                  0) >=
+                                                                              60
+                                                                            ? "bg-yellow-500"
+                                                                            : "bg-red-500"
+                                                                    }`}
+                                                                    style={{
+                                                                        width: `${
+                                                                            applicant
+                                                                                .candidate
+                                                                                ?.profileCompleteness ||
+                                                                            0
+                                                                        }%`,
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <span className="text-xs text-gray-600">
+                                                                {applicant
+                                                                    .candidate
+                                                                    ?.profileCompleteness ||
+                                                                    0}
+                                                                %
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

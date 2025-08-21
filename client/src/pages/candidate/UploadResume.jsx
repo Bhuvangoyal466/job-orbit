@@ -98,7 +98,10 @@ const UploadResume = () => {
 
     const handleSave = async () => {
         try {
-            await candidateAPI.updateFullProfile(formData);
+            const updatedProfile = await candidateAPI.updateFullProfile(
+                formData
+            );
+            setFormData(updatedProfile); // Update with the new data including updated profileCompleteness
             toast.success("Profile updated successfully!");
             setEditMode(false);
         } catch (err) {
@@ -168,18 +171,54 @@ const UploadResume = () => {
             {/* Profile Form */}
             {formData && (
                 <div className="bg-white shadow rounded-lg p-6">
-                    <div className="flex items-center mb-4">
-                        <h2 className="text-xl font-semibold text-gray-900">
-                            Profile Information
-                        </h2>
-                        {!editMode && (
-                            <button
-                                className="ml-auto px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-                                onClick={() => setEditMode(true)}
-                            >
-                                Edit
-                            </button>
-                        )}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 space-y-3 sm:space-y-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                Profile Information
+                            </h2>
+                            {/* Profile Completeness Indicator */}
+                            <div className="flex items-center space-x-2">
+                                <div className="w-24 bg-gray-200 rounded-full h-2">
+                                    <div
+                                        className={`h-2 rounded-full transition-all duration-300 ${
+                                            (formData.profileCompleteness ||
+                                                0) >= 80
+                                                ? "bg-green-500"
+                                                : (formData.profileCompleteness ||
+                                                      0) >= 60
+                                                ? "bg-yellow-500"
+                                                : "bg-red-500"
+                                        }`}
+                                        style={{
+                                            width: `${
+                                                formData.profileCompleteness ||
+                                                0
+                                            }%`,
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-sm font-medium text-gray-700">
+                                    {formData.profileCompleteness || 0}%
+                                    Complete
+                                </span>
+                            </div>
+                        </div>
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                            {(formData.profileCompleteness || 0) < 100 && (
+                                <div className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-md">
+                                    💡 Complete your profile to stand out to
+                                    recruiters!
+                                </div>
+                            )}
+                            {!editMode && (
+                                <button
+                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 whitespace-nowrap"
+                                    onClick={() => setEditMode(true)}
+                                >
+                                    Edit
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <form
                         className="space-y-8"
@@ -482,17 +521,26 @@ const UploadResume = () => {
                                         value={
                                             Array.isArray(formData.skills)
                                                 ? formData.skills.join(", ")
-                                                : ""
+                                                : formData.skills || ""
                                         }
-                                        onChange={(e) =>
+                                        onChange={(e) => {
+                                            const value = e.target.value;
                                             setFormData((prev) => ({
                                                 ...prev,
-                                                skills: e.target.value
+                                                skills: value,
+                                            }));
+                                        }}
+                                        onBlur={(e) => {
+                                            // Convert to array format when user finishes editing
+                                            const value = e.target.value;
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                skills: value
                                                     .split(",")
                                                     .map((s) => s.trim())
                                                     .filter(Boolean),
-                                            }))
-                                        }
+                                            }));
+                                        }}
                                         disabled={!editMode}
                                         className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none ${
                                             !editMode
@@ -644,7 +692,7 @@ const UploadResume = () => {
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    placeholder="3.8 GPA or A+"
+                                                    placeholder="Scale of 0-10 (only numbers)"
                                                     value={edu.grade || ""}
                                                     onChange={(e) =>
                                                         handleArrayChange(
@@ -856,7 +904,7 @@ const UploadResume = () => {
 
                             <div className="mt-6">
                                 <label className="block text-sm font-medium text-gray-700 mb-4">
-                                    Expected Salary Range
+                                    Expected Salary Range (Annually)
                                 </label>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>

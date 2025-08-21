@@ -75,13 +75,18 @@ router.put("/profile", protectCandidate, async (req, res) => {
     try {
         const updateFields = { ...req.body };
         delete updateFields.password;
-        const candidate = await Candidate.findByIdAndUpdate(
-            req.user.id,
-            updateFields,
-            { new: true, runValidators: true }
-        ).select("-password");
+
+        // Get the candidate first to trigger pre-save middleware
+        const candidate = await Candidate.findById(req.user.id);
         if (!candidate)
             return res.status(404).json({ message: "Candidate not found" });
+
+        // Update fields and save to trigger middleware
+        Object.keys(updateFields).forEach((key) => {
+            candidate[key] = updateFields[key];
+        });
+
+        await candidate.save();
         res.json(candidate);
     } catch (err) {
         res.status(500).json({ message: err.message });

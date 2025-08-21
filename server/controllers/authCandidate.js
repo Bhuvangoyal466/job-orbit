@@ -230,21 +230,26 @@ const updateCandidateProfile = async (req, res, next) => {
             }
         });
 
-        const candidate = await Candidate.findByIdAndUpdate(
-            req.user.id,
-            updateData,
-            {
-                new: true,
-                runValidators: true,
-            }
-        );
-
+        // Get the candidate first to trigger pre-save middleware
+        const candidate = await Candidate.findById(req.user.id);
         if (!candidate) {
             return res.status(404).json({
                 success: false,
                 message: "Candidate not found",
             });
         }
+
+        // Update fields and save to trigger middleware
+        Object.keys(updateData).forEach((key) => {
+            candidate[key] = updateData[key];
+        });
+
+        // Update fields and save to trigger middleware
+        Object.keys(updateData).forEach((key) => {
+            candidate[key] = updateData[key];
+        });
+
+        await candidate.save();
 
         res.status(200).json({
             success: true,
@@ -444,6 +449,53 @@ const getDashboardStats = async (req, res, next) => {
     }
 };
 
+// @desc    Recalculate profile completeness for all candidates
+// @route   POST /api/auth/candidate/fix-profiles
+// @access  Public (for maintenance)
+const recalculateProfileCompleteness = async (req, res, next) => {
+    try {
+        const candidates = await Candidate.find({});
+        let updatedCount = 0;
+
+        for (let i = 0; i < candidates.length; i++) {
+            const candidate = candidates[i];
+            const oldCompleteness = candidate.profileCompleteness;
+
+            try {
+                // Simply save each candidate to trigger the pre-save middleware
+                await candidate.save();
+                if (candidate.profileCompleteness !== oldCompleteness) {
+                    updatedCount++;
+                    console.log(
+                        `Updated candidate ${candidate.email}: ${oldCompleteness}% -> ${candidate.profileCompleteness}%`
+                    );
+                }
+            } catch (saveError) {
+                console.error(
+                    `Error updating candidate ${candidate.email}:`,
+                    saveError
+                );
+            }
+        }
+
+        res.status(200).json({
+            success: true,
+            message: `Recalculated profile completeness for ${candidates.length} candidates`,
+            data: {
+                totalCandidates: candidates.length,
+                updatedCandidates: updatedCount,
+            },
+        });
+    } catch (error) {
+        console.error("Recalculate profile completeness error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server error during recalculation",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     registerCandidate,
     loginCandidate,
@@ -453,4 +505,5 @@ module.exports = {
     resetPassword,
     deactivateAccount,
     getDashboardStats,
+    recalculateProfileCompleteness,
 };

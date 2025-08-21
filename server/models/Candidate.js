@@ -227,34 +227,66 @@ candidateSchema.pre("save", async function (next) {
 // Pre-save middleware to calculate profile completeness
 candidateSchema.pre("save", function (next) {
     let completeness = 0;
-    const fields = [
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-        "dateOfBirth",
-        "address.city",
-        "experience",
-        "skills",
-        "education",
-    ];
 
-    fields.forEach((field) => {
+    // Define fields with their weights (must add up to 100)
+    const fieldWeights = {
+        firstName: 8, // 8%
+        lastName: 8, // 8%
+        email: 8, // 8% (always present but counted)
+        phone: 8, // 8%
+        dateOfBirth: 8, // 8%
+        "address.city": 5, // 5%
+        "address.country": 5, // 5%
+        "address.street": 3, // 3%
+        experience: 8, // 8%
+        skills: 15, // 15%
+        education: 15, // 15%
+        preferredJobType: 5, // 5%
+        portfolioUrl: 2, // 2%
+        linkedinUrl: 2, // 2%
+        // Total: 100%
+    };
+
+    // Calculate completeness based on field weights
+    Object.keys(fieldWeights).forEach((field) => {
+        const weight = fieldWeights[field];
+
         if (field.includes(".")) {
+            // Handle nested fields like address.city
             const [parent, child] = field.split(".");
-            if (this[parent] && this[parent][child])
-                completeness += 100 / fields.length;
-        } else {
             if (
-                this[field] &&
-                (Array.isArray(this[field]) ? this[field].length > 0 : true)
+                this[parent] &&
+                this[parent][child] &&
+                this[parent][child].toString().trim()
             ) {
-                completeness += 100 / fields.length;
+                completeness += weight;
+            }
+        } else {
+            // Handle direct fields
+            if (this[field] !== undefined && this[field] !== null) {
+                if (Array.isArray(this[field])) {
+                    // For arrays, check if they have content
+                    if (this[field].length > 0) {
+                        completeness += weight;
+                    }
+                } else if (typeof this[field] === "string") {
+                    // For strings, check if they're not empty after trim
+                    if (this[field].trim()) {
+                        completeness += weight;
+                    }
+                } else if (typeof this[field] === "number") {
+                    // For numbers, include 0 as valid (experience can be 0)
+                    completeness += weight;
+                } else {
+                    // For other types (boolean, objects), just check if they exist
+                    completeness += weight;
+                }
             }
         }
     });
 
-    this.profileCompleteness = Math.round(completeness);
+    // Ensure completeness never exceeds 100
+    this.profileCompleteness = Math.min(Math.round(completeness), 100);
     next();
 });
 
