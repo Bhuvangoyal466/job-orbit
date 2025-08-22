@@ -179,10 +179,6 @@ exports.applyToJob = async (req, res) => {
                 },
             },
         });
-        console.log(
-            "Candidate update result:",
-            candidateUpdate ? "Success" : "Failed"
-        );
 
         res.json({ message: "Successfully applied to job", job });
     } catch (error) {

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
     BarChart3,
-    TrendingUp,
     FileText,
     Calendar,
     Search,
@@ -32,12 +31,6 @@ const CandidateDashboard = () => {
             value: "0",
             icon: Calendar,
             color: "bg-green-500",
-        },
-        {
-            name: "Profile Views",
-            value: "0",
-            icon: TrendingUp,
-            color: "bg-purple-500",
         },
         {
             name: "Saved Jobs",
@@ -111,12 +104,6 @@ const CandidateDashboard = () => {
                             .length.toString(),
                         icon: Calendar,
                         color: "bg-green-500",
-                    },
-                    {
-                        name: "Profile Views",
-                        value: "0", // This would require additional API implementation
-                        icon: TrendingUp,
-                        color: "bg-purple-500",
                     },
                     {
                         name: "Saved Jobs",
