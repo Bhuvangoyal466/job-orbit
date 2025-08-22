@@ -97,15 +97,25 @@ router.put("/profile", protectCandidate, async (req, res) => {
 router.get("/view/:candidateId", protectRecruiter, async (req, res) => {
     try {
         const { candidateId } = req.params;
+        console.log("Server: Fetching resume for candidate:", candidateId);
 
         const candidate = await Candidate.findById(candidateId).select(
             "resume firstName lastName"
         );
         if (!candidate) {
+            console.log("Server: Candidate not found");
             return res.status(404).json({ message: "Candidate not found" });
         }
 
+        console.log(
+            "Server: Candidate found:",
+            candidate.firstName,
+            candidate.lastName
+        );
+        console.log("Server: Resume info:", candidate.resume);
+
         if (!candidate.resume || !candidate.resume.path) {
+            console.log("Server: No resume path found");
             return res
                 .status(404)
                 .json({ message: "Resume not found for this candidate" });
@@ -113,11 +123,19 @@ router.get("/view/:candidateId", protectRecruiter, async (req, res) => {
 
         // Check if file exists
         const fs = require("fs");
-        if (!fs.existsSync(candidate.resume.path)) {
+        const filePath = candidate.resume.path;
+        console.log("Server: Checking file path:", filePath);
+
+        if (!fs.existsSync(filePath)) {
+            console.log("Server: File does not exist on filesystem");
             return res
                 .status(404)
                 .json({ message: "Resume file not found on server" });
         }
+
+        // Get file stats for debugging
+        const stats = fs.statSync(filePath);
+        console.log("Server: File size:", stats.size, "bytes");
 
         // Set appropriate headers for PDF
         res.setHeader("Content-Type", "application/pdf");
@@ -126,8 +144,9 @@ router.get("/view/:candidateId", protectRecruiter, async (req, res) => {
             `inline; filename="${candidate.resume.originalName}"`
         );
 
+        console.log("Server: Sending file...");
         // Send the file
-        res.sendFile(path.resolve(candidate.resume.path));
+        res.sendFile(path.resolve(filePath));
     } catch (err) {
         console.error("Error viewing resume:", err);
         res.status(500).json({

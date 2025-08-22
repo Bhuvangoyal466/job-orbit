@@ -143,6 +143,16 @@ const ManageApplicants = () => {
         setShowModal(true);
     };
 
+    const handleResumeError = useCallback((errorMessage) => {
+        // Show toast only for resume-related errors
+        if (
+            errorMessage.includes("Resume not found") ||
+            errorMessage.includes("not found")
+        ) {
+            toast.error(errorMessage);
+        }
+    }, []);
+
     const handleViewResume = (applicant) => {
         if (!applicant.candidateId) {
             toast.error(
@@ -156,6 +166,7 @@ const ManageApplicants = () => {
             name: applicant.name,
         });
         setShowResumeViewer(true);
+        // Don't show a toast here since the ResumeViewer will handle any errors
     };
 
     const handleScheduleInterview = (applicant) => {
@@ -1242,6 +1253,7 @@ const ManageApplicants = () => {
                         setShowResumeViewer(false);
                         setSelectedResumeCandidate(null);
                     }}
+                    onError={handleResumeError}
                 />
             )}
         </div>

@@ -3,7 +3,13 @@ import { X, Download, FileText, Loader } from "lucide-react";
 import { toast } from "react-toastify";
 import { recruiterAPI } from "../utils/api";
 
-const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
+const ResumeViewer = ({
+    candidateId,
+    candidateName,
+    isOpen,
+    onClose,
+    onError,
+}) => {
     const [resumeUrl, setResumeUrl] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -11,27 +17,55 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
     const loadResume = useCallback(async () => {
         if (!candidateId) return;
 
+        console.log("Starting to load resume for candidate:", candidateId);
         setLoading(true);
         setError(null);
 
         try {
+            console.log("Calling recruiterAPI.viewResume...");
             const response = await recruiterAPI.viewResume(candidateId);
+            console.log(
+                "Response received:",
+                response.status,
+                response.headers.get("content-type")
+            );
+
             const blob = await response.blob();
+            console.log("Blob created:", blob.size, "bytes, type:", blob.type);
 
             if (blob.type !== "application/pdf") {
-                throw new Error("Invalid file format. Expected PDF.");
+                throw new Error(
+                    `Invalid file format. Expected PDF, got: ${blob.type}`
+                );
+            }
+
+            // Check if blob is too large (> 50MB)
+            if (blob.size > 50 * 1024 * 1024) {
+                throw new Error(
+                    `PDF file is too large (${Math.round(
+                        blob.size / 1024 / 1024
+                    )}MB). Please use a smaller file.`
+                );
             }
 
             const url = URL.createObjectURL(blob);
+            console.log("Object URL created:", url);
+            console.log("Setting resumeUrl state...");
             setResumeUrl(url);
+            console.log("resumeUrl state should be set now");
         } catch (err) {
             console.error("Error loading resume:", err);
             setError(err.message);
-            toast.error(err.message || "Failed to load resume");
+            // Notify parent component about the error
+            if (onError) {
+                onError(err.message);
+            }
         } finally {
+            console.log("Finally block: setting loading to false");
             setLoading(false);
+            console.log("Loading should now be false");
         }
-    }, [candidateId]);
+    }, [candidateId, onError]);
 
     const handleClose = useCallback(() => {
         if (resumeUrl) {
@@ -44,16 +78,20 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
 
     useEffect(() => {
         if (isOpen && candidateId) {
+            console.log("useEffect triggered - loading resume");
             loadResume();
         }
+    }, [isOpen, candidateId, loadResume]);
 
-        // Cleanup function to revoke object URL
+    // Separate cleanup effect
+    useEffect(() => {
         return () => {
             if (resumeUrl) {
+                console.log("Cleanup: Revoking URL:", resumeUrl);
                 URL.revokeObjectURL(resumeUrl);
             }
         };
-    }, [isOpen, candidateId, loadResume, resumeUrl]);
+    }, [resumeUrl]);
 
     const handleDownload = async () => {
         if (!resumeUrl) return;
@@ -96,6 +134,14 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
     }, [isOpen, handleClose]);
 
     if (!isOpen) return null;
+
+    console.log("Rendering ResumeViewer:", {
+        loading,
+        error,
+        resumeUrl,
+        candidateId,
+        candidateName,
+    });
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -140,8 +186,15 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
                         <div className="flex items-center justify-center h-full">
                             <div className="text-center">
                                 <Loader className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-                                <p className="text-gray-600">
+                                <p className="text-gray-600 mb-2">
                                     Loading resume...
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                    Check the browser console for debug
+                                    information
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Candidate ID: {candidateId}
                                 </p>
                             </div>
                         </div>
@@ -169,12 +222,34 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
 
                     {resumeUrl && !loading && !error && (
                         <div className="h-full border border-gray-300 rounded-lg overflow-hidden">
+                            {console.log(
+                                "Rendering iframe with URL:",
+                                resumeUrl
+                            )}
                             <iframe
                                 src={resumeUrl}
                                 title={`${candidateName}'s Resume`}
                                 className="w-full h-full"
                                 style={{ minHeight: "500px" }}
+                                onLoad={() =>
+                                    console.log("Iframe loaded successfully")
+                                }
+                                onError={(e) =>
+                                    console.error("Iframe error:", e)
+                                }
+                                allow="same-origin"
                             />
+                            {/* Fallback link in case iframe doesn't work */}
+                            <div className="absolute top-4 left-4 bg-blue-100 p-2 rounded">
+                                <a
+                                    href={resumeUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-600 text-sm"
+                                >
+                                    Open PDF in new tab (fallback)
+                                </a>
+                            </div>
                         </div>
                     )}
                 </div>

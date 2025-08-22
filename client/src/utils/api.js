@@ -225,23 +225,55 @@ export const recruiterAPI = {
 
     // View candidate resume
     viewResume: async (candidateId) => {
+        console.log("API: Starting viewResume for candidate:", candidateId);
         const token = localStorage.getItem("token");
-        const response = await fetch(
-            `${API_BASE_URL}/candidate/view/${candidateId}`,
-            {
-                method: "GET",
-                headers: {
-                    Authorization: token ? `Bearer ${token}` : undefined,
-                },
-            }
-        );
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to fetch resume");
+        if (!token) {
+            throw new Error("No authentication token found");
         }
 
-        return response; // Return the response object to handle blob data
+        const url = `${API_BASE_URL}/candidate/view/${candidateId}`;
+        console.log("API: Making request to:", url);
+
+        try {
+            // Add timeout to prevent infinite loading
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                controller.abort();
+            }, 30000); // 30 second timeout
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            console.log("API: Response status:", response.status);
+            console.log(
+                "API: Response headers:",
+                Object.fromEntries(response.headers.entries())
+            );
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("API: Error response:", errorData);
+                throw new Error(errorData.message || "Failed to fetch resume");
+            }
+
+            return response; // Return the response object to handle blob data
+        } catch (error) {
+            if (error.name === "AbortError") {
+                throw new Error(
+                    "Request timeout - the resume file might be too large or there's a server issue"
+                );
+            }
+            console.error("API: Network error:", error);
+            throw error;
+        }
     },
 };
 
