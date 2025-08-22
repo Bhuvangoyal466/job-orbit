@@ -97,31 +97,42 @@ router.put("/profile", protectCandidate, async (req, res) => {
 router.get("/view/:candidateId", protectRecruiter, async (req, res) => {
     try {
         const { candidateId } = req.params;
-        
-        const candidate = await Candidate.findById(candidateId).select('resume firstName lastName');
+
+        const candidate = await Candidate.findById(candidateId).select(
+            "resume firstName lastName"
+        );
         if (!candidate) {
             return res.status(404).json({ message: "Candidate not found" });
         }
 
         if (!candidate.resume || !candidate.resume.path) {
-            return res.status(404).json({ message: "Resume not found for this candidate" });
+            return res
+                .status(404)
+                .json({ message: "Resume not found for this candidate" });
         }
 
         // Check if file exists
-        const fs = require('fs');
+        const fs = require("fs");
         if (!fs.existsSync(candidate.resume.path)) {
-            return res.status(404).json({ message: "Resume file not found on server" });
+            return res
+                .status(404)
+                .json({ message: "Resume file not found on server" });
         }
 
         // Set appropriate headers for PDF
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `inline; filename="${candidate.resume.originalName}"`);
-        
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+            "Content-Disposition",
+            `inline; filename="${candidate.resume.originalName}"`
+        );
+
         // Send the file
         res.sendFile(path.resolve(candidate.resume.path));
     } catch (err) {
         console.error("Error viewing resume:", err);
-        res.status(500).json({ message: "Server error while retrieving resume" });
+        res.status(500).json({
+            message: "Server error while retrieving resume",
+        });
     }
 });
 

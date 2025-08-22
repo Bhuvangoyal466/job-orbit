@@ -10,18 +10,18 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
 
     const loadResume = useCallback(async () => {
         if (!candidateId) return;
-        
+
         setLoading(true);
         setError(null);
-        
+
         try {
             const response = await recruiterAPI.viewResume(candidateId);
             const blob = await response.blob();
-            
-            if (blob.type !== 'application/pdf') {
-                throw new Error('Invalid file format. Expected PDF.');
+
+            if (blob.type !== "application/pdf") {
+                throw new Error("Invalid file format. Expected PDF.");
             }
-            
+
             const url = URL.createObjectURL(blob);
             setResumeUrl(url);
         } catch (err) {
@@ -46,7 +46,7 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
         if (isOpen && candidateId) {
             loadResume();
         }
-        
+
         // Cleanup function to revoke object URL
         return () => {
             if (resumeUrl) {
@@ -57,21 +57,21 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
 
     const handleDownload = async () => {
         if (!resumeUrl) return;
-        
+
         try {
             const response = await recruiterAPI.viewResume(candidateId);
             const blob = await response.blob();
-            
+
             // Create download link
             const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = url;
             link.download = `${candidateName}_Resume.pdf`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(url);
-            
+
             toast.success("Resume downloaded successfully");
         } catch (error) {
             console.error("Download error:", error);
@@ -140,7 +140,9 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
                         <div className="flex items-center justify-center h-full">
                             <div className="text-center">
                                 <Loader className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
-                                <p className="text-gray-600">Loading resume...</p>
+                                <p className="text-gray-600">
+                                    Loading resume...
+                                </p>
                             </div>
                         </div>
                     )}
@@ -171,7 +173,7 @@ const ResumeViewer = ({ candidateId, candidateName, isOpen, onClose }) => {
                                 src={resumeUrl}
                                 title={`${candidateName}'s Resume`}
                                 className="w-full h-full"
-                                style={{ minHeight: '500px' }}
+                                style={{ minHeight: "500px" }}
                             />
                         </div>
                     )}

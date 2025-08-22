@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import {
     Calendar,
     Clock,
@@ -25,6 +26,7 @@ import InterviewScheduler from "../../components/InterviewScheduler";
 const API_BASE_URL = "http://localhost:5000/api";
 
 const RecruiterInterviewManagement = () => {
+    const location = useLocation();
     const [interviews, setInterviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [statusFilter, setStatusFilter] = useState("all");
@@ -39,6 +41,14 @@ const RecruiterInterviewManagement = () => {
         recommendation: "hire",
         interviewNotes: "",
     });
+
+    // Check if we came from applicants page with candidate info
+    useEffect(() => {
+        if (location.state?.fromApplicants) {
+            setShowScheduler(true);
+            toast.info(`Opening scheduler for ${location.state.candidateName}`);
+        }
+    }, [location.state]);
 
     const fetchInterviews = async () => {
         try {
@@ -692,8 +702,23 @@ const RecruiterInterviewManagement = () => {
                     isOpen={showScheduler}
                     onClose={() => setShowScheduler(false)}
                     onInterviewScheduled={handleInterviewScheduled}
-                    jobDetails={{}} // You'll need to pass actual job details when integrating
-                    candidateDetails={{}} // You'll need to pass actual candidate details when integrating
+                    jobDetails={
+                        location.state?.fromApplicants
+                            ? {
+                                  id: location.state.jobId,
+                                  title: location.state.jobTitle,
+                              }
+                            : {}
+                    }
+                    candidateDetails={
+                        location.state?.fromApplicants
+                            ? {
+                                  id: location.state.candidateId,
+                                  name: location.state.candidateName,
+                                  email: location.state.candidateEmail,
+                              }
+                            : {}
+                    }
                 />
             )}
         </div>

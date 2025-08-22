@@ -35,7 +35,8 @@ const ManageApplicants = () => {
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showResumeViewer, setShowResumeViewer] = useState(false);
-    const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
+    const [selectedResumeCandidate, setSelectedResumeCandidate] =
+        useState(null);
 
     const fetchApplicants = useCallback(async () => {
         try {
@@ -144,28 +145,30 @@ const ManageApplicants = () => {
 
     const handleViewResume = (applicant) => {
         if (!applicant.candidateId) {
-            toast.error("Unable to view resume: Candidate information not available");
+            toast.error(
+                "Unable to view resume: Candidate information not available"
+            );
             return;
         }
-        
+
         setSelectedResumeCandidate({
             id: applicant.candidateId,
-            name: applicant.name
+            name: applicant.name,
         });
         setShowResumeViewer(true);
     };
 
     const handleScheduleInterview = (applicant) => {
         // Navigate to interview management page with candidate and job information
-        navigate('/recruiter/interviews', {
+        navigate("/recruiter/interviews", {
             state: {
                 candidateId: applicant.candidateId,
                 candidateName: applicant.name,
                 candidateEmail: applicant.email,
                 jobId: applicant.jobId,
                 jobTitle: applicant.jobTitle,
-                fromApplicants: true
-            }
+                fromApplicants: true,
+            },
         });
     };
 
@@ -658,6 +661,16 @@ const ManageApplicants = () => {
                             >
                                 <FileText className="h-4 w-4 mr-2" />
                                 View Resume
+                            </button>
+                            <button
+                                onClick={() => {
+                                    handleScheduleInterview(selectedApplicant);
+                                    closeModal();
+                                }}
+                                className="cursor-pointer inline-flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-purple-700 bg-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 hover:bg-purple-50"
+                            >
+                                <CalendarPlus className="h-4 w-4 mr-2" />
+                                Schedule Interview
                             </button>
                             {selectedApplicant.status !== "hired" &&
                                 selectedApplicant.status !== "rejected" &&
@@ -1153,6 +1166,17 @@ const ManageApplicants = () => {
                                                     title="View Resume"
                                                 >
                                                     <FileText className="h-4 w-4" />
+                                                </button>
+                                                <button
+                                                    className="p-1.5 text-purple-600 hover:bg-purple-50 rounded cursor-pointer"
+                                                    onClick={() =>
+                                                        handleScheduleInterview(
+                                                            applicant
+                                                        )
+                                                    }
+                                                    title="Schedule Interview"
+                                                >
+                                                    <CalendarPlus className="h-4 w-4" />
                                                 </button>
                                                 {applicant.status !== "hired" &&
                                                     applicant.status !==

@@ -235,12 +235,12 @@ export const recruiterAPI = {
                 },
             }
         );
-        
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || "Failed to fetch resume");
         }
-        
+
         return response; // Return the response object to handle blob data
     },
 };
