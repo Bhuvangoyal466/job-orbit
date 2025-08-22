@@ -6,7 +6,6 @@ import {
     Clock,
     CheckCircle,
     XCircle,
-    AlertCircle,
     Eye,
     RefreshCw,
     User,
@@ -19,7 +18,6 @@ const ApplicationTracker = () => {
     const [stats, setStats] = useState({
         total: 0,
         applied: 0,
-        underReview: 0,
         interviewed: 0,
         hired: 0,
         rejected: 0,
@@ -41,7 +39,6 @@ const ApplicationTracker = () => {
                 response.stats || {
                     total: 0,
                     applied: 0,
-                    underReview: 0,
                     interviewed: 0,
                     hired: 0,
                     rejected: 0,
@@ -64,8 +61,6 @@ const ApplicationTracker = () => {
         switch (status) {
             case "applied":
                 return <Clock className="h-5 clw-5 text-blue-600" />;
-            case "under-review":
-                return <AlertCircle className="h-5 w-5 text-yellow-600" />;
             case "interviewed":
                 return <Eye className="h-5 w-5 text-purple-600" />;
             case "hired":
@@ -81,8 +76,6 @@ const ApplicationTracker = () => {
         switch (status) {
             case "applied":
                 return "bg-blue-100 text-blue-800";
-            case "under-review":
-                return "bg-yellow-100 text-yellow-800";
             case "interviewed":
                 return "bg-purple-100 text-purple-800";
             case "hired":
@@ -98,8 +91,6 @@ const ApplicationTracker = () => {
         switch (status) {
             case "applied":
                 return "Applied";
-            case "under-review":
-                return "Under Review";
             case "interviewed":
                 return "Interviewed";
             case "hired":
@@ -157,8 +148,8 @@ const ApplicationTracker = () => {
 
             {/* Stats Overview */}
             {loading ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
-                    {[...Array(5)].map((_, i) => (
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                    {[...Array(4)].map((_, i) => (
                         <div
                             key={i}
                             className="bg-white p-6 rounded-lg shadow animate-pulse"
@@ -174,7 +165,7 @@ const ApplicationTracker = () => {
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-5">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
                     <div className="bg-white p-6 rounded-lg shadow">
                         <div className="flex items-center">
                             <Clock className="h-8 w-8 text-blue-600" />
@@ -184,19 +175,6 @@ const ApplicationTracker = () => {
                                 </p>
                                 <p className="text-2xl font-bold text-gray-900">
                                     {stats.applied}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-lg shadow">
-                        <div className="flex items-center">
-                            <AlertCircle className="h-8 w-8 text-yellow-600" />
-                            <div className="ml-4">
-                                <p className="text-sm font-medium text-gray-600">
-                                    Under Review
-                                </p>
-                                <p className="text-2xl font-bold text-gray-900">
-                                    {stats.underReview}
                                 </p>
                             </div>
                         </div>
@@ -257,7 +235,6 @@ const ApplicationTracker = () => {
                     >
                         <option value="all">All Applications</option>
                         <option value="applied">Applied</option>
-                        <option value="under-review">Under Review</option>
                         <option value="interviewed">Interviewed</option>
                         <option value="hired">Hired</option>
                         <option value="rejected">Rejected</option>

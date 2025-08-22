@@ -71,7 +71,6 @@ const jobSchema = new mongoose.Schema(
                     type: String,
                     enum: [
                         "applied",
-                        "under-review",
                         "interviewed",
                         "hired",
                         "rejected",

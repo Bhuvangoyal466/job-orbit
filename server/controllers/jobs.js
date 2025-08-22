@@ -590,9 +590,6 @@ exports.getCandidateApplications = async (req, res) => {
             total: applications.length,
             applied: applications.filter((app) => app.status === "applied")
                 .length,
-            underReview: applications.filter(
-                (app) => app.status === "under-review"
-            ).length,
             interviewed: applications.filter(
                 (app) => app.status === "interviewed"
             ).length,
@@ -637,7 +634,6 @@ exports.updateApplicationStatus = async (req, res) => {
         // Validate status
         const validStatuses = [
             "applied",
-            "under-review",
             "interviewed",
             "hired",
             "rejected",

@@ -314,3 +314,53 @@ export const jobsAPI = {
         return makeRequest("/jobs/applications");
     },
 };
+
+// Interview API calls
+export const interviewAPI = {
+    // Schedule interview (Recruiter only)
+    scheduleInterview: async (interviewData) => {
+        return makeRequest("/interviews", {
+            method: "POST",
+            body: JSON.stringify(interviewData),
+        });
+    },
+
+    // Get recruiter interviews
+    getRecruiterInterviews: async (params = {}) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return makeRequest(
+            `/interviews/recruiter${queryParams ? `?${queryParams}` : ""}`
+        );
+    },
+
+    // Get candidate interviews
+    getCandidateInterviews: async (params = {}) => {
+        const queryParams = new URLSearchParams(params).toString();
+        return makeRequest(
+            `/interviews/candidate${queryParams ? `?${queryParams}` : ""}`
+        );
+    },
+
+    // Update interview
+    updateInterview: async (interviewId, updateData) => {
+        return makeRequest(`/interviews/${interviewId}`, {
+            method: "PUT",
+            body: JSON.stringify(updateData),
+        });
+    },
+
+    // Cancel interview
+    cancelInterview: async (interviewId) => {
+        return makeRequest(`/interviews/${interviewId}`, {
+            method: "DELETE",
+        });
+    },
+
+    // Add interview feedback (Recruiter only)
+    addFeedback: async (interviewId, feedbackData) => {
+        return makeRequest(`/interviews/${interviewId}/feedback`, {
+            method: "POST",
+            body: JSON.stringify(feedbackData),
+        });
+    },
+};

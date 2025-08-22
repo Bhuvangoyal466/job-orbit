@@ -8,6 +8,7 @@ import {
     BarChart3,
     Settings,
     Building2,
+    Calendar,
 } from "lucide-react";
 
 const RecruiterLayout = () => {
@@ -29,6 +30,11 @@ const RecruiterLayout = () => {
             name: "Manage Applicants",
             href: "/recruiter/applicants",
             icon: Users,
+        },
+        {
+            name: "Interview Management",
+            href: "/recruiter/interviews",
+            icon: Calendar,
         },
     ];
 

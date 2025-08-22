@@ -21,6 +21,7 @@ import CandidateDashboard from "../pages/candidate/CandidateDashboard";
 import JobBoard from "../pages/candidate/JobBoard";
 import UploadResume from "../pages/candidate/UploadResume";
 import ApplicationTracker from "../pages/candidate/ApplicationTracker";
+import InterviewManagement from "../pages/candidate/InterviewManagement";
 
 // Recruiter Pages
 import RecruiterLogin from "../pages/recruiter/RecruiterLogin";
@@ -28,6 +29,7 @@ import RecruiterSignup from "../pages/recruiter/RecruiterSignup";
 import RecruiterDashboard from "../pages/recruiter/RecruiterDashboard";
 import PostJob from "../pages/recruiter/PostJob";
 import ManageApplicants from "../pages/recruiter/ManageApplicants";
+import RecruiterInterviewManagement from "../pages/recruiter/RecruiterInterviewManagement";
 
 const AppRoutes = () => {
     return (
@@ -121,6 +123,10 @@ const AppRoutes = () => {
                             path="applications"
                             element={<ApplicationTracker />}
                         />
+                        <Route
+                            path="interviews"
+                            element={<InterviewManagement />}
+                        />
                     </Route>
 
                     {/* Protected Recruiter routes */}
@@ -143,6 +149,10 @@ const AppRoutes = () => {
                         <Route
                             path="applicants"
                             element={<ManageApplicants />}
+                        />
+                        <Route
+                            path="interviews"
+                            element={<RecruiterInterviewManagement />}
                         />
                     </Route>
 

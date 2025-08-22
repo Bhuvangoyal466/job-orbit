@@ -98,7 +98,6 @@ const CandidateDashboard = () => {
                         value: applications
                             .filter(
                                 (app) =>
-                                    app.status === "under-review" ||
                                     app.status === "interviewed"
                             )
                             .length.toString(),
