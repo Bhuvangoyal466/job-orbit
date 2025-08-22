@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { 
-    Calendar, 
-    Clock, 
-    MapPin, 
-    Video, 
-    Phone, 
-    Building2, 
-    User, 
+import {
+    Calendar,
+    Clock,
+    MapPin,
+    Video,
+    Phone,
+    Building2,
+    User,
     RefreshCw,
     CheckCircle,
     XCircle,
@@ -16,7 +16,7 @@ import {
     UserPlus,
     Star,
     ThumbsUp,
-    ThumbsDown
+    ThumbsDown,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import InterviewScheduler from "../../components/InterviewScheduler";
@@ -37,7 +37,7 @@ const RecruiterInterviewManagement = () => {
         strengths: [],
         weaknesses: [],
         recommendation: "hire",
-        interviewNotes: ""
+        interviewNotes: "",
     });
 
     const fetchInterviews = async () => {
@@ -48,21 +48,26 @@ const RecruiterInterviewManagement = () => {
                 params.append("status", statusFilter);
             }
 
-            const response = await fetch(`${API_BASE_URL}/interviews/recruiter?${params}`, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+            const response = await fetch(
+                `${API_BASE_URL}/interviews/recruiter?${params}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
                 }
-            });
+            );
 
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || 'Failed to fetch interviews');
+                throw new Error(data.message || "Failed to fetch interviews");
             }
 
             setInterviews(data.interviews || []);
         } catch (error) {
-            console.error('Error fetching interviews:', error);
-            toast.error('Failed to load interviews');
+            console.error("Error fetching interviews:", error);
+            toast.error("Failed to load interviews");
             setInterviews([]);
         } finally {
             setLoading(false);
@@ -122,7 +127,9 @@ const RecruiterInterviewManagement = () => {
     };
 
     const formatStatus = (status) => {
-        return status.charAt(0).toUpperCase() + status.slice(1).replace('-', ' ');
+        return (
+            status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ")
+        );
     };
 
     const formatDateTime = (dateTime) => {
@@ -141,33 +148,38 @@ const RecruiterInterviewManagement = () => {
             strengths: interview.feedback?.strengths || [],
             weaknesses: interview.feedback?.weaknesses || [],
             recommendation: interview.feedback?.recommendation || "hire",
-            interviewNotes: interview.notes?.interviewNotes || ""
+            interviewNotes: interview.notes?.interviewNotes || "",
         });
         setShowFeedbackModal(true);
     };
 
     const saveFeedback = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/interviews/${selectedInterview._id}/feedback`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(feedback)
-            });
+            const response = await fetch(
+                `${API_BASE_URL}/interviews/${selectedInterview._id}/feedback`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                    body: JSON.stringify(feedback),
+                }
+            );
 
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || 'Failed to save feedback');
+                throw new Error(data.message || "Failed to save feedback");
             }
 
-            toast.success('Feedback saved successfully');
+            toast.success("Feedback saved successfully");
             setShowFeedbackModal(false);
             fetchInterviews();
         } catch (error) {
-            console.error('Error saving feedback:', error);
-            toast.error('Failed to save feedback');
+            console.error("Error saving feedback:", error);
+            toast.error("Failed to save feedback");
         }
     };
 
@@ -187,14 +199,16 @@ const RecruiterInterviewManagement = () => {
     };
 
     const handleInterviewScheduled = (newInterview) => {
-        setInterviews(prev => [newInterview, ...prev]);
+        setInterviews((prev) => [newInterview, ...prev]);
     };
 
     return (
         <div className="space-y-6">
             <div className="mb-8 flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Interview Management</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                        Interview Management
+                    </h1>
                     <p className="text-gray-600 mt-2">
                         Schedule and manage interviews with candidates
                     </p>
@@ -212,7 +226,11 @@ const RecruiterInterviewManagement = () => {
                         disabled={loading}
                         className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                     >
-                        <RefreshCw className={`-ml-0.5 mr-2 h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+                        <RefreshCw
+                            className={`-ml-0.5 mr-2 h-4 w-4 ${
+                                loading ? "animate-spin" : ""
+                            }`}
+                        />
                         Refresh
                     </button>
                 </div>
@@ -251,7 +269,10 @@ const RecruiterInterviewManagement = () => {
                     <div className="p-6">
                         <div className="animate-pulse space-y-4">
                             {[...Array(3)].map((_, i) => (
-                                <div key={i} className="flex items-center space-x-4">
+                                <div
+                                    key={i}
+                                    className="flex items-center space-x-4"
+                                >
                                     <div className="bg-gray-300 rounded h-5 w-5"></div>
                                     <div className="flex-1 space-y-2">
                                         <div className="h-5 bg-gray-300 rounded w-1/3"></div>
@@ -272,18 +293,25 @@ const RecruiterInterviewManagement = () => {
                         <p className="mt-2 text-gray-500">
                             {statusFilter === "all"
                                 ? "You haven't scheduled any interviews yet."
-                                : `No interviews with status "${formatStatus(statusFilter)}" found.`}
+                                : `No interviews with status "${formatStatus(
+                                      statusFilter
+                                  )}" found.`}
                         </p>
                     </div>
                 ) : (
                     <div className="divide-y divide-gray-200">
                         {interviews.map((interview) => (
-                            <div key={interview._id} className="p-6 hover:bg-gray-50">
+                            <div
+                                key={interview._id}
+                                className="p-6 hover:bg-gray-50"
+                            >
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-start space-x-3">
                                             <div className="flex-shrink-0 mt-1">
-                                                {getStatusIcon(interview.status)}
+                                                {getStatusIcon(
+                                                    interview.status
+                                                )}
                                             </div>
                                             <div className="flex-1">
                                                 <h3 className="text-lg font-semibold text-gray-900">
@@ -292,27 +320,61 @@ const RecruiterInterviewManagement = () => {
                                                 <div className="flex items-center space-x-4 mt-1 text-sm text-gray-600">
                                                     <div className="flex items-center space-x-1">
                                                         <Building2 className="h-4 w-4" />
-                                                        <span>{interview.job?.title}</span>
+                                                        <span>
+                                                            {
+                                                                interview.job
+                                                                    ?.title
+                                                            }
+                                                        </span>
                                                     </div>
                                                     <div className="flex items-center space-x-1">
                                                         <User className="h-4 w-4" />
                                                         <span>
-                                                            {interview.candidate?.firstName} {interview.candidate?.lastName}
+                                                            {
+                                                                interview
+                                                                    .candidate
+                                                                    ?.firstName
+                                                            }{" "}
+                                                            {
+                                                                interview
+                                                                    .candidate
+                                                                    ?.lastName
+                                                            }
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center space-x-1">
-                                                        {getTypeIcon(interview.type)}
-                                                        <span className="capitalize">{interview.type}</span>
+                                                        {getTypeIcon(
+                                                            interview.type
+                                                        )}
+                                                        <span className="capitalize">
+                                                            {interview.type}
+                                                        </span>
                                                     </div>
                                                 </div>
 
                                                 <div className="mt-2 text-sm text-gray-600">
                                                     <div className="flex items-center space-x-1">
                                                         <Calendar className="h-4 w-4" />
-                                                        <span className={isUpcoming(interview.scheduledDateTime) ? "font-medium text-blue-600" : ""}>
-                                                            {formatDateTime(interview.scheduledDateTime)}
+                                                        <span
+                                                            className={
+                                                                isUpcoming(
+                                                                    interview.scheduledDateTime
+                                                                )
+                                                                    ? "font-medium text-blue-600"
+                                                                    : ""
+                                                            }
+                                                        >
+                                                            {formatDateTime(
+                                                                interview.scheduledDateTime
+                                                            )}
                                                         </span>
-                                                        <span>({interview.formattedDuration})</span>
+                                                        <span>
+                                                            (
+                                                            {
+                                                                interview.formattedDuration
+                                                            }
+                                                            )
+                                                        </span>
                                                     </div>
                                                 </div>
 
@@ -324,73 +386,126 @@ const RecruiterInterviewManagement = () => {
 
                                                 {/* Interview Details */}
                                                 <div className="mt-3 space-y-1 text-sm">
-                                                    {interview.type === 'video' && interview.meetingLink && (
-                                                        <div className="flex items-center space-x-2">
-                                                            <Video className="h-4 w-4 text-blue-500" />
-                                                            <a
-                                                                href={interview.meetingLink}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="text-blue-600 hover:text-blue-800 underline"
-                                                            >
-                                                                {interview.meetingLink}
-                                                            </a>
-                                                        </div>
-                                                    )}
-                                                    {interview.type === 'phone' && interview.phoneNumber && (
-                                                        <div className="flex items-center space-x-2">
-                                                            <Phone className="h-4 w-4 text-green-500" />
-                                                            <span className="font-medium">{interview.phoneNumber}</span>
-                                                        </div>
-                                                    )}
-                                                    {interview.type === 'in-person' && interview.location && (
-                                                        <div className="flex items-center space-x-2">
-                                                            <MapPin className="h-4 w-4 text-red-500" />
-                                                            <span>{interview.location}</span>
-                                                        </div>
-                                                    )}
+                                                    {interview.type ===
+                                                        "video" &&
+                                                        interview.meetingLink && (
+                                                            <div className="flex items-center space-x-2">
+                                                                <Video className="h-4 w-4 text-blue-500" />
+                                                                <a
+                                                                    href={
+                                                                        interview.meetingLink
+                                                                    }
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-600 hover:text-blue-800 underline"
+                                                                >
+                                                                    {
+                                                                        interview.meetingLink
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                        )}
+                                                    {interview.type ===
+                                                        "phone" &&
+                                                        interview.phoneNumber && (
+                                                            <div className="flex items-center space-x-2">
+                                                                <Phone className="h-4 w-4 text-green-500" />
+                                                                <span className="font-medium">
+                                                                    {
+                                                                        interview.phoneNumber
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                    {interview.type ===
+                                                        "in-person" &&
+                                                        interview.location && (
+                                                            <div className="flex items-center space-x-2">
+                                                                <MapPin className="h-4 w-4 text-red-500" />
+                                                                <span>
+                                                                    {
+                                                                        interview.location
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                 </div>
 
                                                 {/* Feedback Display */}
                                                 {interview.feedback && (
                                                     <div className="mt-3 p-3 bg-green-50 rounded-lg">
                                                         <div className="flex items-center justify-between mb-2">
-                                                            <p className="text-sm font-medium text-green-800">Interview Feedback</p>
+                                                            <p className="text-sm font-medium text-green-800">
+                                                                Interview
+                                                                Feedback
+                                                            </p>
                                                             <div className="flex items-center space-x-2">
                                                                 <div className="flex items-center">
-                                                                    {[...Array(5)].map((_, i) => (
-                                                                        <Star
-                                                                            key={i}
-                                                                            className={`h-4 w-4 ${
-                                                                                i < interview.feedback.rating 
-                                                                                    ? 'text-yellow-400 fill-current' 
-                                                                                    : 'text-gray-300'
-                                                                            }`}
-                                                                        />
-                                                                    ))}
+                                                                    {[
+                                                                        ...Array(
+                                                                            5
+                                                                        ),
+                                                                    ].map(
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) => (
+                                                                            <Star
+                                                                                key={
+                                                                                    i
+                                                                                }
+                                                                                className={`h-4 w-4 ${
+                                                                                    i <
+                                                                                    interview
+                                                                                        .feedback
+                                                                                        .rating
+                                                                                        ? "text-yellow-400 fill-current"
+                                                                                        : "text-gray-300"
+                                                                                }`}
+                                                                            />
+                                                                        )
+                                                                    )}
                                                                 </div>
                                                                 <div className="flex items-center space-x-1">
-                                                                    {getRecommendationIcon(interview.feedback.recommendation)}
+                                                                    {getRecommendationIcon(
+                                                                        interview
+                                                                            .feedback
+                                                                            .recommendation
+                                                                    )}
                                                                     <span className="text-sm font-medium capitalize">
-                                                                        {interview.feedback.recommendation.replace('-', ' ')}
+                                                                        {interview.feedback.recommendation.replace(
+                                                                            "-",
+                                                                            " "
+                                                                        )}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {interview.feedback.comments && (
+                                                        {interview.feedback
+                                                            .comments && (
                                                             <p className="text-sm text-green-700">
-                                                                {interview.feedback.comments}
+                                                                {
+                                                                    interview
+                                                                        .feedback
+                                                                        .comments
+                                                                }
                                                             </p>
                                                         )}
                                                     </div>
                                                 )}
 
                                                 {/* Notes */}
-                                                {interview.notes?.recruiterNotes && (
+                                                {interview.notes
+                                                    ?.recruiterNotes && (
                                                     <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                                                        <p className="text-sm font-medium text-blue-800">My Notes:</p>
+                                                        <p className="text-sm font-medium text-blue-800">
+                                                            My Notes:
+                                                        </p>
                                                         <p className="text-sm text-blue-700 mt-1">
-                                                            {interview.notes.recruiterNotes}
+                                                            {
+                                                                interview.notes
+                                                                    .recruiterNotes
+                                                            }
                                                         </p>
                                                     </div>
                                                 )}
@@ -400,14 +515,20 @@ const RecruiterInterviewManagement = () => {
 
                                     <div className="flex flex-col items-end space-y-3 ml-4">
                                         <span
-                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(interview.status)}`}
+                                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                                                interview.status
+                                            )}`}
                                         >
                                             {formatStatus(interview.status)}
                                         </span>
 
-                                        {(interview.status === 'scheduled' || interview.status === 'rescheduled') && (
+                                        {(interview.status === "scheduled" ||
+                                            interview.status ===
+                                                "rescheduled") && (
                                             <button
-                                                onClick={() => handleAddFeedback(interview)}
+                                                onClick={() =>
+                                                    handleAddFeedback(interview)
+                                                }
                                                 className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
                                             >
                                                 <MessageSquare className="h-3 w-3 mr-1" />
@@ -417,7 +538,9 @@ const RecruiterInterviewManagement = () => {
 
                                         {interview.feedback && (
                                             <button
-                                                onClick={() => handleAddFeedback(interview)}
+                                                onClick={() =>
+                                                    handleAddFeedback(interview)
+                                                }
                                                 className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50"
                                             >
                                                 <Edit3 className="h-3 w-3 mr-1" />
@@ -441,7 +564,9 @@ const RecruiterInterviewManagement = () => {
                                 Interview Feedback
                             </h3>
                             <p className="text-sm text-gray-600 mb-6">
-                                {selectedInterview?.title} - {selectedInterview?.candidate?.firstName} {selectedInterview?.candidate?.lastName}
+                                {selectedInterview?.title} -{" "}
+                                {selectedInterview?.candidate?.firstName}{" "}
+                                {selectedInterview?.candidate?.lastName}
                             </p>
 
                             <div className="space-y-4">
@@ -455,19 +580,27 @@ const RecruiterInterviewManagement = () => {
                                             <button
                                                 key={rating}
                                                 type="button"
-                                                onClick={() => setFeedback(prev => ({ ...prev, rating }))}
+                                                onClick={() =>
+                                                    setFeedback((prev) => ({
+                                                        ...prev,
+                                                        rating,
+                                                    }))
+                                                }
                                                 className="focus:outline-none"
                                             >
                                                 <Star
                                                     className={`h-6 w-6 ${
-                                                        rating <= feedback.rating
-                                                            ? 'text-yellow-400 fill-current'
-                                                            : 'text-gray-300'
+                                                        rating <=
+                                                        feedback.rating
+                                                            ? "text-yellow-400 fill-current"
+                                                            : "text-gray-300"
                                                     }`}
                                                 />
                                             </button>
                                         ))}
-                                        <span className="ml-2 text-sm text-gray-600">({feedback.rating}/5)</span>
+                                        <span className="ml-2 text-sm text-gray-600">
+                                            ({feedback.rating}/5)
+                                        </span>
                                     </div>
                                 </div>
 
@@ -478,13 +611,20 @@ const RecruiterInterviewManagement = () => {
                                     </label>
                                     <select
                                         value={feedback.recommendation}
-                                        onChange={(e) => setFeedback(prev => ({ ...prev, recommendation: e.target.value }))}
+                                        onChange={(e) =>
+                                            setFeedback((prev) => ({
+                                                ...prev,
+                                                recommendation: e.target.value,
+                                            }))
+                                        }
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     >
                                         <option value="hire">Hire</option>
                                         <option value="reject">Reject</option>
                                         <option value="maybe">Maybe</option>
-                                        <option value="next-round">Next Round</option>
+                                        <option value="next-round">
+                                            Next Round
+                                        </option>
                                     </select>
                                 </div>
 
@@ -495,7 +635,12 @@ const RecruiterInterviewManagement = () => {
                                     </label>
                                     <textarea
                                         value={feedback.comments}
-                                        onChange={(e) => setFeedback(prev => ({ ...prev, comments: e.target.value }))}
+                                        onChange={(e) =>
+                                            setFeedback((prev) => ({
+                                                ...prev,
+                                                comments: e.target.value,
+                                            }))
+                                        }
                                         rows={4}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Overall feedback about the candidate..."
@@ -509,7 +654,12 @@ const RecruiterInterviewManagement = () => {
                                     </label>
                                     <textarea
                                         value={feedback.interviewNotes}
-                                        onChange={(e) => setFeedback(prev => ({ ...prev, interviewNotes: e.target.value }))}
+                                        onChange={(e) =>
+                                            setFeedback((prev) => ({
+                                                ...prev,
+                                                interviewNotes: e.target.value,
+                                            }))
+                                        }
                                         rows={3}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Notes about the interview process..."

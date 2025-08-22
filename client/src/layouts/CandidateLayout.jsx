@@ -1,7 +1,15 @@
 import React from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
-import { Home, Search, FileText, BarChart3, Upload, User, Calendar } from "lucide-react";
+import {
+    Home,
+    Search,
+    FileText,
+    BarChart3,
+    Upload,
+    User,
+    Calendar,
+} from "lucide-react";
 
 const CandidateLayout = () => {
     const { user } = useAuth();

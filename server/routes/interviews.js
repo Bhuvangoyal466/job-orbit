@@ -22,7 +22,7 @@ router.post("/", protect, async (req, res) => {
             location,
             meetingLink,
             phoneNumber,
-            notes
+            notes,
         } = req.body;
 
         // Verify the recruiter owns this job
@@ -32,7 +32,12 @@ router.post("/", protect, async (req, res) => {
         }
 
         if (job.recruiter._id.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Not authorized to schedule interview for this job" });
+            return res
+                .status(403)
+                .json({
+                    message:
+                        "Not authorized to schedule interview for this job",
+                });
         }
 
         // Verify candidate exists and has applied to this job
@@ -42,28 +47,29 @@ router.post("/", protect, async (req, res) => {
         }
 
         const hasApplied = job.applicants.some(
-            applicant => applicant.candidateId.toString() === candidateId
+            (applicant) => applicant.candidateId.toString() === candidateId
         );
         if (!hasApplied) {
-            return res.status(400).json({ message: "Candidate has not applied to this job" });
+            return res
+                .status(400)
+                .json({ message: "Candidate has not applied to this job" });
         }
 
         // Check for scheduling conflicts
         const conflictingInterview = await Interview.findOne({
-            $or: [
-                { candidate: candidateId },
-                { recruiter: req.user.id }
-            ],
+            $or: [{ candidate: candidateId }, { recruiter: req.user.id }],
             scheduledDateTime: {
                 $gte: new Date(scheduledDateTime),
-                $lt: new Date(new Date(scheduledDateTime).getTime() + (duration * 60000))
+                $lt: new Date(
+                    new Date(scheduledDateTime).getTime() + duration * 60000
+                ),
             },
-            status: { $in: ["scheduled", "rescheduled"] }
+            status: { $in: ["scheduled", "rescheduled"] },
         });
 
         if (conflictingInterview) {
-            return res.status(400).json({ 
-                message: "Time slot conflicts with another scheduled interview" 
+            return res.status(400).json({
+                message: "Time slot conflicts with another scheduled interview",
             });
         }
 
@@ -80,8 +86,8 @@ router.post("/", protect, async (req, res) => {
             meetingLink: type === "video" ? meetingLink : undefined,
             phoneNumber: type === "phone" ? phoneNumber : undefined,
             notes: {
-                recruiterNotes: notes || ""
-            }
+                recruiterNotes: notes || "",
+            },
         });
 
         await interview.save();
@@ -94,14 +100,13 @@ router.post("/", protect, async (req, res) => {
 
         res.status(201).json({
             message: "Interview scheduled successfully",
-            interview: populatedInterview
+            interview: populatedInterview,
         });
-
     } catch (error) {
         console.error("Error scheduling interview:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });
@@ -112,20 +117,20 @@ router.post("/", protect, async (req, res) => {
 router.get("/recruiter", protect, async (req, res) => {
     try {
         const { status, date } = req.query;
-        
+
         let query = { recruiter: req.user.id };
-        
+
         if (status && status !== "all") {
             query.status = status;
         }
-        
+
         if (date) {
             const startDate = new Date(date);
             const endDate = new Date(startDate);
             endDate.setDate(endDate.getDate() + 1);
             query.scheduledDateTime = {
                 $gte: startDate,
-                $lt: endDate
+                $lt: endDate,
             };
         }
 
@@ -135,12 +140,11 @@ router.get("/recruiter", protect, async (req, res) => {
             .sort({ scheduledDateTime: 1 });
 
         res.json({ interviews });
-
     } catch (error) {
         console.error("Error fetching recruiter interviews:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });
@@ -151,20 +155,20 @@ router.get("/recruiter", protect, async (req, res) => {
 router.get("/candidate", protect, async (req, res) => {
     try {
         const { status, date } = req.query;
-        
+
         let query = { candidate: req.user.id };
-        
+
         if (status && status !== "all") {
             query.status = status;
         }
-        
+
         if (date) {
             const startDate = new Date(date);
             const endDate = new Date(startDate);
             endDate.setDate(endDate.getDate() + 1);
             query.scheduledDateTime = {
                 $gte: startDate,
-                $lt: endDate
+                $lt: endDate,
             };
         }
 
@@ -174,12 +178,11 @@ router.get("/candidate", protect, async (req, res) => {
             .sort({ scheduledDateTime: 1 });
 
         res.json({ interviews });
-
     } catch (error) {
         console.error("Error fetching candidate interviews:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });
@@ -190,7 +193,7 @@ router.get("/candidate", protect, async (req, res) => {
 router.put("/:id", protect, async (req, res) => {
     try {
         const interview = await Interview.findById(req.params.id);
-        
+
         if (!interview) {
             return res.status(404).json({ message: "Interview not found" });
         }
@@ -198,7 +201,7 @@ router.put("/:id", protect, async (req, res) => {
         // Check if user is authorized (recruiter or candidate)
         const isRecruiter = interview.recruiter.toString() === req.user.id;
         const isCandidate = interview.candidate.toString() === req.user.id;
-        
+
         if (!isRecruiter && !isCandidate) {
             return res.status(403).json({ message: "Not authorized" });
         }
@@ -212,28 +215,35 @@ router.put("/:id", protect, async (req, res) => {
             status,
             candidateNotes,
             recruiterNotes,
-            rescheduledReason
+            rescheduledReason,
         } = req.body;
 
         // Handle rescheduling
-        if (scheduledDateTime && scheduledDateTime !== interview.scheduledDateTime.toISOString()) {
+        if (
+            scheduledDateTime &&
+            scheduledDateTime !== interview.scheduledDateTime.toISOString()
+        ) {
             // Check for conflicts
             const conflictingInterview = await Interview.findOne({
                 _id: { $ne: interview._id },
                 $or: [
                     { candidate: interview.candidate },
-                    { recruiter: interview.recruiter }
+                    { recruiter: interview.recruiter },
                 ],
                 scheduledDateTime: {
                     $gte: new Date(scheduledDateTime),
-                    $lt: new Date(new Date(scheduledDateTime).getTime() + ((duration || interview.duration) * 60000))
+                    $lt: new Date(
+                        new Date(scheduledDateTime).getTime() +
+                            (duration || interview.duration) * 60000
+                    ),
                 },
-                status: { $in: ["scheduled", "rescheduled"] }
+                status: { $in: ["scheduled", "rescheduled"] },
             });
 
             if (conflictingInterview) {
-                return res.status(400).json({ 
-                    message: "Time slot conflicts with another scheduled interview" 
+                return res.status(400).json({
+                    message:
+                        "Time slot conflicts with another scheduled interview",
                 });
             }
 
@@ -267,14 +277,13 @@ router.put("/:id", protect, async (req, res) => {
 
         res.json({
             message: "Interview updated successfully",
-            interview: updatedInterview
+            interview: updatedInterview,
         });
-
     } catch (error) {
         console.error("Error updating interview:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });
@@ -285,7 +294,7 @@ router.put("/:id", protect, async (req, res) => {
 router.delete("/:id", protect, async (req, res) => {
     try {
         const interview = await Interview.findById(req.params.id);
-        
+
         if (!interview) {
             return res.status(404).json({ message: "Interview not found" });
         }
@@ -293,7 +302,7 @@ router.delete("/:id", protect, async (req, res) => {
         // Check if user is authorized (recruiter or candidate)
         const isRecruiter = interview.recruiter.toString() === req.user.id;
         const isCandidate = interview.candidate.toString() === req.user.id;
-        
+
         if (!isRecruiter && !isCandidate) {
             return res.status(403).json({ message: "Not authorized" });
         }
@@ -302,12 +311,11 @@ router.delete("/:id", protect, async (req, res) => {
         await interview.save();
 
         res.json({ message: "Interview cancelled successfully" });
-
     } catch (error) {
         console.error("Error cancelling interview:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });
@@ -318,24 +326,33 @@ router.delete("/:id", protect, async (req, res) => {
 router.post("/:id/feedback", protect, async (req, res) => {
     try {
         const interview = await Interview.findById(req.params.id);
-        
+
         if (!interview) {
             return res.status(404).json({ message: "Interview not found" });
         }
 
         // Check if user is the recruiter
         if (interview.recruiter.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Only recruiters can add feedback" });
+            return res
+                .status(403)
+                .json({ message: "Only recruiters can add feedback" });
         }
 
-        const { rating, comments, strengths, weaknesses, recommendation, interviewNotes } = req.body;
+        const {
+            rating,
+            comments,
+            strengths,
+            weaknesses,
+            recommendation,
+            interviewNotes,
+        } = req.body;
 
         interview.feedback = {
             rating,
             comments,
             strengths: strengths || [],
             weaknesses: weaknesses || [],
-            recommendation
+            recommendation,
         };
 
         if (interviewNotes) {
@@ -348,36 +365,35 @@ router.post("/:id/feedback", protect, async (req, res) => {
         // Update job applicant status based on recommendation
         if (recommendation === "hire") {
             await Job.updateOne(
-                { 
-                    "_id": interview.job, 
-                    "applicants.candidateId": interview.candidate 
+                {
+                    _id: interview.job,
+                    "applicants.candidateId": interview.candidate,
                 },
-                { 
-                    "$set": { "applicants.$.status": "hired" } 
+                {
+                    $set: { "applicants.$.status": "hired" },
                 }
             );
         } else if (recommendation === "reject") {
             await Job.updateOne(
-                { 
-                    "_id": interview.job, 
-                    "applicants.candidateId": interview.candidate 
+                {
+                    _id: interview.job,
+                    "applicants.candidateId": interview.candidate,
                 },
-                { 
-                    "$set": { "applicants.$.status": "rejected" } 
+                {
+                    $set: { "applicants.$.status": "rejected" },
                 }
             );
         }
 
-        res.json({ 
+        res.json({
             message: "Feedback added successfully",
-            interview 
+            interview,
         });
-
     } catch (error) {
         console.error("Error adding feedback:", error);
-        res.status(500).json({ 
-            message: "Server error", 
-            error: error.message 
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
         });
     }
 });

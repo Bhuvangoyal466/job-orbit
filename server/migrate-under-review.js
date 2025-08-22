@@ -5,7 +5,9 @@ require("dotenv").config();
 
 const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/job-orbit");
+        await mongoose.connect(
+            process.env.MONGODB_URI || "mongodb://localhost:27017/job-orbit"
+        );
         console.log("MongoDB connected for migration");
     } catch (error) {
         console.error("MongoDB connection error:", error);
@@ -23,7 +25,9 @@ const migrateUnderReviewStatus = async () => {
             { $set: { "applicants.$.status": "applied" } }
         );
 
-        console.log(`Updated ${jobUpdateResult.modifiedCount} job applicant records`);
+        console.log(
+            `Updated ${jobUpdateResult.modifiedCount} job applicant records`
+        );
 
         // Update Candidate applications with 'under-review' status to 'applied'
         const candidateUpdateResult = await Candidate.updateMany(
@@ -31,10 +35,11 @@ const migrateUnderReviewStatus = async () => {
             { $set: { "applications.$.status": "applied" } }
         );
 
-        console.log(`Updated ${candidateUpdateResult.modifiedCount} candidate application records`);
+        console.log(
+            `Updated ${candidateUpdateResult.modifiedCount} candidate application records`
+        );
 
         console.log("Migration completed successfully!");
-
     } catch (error) {
         console.error("Migration error:", error);
     } finally {

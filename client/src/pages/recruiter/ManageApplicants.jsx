@@ -16,11 +16,15 @@ import {
     Award,
     Clock,
     XIcon,
+    CalendarPlus,
 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import { recruiterAPI } from "../../utils/api";
+import ResumeViewer from "../../components/ResumeViewer";
 
 const ManageApplicants = () => {
+    const navigate = useNavigate();
     const [selectedStatus, setSelectedStatus] = useState("all");
     const [sortBy, setSortBy] = useState("appliedDate"); // New sorting state
     const [sortOrder, setSortOrder] = useState("desc"); // New sorting order state
@@ -30,6 +34,8 @@ const ManageApplicants = () => {
     const [updatingStatus, setUpdatingStatus] = useState({});
     const [selectedApplicant, setSelectedApplicant] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [showResumeViewer, setShowResumeViewer] = useState(false);
+    const [selectedResumeCandidate, setSelectedResumeCandidate] = useState(null);
 
     const fetchApplicants = useCallback(async () => {
         try {
@@ -137,8 +143,30 @@ const ManageApplicants = () => {
     };
 
     const handleViewResume = (applicant) => {
-        toast.info(`Opening resume for ${applicant.name}`);
-        // TODO: Implement resume viewing functionality
+        if (!applicant.candidateId) {
+            toast.error("Unable to view resume: Candidate information not available");
+            return;
+        }
+        
+        setSelectedResumeCandidate({
+            id: applicant.candidateId,
+            name: applicant.name
+        });
+        setShowResumeViewer(true);
+    };
+
+    const handleScheduleInterview = (applicant) => {
+        // Navigate to interview management page with candidate and job information
+        navigate('/recruiter/interviews', {
+            state: {
+                candidateId: applicant.candidateId,
+                candidateName: applicant.name,
+                candidateEmail: applicant.email,
+                jobId: applicant.jobId,
+                jobTitle: applicant.jobTitle,
+                fromApplicants: true
+            }
+        });
     };
 
     const handleAcceptApplicant = (applicant) => {
@@ -947,6 +975,17 @@ const ManageApplicants = () => {
                                                 >
                                                     <FileText className="h-4 w-4" />
                                                 </button>
+                                                <button
+                                                    className="p-2 text-purple-600 hover:bg-purple-50 rounded-md cursor-pointer"
+                                                    onClick={() =>
+                                                        handleScheduleInterview(
+                                                            applicant
+                                                        )
+                                                    }
+                                                    title="Schedule Interview"
+                                                >
+                                                    <CalendarPlus className="h-4 w-4" />
+                                                </button>
                                                 {applicant.status !== "hired" &&
                                                     applicant.status !==
                                                         "rejected" &&
@@ -1168,6 +1207,19 @@ const ManageApplicants = () => {
 
             {/* Application Details Modal */}
             <ApplicationModal />
+
+            {/* Resume Viewer Modal */}
+            {selectedResumeCandidate && (
+                <ResumeViewer
+                    candidateId={selectedResumeCandidate.id}
+                    candidateName={selectedResumeCandidate.name}
+                    isOpen={showResumeViewer}
+                    onClose={() => {
+                        setShowResumeViewer(false);
+                        setSelectedResumeCandidate(null);
+                    }}
+                />
+            )}
         </div>
     );
 };

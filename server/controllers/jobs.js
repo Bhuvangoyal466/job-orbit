@@ -632,12 +632,7 @@ exports.updateApplicationStatus = async (req, res) => {
         }
 
         // Validate status
-        const validStatuses = [
-            "applied",
-            "interviewed",
-            "hired",
-            "rejected",
-        ];
+        const validStatuses = ["applied", "interviewed", "hired", "rejected"];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({ message: "Invalid status" });
         }
@@ -765,7 +760,7 @@ exports.getRecruiterApplicants = async (req, res) => {
         const jobs = await Job.find(query)
             .populate({
                 path: "applicants.candidateId",
-                select: "firstName lastName email phone dateOfBirth education experience skills profile",
+                select: "firstName lastName email phone dateOfBirth education experience skills profile profileCompleteness",
             })
             .select("title applicants createdAt numberOfOpenings");
 

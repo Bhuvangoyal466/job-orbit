@@ -222,6 +222,27 @@ export const recruiterAPI = {
             `/jobs/recruiter/myjobs${queryParams ? `?${queryParams}` : ""}`
         );
     },
+
+    // View candidate resume
+    viewResume: async (candidateId) => {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+            `${API_BASE_URL}/candidate/view/${candidateId}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: token ? `Bearer ${token}` : undefined,
+                },
+            }
+        );
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to fetch resume");
+        }
+        
+        return response; // Return the response object to handle blob data
+    },
 };
 
 // General utility functions

@@ -96,10 +96,7 @@ const CandidateDashboard = () => {
                     {
                         name: "Interviews",
                         value: applications
-                            .filter(
-                                (app) =>
-                                    app.status === "interviewed"
-                            )
+                            .filter((app) => app.status === "interviewed")
                             .length.toString(),
                         icon: Calendar,
                         color: "bg-green-500",

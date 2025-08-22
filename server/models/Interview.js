@@ -35,11 +35,12 @@ const interviewSchema = new mongoose.Schema(
             type: Date,
             required: [true, "Interview date and time is required"],
             validate: {
-                validator: function(value) {
+                validator: function (value) {
                     return value > new Date();
                 },
-                message: "Interview must be scheduled for a future date and time"
-            }
+                message:
+                    "Interview must be scheduled for a future date and time",
+            },
         },
         duration: {
             type: Number, // Duration in minutes
@@ -49,26 +50,32 @@ const interviewSchema = new mongoose.Schema(
         },
         location: {
             type: String,
-            required: function() {
+            required: function () {
                 return this.type === "in-person";
-            }
+            },
         },
         meetingLink: {
             type: String,
-            required: function() {
+            required: function () {
                 return this.type === "video";
             },
-            match: [/^https?:\/\/.+/, "Meeting link must be a valid URL"]
+            match: [/^https?:\/\/.+/, "Meeting link must be a valid URL"],
         },
         phoneNumber: {
             type: String,
-            required: function() {
+            required: function () {
                 return this.type === "phone";
-            }
+            },
         },
         status: {
             type: String,
-            enum: ["scheduled", "rescheduled", "completed", "cancelled", "no-show"],
+            enum: [
+                "scheduled",
+                "rescheduled",
+                "completed",
+                "cancelled",
+                "no-show",
+            ],
             default: "scheduled",
         },
         notes: {
@@ -88,7 +95,7 @@ const interviewSchema = new mongoose.Schema(
             recommendation: {
                 type: String,
                 enum: ["hire", "reject", "maybe", "next-round"],
-            }
+            },
         },
         reminders: {
             candidateReminded: {
@@ -106,7 +113,7 @@ const interviewSchema = new mongoose.Schema(
         },
         rescheduledReason: {
             type: String,
-        }
+        },
     },
     {
         timestamps: true,
@@ -116,20 +123,22 @@ const interviewSchema = new mongoose.Schema(
 );
 
 // Virtual for interview end time
-interviewSchema.virtual("endDateTime").get(function() {
+interviewSchema.virtual("endDateTime").get(function () {
     if (this.scheduledDateTime && this.duration) {
-        return new Date(this.scheduledDateTime.getTime() + (this.duration * 60000));
+        return new Date(
+            this.scheduledDateTime.getTime() + this.duration * 60000
+        );
     }
     return null;
 });
 
 // Virtual for formatted duration
-interviewSchema.virtual("formattedDuration").get(function() {
+interviewSchema.virtual("formattedDuration").get(function () {
     if (this.duration) {
         const hours = Math.floor(this.duration / 60);
         const minutes = this.duration % 60;
         if (hours > 0) {
-            return `${hours}h ${minutes > 0 ? minutes + 'm' : ''}`.trim();
+            return `${hours}h ${minutes > 0 ? minutes + "m" : ""}`.trim();
         }
         return `${minutes}m`;
     }
@@ -144,17 +153,17 @@ interviewSchema.index({ status: 1 });
 interviewSchema.index({ scheduledDateTime: 1 });
 
 // Pre-save middleware to update job applicant status
-interviewSchema.pre("save", async function(next) {
+interviewSchema.pre("save", async function (next) {
     if (this.isNew) {
         try {
             const Job = mongoose.model("Job");
             await Job.updateOne(
-                { 
-                    "_id": this.job, 
-                    "applicants.candidateId": this.candidate 
+                {
+                    _id: this.job,
+                    "applicants.candidateId": this.candidate,
                 },
-                { 
-                    "$set": { "applicants.$.status": "interviewed" } 
+                {
+                    $set: { "applicants.$.status": "interviewed" },
                 }
             );
         } catch (error) {

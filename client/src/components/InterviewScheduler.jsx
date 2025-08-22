@@ -5,31 +5,37 @@ import { toast } from "react-toastify";
 // API base URL - should match the one in utils/api.js
 const API_BASE_URL = "http://localhost:5000/api";
 
-const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onInterviewScheduled }) => {
+const InterviewScheduler = ({
+    isOpen,
+    onClose,
+    jobDetails,
+    candidateDetails,
+    onInterviewScheduled,
+}) => {
     const [formData, setFormData] = useState({
-        title: `Interview for ${jobDetails?.title || 'Position'}`,
-        description: '',
-        type: 'video',
-        scheduledDateTime: '',
+        title: `Interview for ${jobDetails?.title || "Position"}`,
+        description: "",
+        type: "video",
+        scheduledDateTime: "",
         duration: 60,
-        location: '',
-        meetingLink: '',
-        phoneNumber: '',
-        notes: ''
+        location: "",
+        meetingLink: "",
+        phoneNumber: "",
+        notes: "",
     });
     const [loading, setLoading] = useState(false);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         // Validation
         if (!formData.scheduledDateTime) {
             toast.error("Please select a date and time for the interview");
@@ -37,21 +43,23 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
         }
 
         if (new Date(formData.scheduledDateTime) <= new Date()) {
-            toast.error("Interview must be scheduled for a future date and time");
+            toast.error(
+                "Interview must be scheduled for a future date and time"
+            );
             return;
         }
 
-        if (formData.type === 'in-person' && !formData.location) {
+        if (formData.type === "in-person" && !formData.location) {
             toast.error("Please provide a location for in-person interview");
             return;
         }
 
-        if (formData.type === 'video' && !formData.meetingLink) {
+        if (formData.type === "video" && !formData.meetingLink) {
             toast.error("Please provide a meeting link for video interview");
             return;
         }
 
-        if (formData.type === 'phone' && !formData.phoneNumber) {
+        if (formData.type === "phone" && !formData.phoneNumber) {
             toast.error("Please provide a phone number for phone interview");
             return;
         }
@@ -59,31 +67,30 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
         setLoading(true);
         try {
             const response = await fetch(`${API_BASE_URL}/interviews`, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: JSON.stringify({
                     jobId: jobDetails.id,
                     candidateId: candidateDetails.id,
-                    ...formData
-                })
+                    ...formData,
+                }),
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || 'Failed to schedule interview');
+                throw new Error(data.message || "Failed to schedule interview");
             }
 
-            toast.success('Interview scheduled successfully!');
+            toast.success("Interview scheduled successfully!");
             onInterviewScheduled(data.interview);
             onClose();
-            
         } catch (error) {
-            console.error('Error scheduling interview:', error);
-            toast.error(error.message || 'Failed to schedule interview');
+            console.error("Error scheduling interview:", error);
+            toast.error(error.message || "Failed to schedule interview");
         } finally {
             setLoading(false);
         }
@@ -93,11 +100,11 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
 
     const getTypeIcon = (type) => {
         switch (type) {
-            case 'video':
+            case "video":
                 return <Video className="h-5 w-5" />;
-            case 'phone':
+            case "phone":
                 return <Phone className="h-5 w-5" />;
-            case 'in-person':
+            case "in-person":
                 return <MapPin className="h-5 w-5" />;
             default:
                 return <Calendar className="h-5 w-5" />;
@@ -109,7 +116,9 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
             <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold text-gray-900">Schedule Interview</h2>
+                        <h2 className="text-2xl font-bold text-gray-900">
+                            Schedule Interview
+                        </h2>
                         <button
                             onClick={onClose}
                             className="p-2 hover:bg-gray-100 rounded-full"
@@ -120,17 +129,28 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
 
                     {/* Candidate and Job Info */}
                     <div className="bg-gray-50 rounded-lg p-4 mb-6">
-                        <h3 className="font-semibold text-gray-900 mb-2">Interview Details</h3>
+                        <h3 className="font-semibold text-gray-900 mb-2">
+                            Interview Details
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                             <div>
                                 <p className="text-gray-600">Candidate:</p>
-                                <p className="font-medium">{candidateDetails?.firstName} {candidateDetails?.lastName}</p>
-                                <p className="text-gray-500">{candidateDetails?.email}</p>
+                                <p className="font-medium">
+                                    {candidateDetails?.firstName}{" "}
+                                    {candidateDetails?.lastName}
+                                </p>
+                                <p className="text-gray-500">
+                                    {candidateDetails?.email}
+                                </p>
                             </div>
                             <div>
                                 <p className="text-gray-600">Position:</p>
-                                <p className="font-medium">{jobDetails?.title}</p>
-                                <p className="text-gray-500">{jobDetails?.company?.name}</p>
+                                <p className="font-medium">
+                                    {jobDetails?.title}
+                                </p>
+                                <p className="text-gray-500">
+                                    {jobDetails?.company?.name}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -172,19 +192,28 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
                                 Interview Type *
                             </label>
                             <div className="grid grid-cols-3 gap-3">
-                                {['video', 'phone', 'in-person'].map((type) => (
+                                {["video", "phone", "in-person"].map((type) => (
                                     <button
                                         key={type}
                                         type="button"
-                                        onClick={() => setFormData(prev => ({ ...prev, type }))}
+                                        onClick={() =>
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                type,
+                                            }))
+                                        }
                                         className={`p-3 border rounded-lg flex items-center justify-center gap-2 transition-colors ${
                                             formData.type === type
-                                                ? 'border-blue-500 bg-blue-50 text-blue-700'
-                                                : 'border-gray-300 hover:border-gray-400'
+                                                ? "border-blue-500 bg-blue-50 text-blue-700"
+                                                : "border-gray-300 hover:border-gray-400"
                                         }`}
                                     >
                                         {getTypeIcon(type)}
-                                        <span className="capitalize text-sm">{type === 'in-person' ? 'In Person' : type}</span>
+                                        <span className="capitalize text-sm">
+                                            {type === "in-person"
+                                                ? "In Person"
+                                                : type}
+                                        </span>
                                     </button>
                                 ))}
                             </div>
@@ -227,7 +256,7 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
                         </div>
 
                         {/* Conditional Fields Based on Type */}
-                        {formData.type === 'video' && (
+                        {formData.type === "video" && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Meeting Link *
@@ -244,7 +273,7 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
                             </div>
                         )}
 
-                        {formData.type === 'phone' && (
+                        {formData.type === "phone" && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Phone Number *
@@ -261,7 +290,7 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
                             </div>
                         )}
 
-                        {formData.type === 'in-person' && (
+                        {formData.type === "in-person" && (
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Location *
@@ -308,7 +337,9 @@ const InterviewScheduler = ({ isOpen, onClose, jobDetails, candidateDetails, onI
                                 disabled={loading}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
                             >
-                                {loading && <Clock className="h-4 w-4 animate-spin" />}
+                                {loading && (
+                                    <Clock className="h-4 w-4 animate-spin" />
+                                )}
                                 Schedule Interview
                             </button>
                         </div>
