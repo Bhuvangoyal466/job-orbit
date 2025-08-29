@@ -121,7 +121,7 @@ const InterviewScheduler = ({
                         </h2>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-gray-100 rounded-full"
+                            className="p-2 hover:bg-gray-100 rounded-full cursor-pointer"
                         >
                             <X className="h-5 w-5" />
                         </button>
@@ -202,7 +202,7 @@ const InterviewScheduler = ({
                                                 type,
                                             }))
                                         }
-                                        className={`p-3 border rounded-lg flex items-center justify-center gap-2 transition-colors ${
+                                        className={`p-3 border rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer ${
                                             formData.type === type
                                                 ? "border-blue-500 bg-blue-50 text-blue-700"
                                                 : "border-gray-300 hover:border-gray-400"
@@ -327,7 +327,7 @@ const InterviewScheduler = ({
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+                                className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50 cursor-pointer"
                                 disabled={loading}
                             >
                                 Cancel
@@ -335,7 +335,7 @@ const InterviewScheduler = ({
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2"
+                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 flex items-center gap-2 cursor-pointer"
                             >
                                 {loading && (
                                     <Clock className="h-4 w-4 animate-spin" />

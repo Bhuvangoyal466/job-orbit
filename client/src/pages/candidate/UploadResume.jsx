@@ -145,7 +145,7 @@ const UploadResume = () => {
                             : "Drop your resume here"}
                     </p>
                     <p className="text-gray-600 mb-4">
-                        or click to browse files (PDF only)
+                        or click to browse files (PDF or Word only)
                     </p>
                     <input
                         type="file"
@@ -212,7 +212,7 @@ const UploadResume = () => {
                             )}
                             {!editMode && (
                                 <button
-                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 whitespace-nowrap"
+                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 whitespace-nowrap cursor-pointer"
                                     onClick={() => setEditMode(true)}
                                 >
                                     Edit
@@ -720,7 +720,7 @@ const UploadResume = () => {
                                                         idx
                                                     )
                                                 }
-                                                className="mt-3 text-red-600 hover:text-red-800 text-sm font-medium"
+                                                className="mt-3 text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer"
                                             >
                                                 Remove Education
                                             </button>
@@ -738,7 +738,7 @@ const UploadResume = () => {
                                                 grade: "",
                                             })
                                         }
-                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors"
+                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors cursor-pointer"
                                     >
                                         + Add Education
                                     </button>
@@ -969,14 +969,14 @@ const UploadResume = () => {
                                 <div className="flex justify-end space-x-4">
                                     <button
                                         type="button"
-                                        className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                                        className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors cursor-pointer"
                                         onClick={() => setEditMode(false)}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
-                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                                        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
                                     >
                                         Save Changes
                                     </button>

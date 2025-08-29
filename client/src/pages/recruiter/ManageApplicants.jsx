@@ -301,7 +301,7 @@ const ManageApplicants = () => {
                         </div>
                         <button
                             onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2"
+                            className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2 cursor-pointer"
                         >
                             <XIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                         </button>

@@ -150,7 +150,7 @@ const ForgotPassword = () => {
                             <button
                                 type="button"
                                 onClick={() => toggleUserType("candidate")}
-                                className={`flex-1 py-2 px-4 text-sm font-medium text-center transition-colors ${
+                                className={`flex-1 py-2 px-4 text-sm font-medium text-center transition-colors cursor-pointer ${
                                     userType === "candidate"
                                         ? "bg-blue-600 text-white"
                                         : "bg-white text-gray-700 hover:bg-gray-50"
@@ -161,7 +161,7 @@ const ForgotPassword = () => {
                             <button
                                 type="button"
                                 onClick={() => toggleUserType("recruiter")}
-                                className={`flex-1 py-2 px-4 text-sm font-medium text-center transition-colors ${
+                                className={`flex-1 py-2 px-4 text-sm font-medium text-center transition-colors cursor-pointer ${
                                     userType === "recruiter"
                                         ? "bg-blue-600 text-white"
                                         : "bg-white text-gray-700 hover:bg-gray-50"

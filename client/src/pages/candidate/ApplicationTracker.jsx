@@ -138,7 +138,7 @@ const ApplicationTracker = () => {
                         <p className="text-red-600 text-sm">{error}</p>
                         <button
                             onClick={fetchApplications}
-                            className="text-red-600 hover:text-red-800 text-sm underline mt-1"
+                            className="text-red-600 hover:text-red-800 text-sm underline mt-1 cursor-pointer"
                         >
                             Try again
                         </button>
