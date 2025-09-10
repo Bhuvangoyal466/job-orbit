@@ -466,9 +466,10 @@ const RecruiterInterviewManagement = () => {
                                                                                 }
                                                                                 className={`h-4 w-4 ${
                                                                                     i <
-                                                                                    interview
+                                                                                    (interview
                                                                                         .feedback
-                                                                                        .rating
+                                                                                        ?.rating ||
+                                                                                        0)
                                                                                         ? "text-yellow-400 fill-current"
                                                                                         : "text-gray-300"
                                                                                 }`}
@@ -480,19 +481,20 @@ const RecruiterInterviewManagement = () => {
                                                                     {getRecommendationIcon(
                                                                         interview
                                                                             .feedback
-                                                                            .recommendation
+                                                                            ?.recommendation
                                                                     )}
                                                                     <span className="text-sm font-medium capitalize">
-                                                                        {interview.feedback.recommendation.replace(
+                                                                        {interview.feedback?.recommendation?.replace(
                                                                             "-",
                                                                             " "
-                                                                        )}
+                                                                        ) ||
+                                                                            "No recommendation"}
                                                                     </span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         {interview.feedback
-                                                            .comments && (
+                                                            ?.comments && (
                                                             <p className="text-sm text-green-700">
                                                                 {
                                                                     interview

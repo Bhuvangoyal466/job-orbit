@@ -9,7 +9,9 @@ A full-stack MERN application that provides an intelligent job board platform wi
 - ✅ **Profile Management**: Complete candidate profile system with education, experience, and skills
 - ✅ **Job Board**: Advanced job search with filters (location, type, salary, skills)
 - ✅ **Job Applications**: Apply to jobs instantly
+- ✅ **Resume Upload**: PDF resume upload with file management system
 - ✅ **Application Tracker**: Real-time tracking of job applications with status updates
+- ✅ **Interview Management**: View and manage scheduled interviews
 - ✅ **Saved Jobs**: Bookmark and manage favorite job listings
 - ✅ **Dashboard Analytics**: Visual insights into application progress
 - 🔄 **Resume Parser**: AI-powered resume parsing (PDF/DOCX support) - *Coming Soon*
@@ -20,6 +22,8 @@ A full-stack MERN application that provides an intelligent job board platform wi
 - ✅ **Job Management**: Update, delete, and manage posted jobs
 - ✅ **Applicant Management**: Advanced candidate filtering and management
 - ✅ **Application Status**: Update application statuses (applied, under-review, interviewed, hired, rejected)
+- ✅ **Interview Scheduling**: Complete interview management system with multiple types (video, phone, in-person)
+- ✅ **Resume Viewing**: Integrated PDF resume viewer for candidate evaluation
 - ✅ **Real-time Analytics**: Live dashboard with hiring pipeline metrics
 - ✅ **Company Profile**: Complete company information and verification system
 - ✅ **Subscription Management**: Tiered plans with job posting limits
@@ -27,21 +31,24 @@ A full-stack MERN application that provides an intelligent job board platform wi
 ## 🛠️ Technology Stack
 
 ### Frontend
-- **React** (v19.1.0) - Modern UI library
-- **React Router DOM** - Client-side routing
-- **Tailwind CSS** - Utility-first CSS framework
-- **Lucide React** - Beautiful icons
-- **Vite** - Fast build tool and dev server
+- **React** (v19.1.0) - Modern UI library with latest features
+- **React Router DOM** (v7.7.0) - Advanced client-side routing
+- **Tailwind CSS** (v4.1.11) - Utility-first CSS framework
+- **React Toastify** (v11.0.5) - Toast notifications system
+- **Lucide React** (v0.525.0) - Modern icon library
+- **Vite** (v7.0.4) - Lightning-fast build tool and dev server
 
 ### Backend
 - ✅ **Node.js** - Server runtime
-- ✅ **Express.js** - Web framework
-- ✅ **MongoDB** - NoSQL database with Mongoose ODM
-- ✅ **JWT** - Authentication tokens
-- ✅ **bcryptjs** - Password hashing
-- ✅ **express-validator** - Input validation
-- ✅ **CORS** - Cross-origin resource sharing
-- 🔄 **Cloudinary** - File upload and storage - *Coming Soon*
+- ✅ **Express.js** (v4.18.2) - Web framework
+- ✅ **MongoDB** - NoSQL database with Mongoose ODM (v8.16.5)
+- ✅ **JWT** (v9.0.2) - Authentication tokens
+- ✅ **bcryptjs** (v3.0.2) - Password hashing
+- ✅ **express-validator** (v7.0.1) - Input validation
+- ✅ **Multer** (v2.0.2) - File upload handling for resumes
+- ✅ **CORS** (v2.8.5) - Cross-origin resource sharing
+- ✅ **dotenv** (v16.3.1) - Environment variable management
+- 🔄 **Cloudinary** - Cloud file storage - *Coming Soon*
 - 🔄 **PDF-Parse/Mammoth.js** - Resume parsing - *Coming Soon*
 
 ## 📁 Project Structure
@@ -52,8 +59,10 @@ job-orbit/
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
 │   │   │   ├── Footer.jsx
+│   │   │   ├── InterviewScheduler.jsx
 │   │   │   ├── Navbar.jsx
-│   │   │   └── ProtectedRoute.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   └── ResumeViewer.jsx
 │   │   ├── context/        # React Context providers
 │   │   │   ├── AuthContext.jsx
 │   │   │   └── useAuth.js
@@ -67,8 +76,7 @@ job-orbit/
 │   │   ├── routes/         # Routing configuration
 │   │   │   └── AppRoutes.jsx
 │   │   ├── utils/          # Utility functions & API calls
-│   │   │   ├── api.js
-│   │   │   └── helpers.js
+│   │   │   └── api.js
 │   │   ├── App.jsx         # Main app component
 │   │   └── main.jsx        # App entry point
 │   ├── public/             # Static assets
@@ -86,12 +94,17 @@ job-orbit/
 │   │   └── auth.js
 │   ├── models/             # MongoDB schemas
 │   │   ├── Candidate.js
+│   │   ├── Interview.js
 │   │   ├── Job.js
 │   │   └── Recruiter.js
 │   ├── routes/             # API routes
 │   │   ├── authCandidate.js
 │   │   ├── authRecruiter.js
-│   │   └── jobs.js
+│   │   ├── interviews.js
+│   │   ├── jobs.js
+│   │   └── resume.js
+│   ├── uploads/            # File storage
+│   │   └── resumes/        # Resume PDF files
 │   ├── package.json
 │   └── server.js           # Server entry point
 └── README.md
@@ -133,16 +146,27 @@ job-orbit/
   - Apply to jobs instantly
   - Save/bookmark jobs
   - Status updates (applied → under-review → interviewed → hired/rejected)
+- ✅ **Resume Management System**
+  - PDF resume upload with Multer
+  - File storage and retrieval
+  - Resume viewing for recruiters
+- ✅ **Interview Management System**
+  - Complete interview scheduling workflow
+  - Multiple interview types (video, phone, in-person)
+  - Interview status tracking and feedback
+  - Calendar integration
 
 #### Database Models
 - ✅ **User Models**: Comprehensive Candidate and Recruiter schemas
 - ✅ **Job Model**: Full job posting with applicant tracking
+- ✅ **Interview Model**: Complete interview management with scheduling
 - ✅ **Authentication**: JWT middleware and protected routes
+- ✅ **File Upload**: Multer integration for resume management
 - ✅ **Validation**: Express-validator for all inputs
 - ✅ **Statistics**: Auto-updating dashboard metrics
 
 ### 🔄 Next Phase (Phase 3 - Advanced Features)
-- [ ] File upload integration with Cloudinary
+- [ ] Cloud file storage integration with Cloudinary
 - [ ] Resume parsing with pdf-parse/mammoth.js
 - [ ] Email integration for notifications
 - [ ] Real-time notifications (Socket.io)
@@ -150,7 +174,8 @@ job-orbit/
 - [ ] Admin panel for platform management
 - [ ] Payment integration for premium features
 - [ ] Company verification system
-- [ ] Interview scheduling system
+- [ ] Video interview integration
+- [ ] Advanced interview feedback system
 
 ## 🏃‍♂️ Getting Started
 
@@ -186,15 +211,14 @@ job-orbit/
 4. **Environment Configuration**
    
    Create `server/.env` file:
-   ```env
-   NODE_ENV=development
-   PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/joborbit
-   JWT_SECRET=your-super-secret-jwt-key
-   JWT_EXPIRES_IN=7d
-   ```
-
-5. **Start the Application**
+```env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/joborbit
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=7d
+UPLOAD_PATH=./uploads
+```5. **Start the Application**
    
    **Terminal 1 - Backend:**
    ```bash
@@ -208,7 +232,14 @@ job-orbit/
    npm run dev
    ```
 
-6. **Access the Application**
+6. **Create Upload Directory**
+   ```bash
+   # Create uploads directory for resume storage
+   cd server
+   mkdir -p uploads/resumes
+   ```
+
+7. **Access the Application**
    - Frontend: `http://localhost:5173`
    - Backend API: `http://localhost:5000`
 
@@ -246,6 +277,19 @@ job-orbit/
 - `POST /api/jobs/:id/save` - Save job (candidate only)
 - `PUT /api/jobs/:id/status` - Update application status (recruiter only)
 
+### Interviews
+- `POST /api/interviews` - Schedule interview (recruiter only)
+- `GET /api/interviews/recruiter` - Get recruiter's interviews
+- `GET /api/interviews/candidate` - Get candidate's interviews
+- `PUT /api/interviews/:id` - Update interview details
+- `DELETE /api/interviews/:id` - Cancel interview
+- `POST /api/interviews/:id/feedback` - Add interview feedback
+
+### Resume Management
+- `POST /api/candidate/upload-resume` - Upload resume PDF
+- `GET /api/candidate/profile` - Get full candidate profile with resume
+- `GET /api/recruiter/resume/:candidateId` - View candidate resume (recruiter only)
+
 ### User Management
 - `GET /api/jobs/applications` - Get candidate applications
 - `GET /api/jobs/saved` - Get saved jobs
@@ -261,39 +305,54 @@ The application uses MongoDB. You can either:
 ### Authentication
 The application now uses **real JWT-based authentication**. You need to register accounts to access features.
 
+### File Storage
+Resume files are stored locally in the `server/uploads/resumes/` directory. Make sure this directory exists and has proper permissions.
+
 ### Test Data
 To test the application:
 1. Register as both candidate and recruiter
-2. Post jobs as recruiter
-3. Apply to jobs as candidate
-4. Track applications and update statuses
-5. View real-time dashboard analytics
+2. Upload resume as candidate (PDF format)
+3. Post jobs as recruiter
+4. Apply to jobs as candidate
+5. Schedule interviews as recruiter
+6. View resumes using the integrated PDF viewer
+7. Track applications and update statuses
+8. View real-time dashboard analytics
 
 ## 📱 Features Demo
 
 ### Job Seeker Flow
 1. **Register/Login** → Create candidate account
 2. **Complete Profile** → Add education, experience, skills
-3. **Browse Jobs** → Search with advanced filters
-4. **Apply to Jobs** → Submit applications instantly
-5. **Track Applications** → Monitor status updates in real-time
-6. **Save Jobs** → Bookmark interesting positions
-7. **Dashboard Analytics** → View application insights
+3. **Upload Resume** → Upload PDF resume for applications
+4. **Browse Jobs** → Search with advanced filters
+5. **Apply to Jobs** → Submit applications instantly
+6. **Track Applications** → Monitor status updates in real-time
+7. **Interview Management** → View and manage scheduled interviews
+8. **Save Jobs** → Bookmark interesting positions
+9. **Dashboard Analytics** → View application insights
 
 ### Recruiter Flow
 1. **Register/Login** → Create recruiter account
 2. **Complete Company Profile** → Add company information
 3. **Post Jobs** → Create detailed job listings
 4. **Manage Applications** → Review candidate applications
-5. **Update Status** → Progress candidates through hiring pipeline
-6. **Dashboard Analytics** → View hiring metrics and statistics
-7. **Job Management** → Edit, update, or delete job postings
+5. **View Resumes** → Access candidate resumes with integrated PDF viewer
+6. **Schedule Interviews** → Set up video, phone, or in-person interviews
+7. **Update Status** → Progress candidates through hiring pipeline
+8. **Interview Management** → Track and manage all scheduled interviews
+9. **Dashboard Analytics** → View hiring metrics and statistics
+10. **Job Management** → Edit, update, or delete job postings
 
 ## 🎨 UI/UX Highlights
 
-- **Modern Design**: Clean, professional interface with Tailwind CSS
+- **Modern Design**: Clean, professional interface with Tailwind CSS v4.1.11
 - **Responsive Layout**: Mobile-first approach with seamless experience
 - **Interactive Elements**: Smooth animations and transitions
+- **Toast Notifications**: React Toastify integration for user feedback
+- **Modal Components**: Interview scheduler and resume viewer modals
+- **File Upload UI**: Drag-and-drop resume upload interface
+- **PDF Viewer**: Integrated resume viewing with download functionality
 - **Real-time Updates**: Live dashboard statistics and notifications
 - **Loading States**: Proper loading indicators and skeleton screens
 - **Error Handling**: User-friendly error messages and retry options
@@ -312,6 +371,7 @@ MONGODB_URI=mongodb://localhost:27017/joborbit
 JWT_SECRET=your-super-secret-jwt-key-make-it-long-and-complex
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=http://localhost:5173
+UPLOAD_PATH=./uploads
 ```
 
 #### Frontend (Optional - for different API URL)

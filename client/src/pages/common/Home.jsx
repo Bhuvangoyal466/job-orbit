@@ -70,6 +70,59 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+            {/* How It Works Section */}
+            <section className="py-20 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                            How JobOrbit Works
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Getting started is easy! Follow these simple steps
+                            to land your dream job or find the perfect
+                            candidate.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+                        <div className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow">
+                            <div className="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <Upload className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                Create Your Profile
+                            </h3>
+                            <p className="text-gray-600">
+                                Sign up and set up your profile as a job seeker
+                                or recruiter in minutes.
+                            </p>
+                        </div>
+                        <div className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow">
+                            <div className="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <Search className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                Explore & Apply
+                            </h3>
+                            <p className="text-gray-600">
+                                Browse jobs or candidates, use smart filters,
+                                and apply or connect instantly.
+                            </p>
+                        </div>
+                        <div className="bg-white p-8 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow">
+                            <div className="bg-blue-100 w-14 h-14 rounded-lg flex items-center justify-center mx-auto mb-4">
+                                <BarChart3 className="h-7 w-7 text-blue-600" />
+                            </div>
+                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                Track & Succeed
+                            </h3>
+                            <p className="text-gray-600">
+                                Monitor your applications or hiring process with
+                                real-time updates and analytics.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* Features Section */}
             <section className="py-20 bg-gray-50">
@@ -139,6 +192,107 @@ const Home = () => {
                             </div>
                             <div className="text-gray-600">Success Rate</div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Testimonials Section */}
+            <section className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-16">
+                        <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                            What Our Users Say
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                            Hear from job seekers and recruiters who found
+                            success with JobOrbit.
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
+                            <p className="text-gray-700 italic mb-4">
+                                “JobOrbit made my job search so much easier. The
+                                resume parsing was spot on and I landed
+                                interviews quickly!”
+                            </p>
+                            <div className="font-semibold text-blue-600">
+                                Aarav S.
+                            </div>
+                            <div className="text-gray-500 text-sm">
+                                Software Engineer
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
+                            <p className="text-gray-700 italic mb-4">
+                                “As a recruiter, I love the advanced filters and
+                                candidate management tools. Highly recommended!”
+                            </p>
+                            <div className="font-semibold text-blue-600">
+                                Priya M.
+                            </div>
+                            <div className="text-gray-500 text-sm">
+                                HR Manager
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-lg shadow text-center">
+                            <p className="text-gray-700 italic mb-4">
+                                “The application tracking dashboard kept me
+                                organized and motivated throughout my job hunt.”
+                            </p>
+                            <div className="font-semibold text-blue-600">
+                                Rahul K.
+                            </div>
+                            <div className="text-gray-500 text-sm">
+                                Marketing Specialist
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Partners Section */}
+            <section className="py-16 bg-gray-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-10">
+                        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                            Trusted by Leading Companies
+                        </h2>
+                        <p className="text-gray-600 max-w-xl mx-auto">
+                            We are proud to be the choice of top employers and
+                            innovative startups across the country.
+                        </p>
+                    </div>
+                    <div className="flex flex-wrap justify-center items-center gap-8">
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"
+                            alt="Microsoft"
+                            className="h-10"
+                        />
+                        <img
+                            src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+                            alt="Google"
+                            className="h-10"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg"
+                            alt="IBM"
+                            className="h-10"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Tesla_Motors.svg/1200px-Tesla_Motors.svg.png"
+                            alt="Tesla"
+                            className="h-10"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Meta_Platforms_Inc._logo.svg/1200px-Meta_Platforms_Inc._logo.svg.png"
+                            alt="Meta"
+                            className="h-10"
+                        />
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/1200px-Amazon_logo.svg.png"
+                            alt="Amazon"
+                            className="h-10"
+                        />
                     </div>
                 </div>
             </section>
