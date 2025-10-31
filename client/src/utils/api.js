@@ -117,11 +117,10 @@ export const candidateAPI = {
         return makeRequest("/candidate/profile");
     },
 
-    // Update candidate profile (all fields except password)
-    updateFullProfile: async (userData) => {
-        return makeRequest("/candidate/profile", {
-            method: "PUT",
-            body: JSON.stringify(userData),
+    // Parse existing resume
+    parseExistingResume: async () => {
+        return makeRequest("/candidate/parse-existing", {
+            method: "POST",
         });
     },
 };

@@ -50,8 +50,76 @@ const UploadResume = () => {
         setUploadedFile(file);
         setUploading(true);
         try {
-            await candidateAPI.uploadResume(file);
-            toast.success("Resume uploaded successfully!");
+            const response = await candidateAPI.uploadResume(file);
+
+            if (response.parsed && response.parsedData) {
+                // Show success message with parsing info
+                toast.success(
+                    "Resume uploaded and parsed successfully! Your profile has been auto-filled with extracted data."
+                );
+
+                // Update form data with parsed information
+                if (response.candidateProfile) {
+                    setFormData(response.candidateProfile);
+                    // Automatically enable edit mode so user can review and modify
+                    setEditMode(true);
+                } else {
+                    // Refresh the profile to get updated data
+                    const updatedProfile = await candidateAPI.getFullProfile();
+                    setFormData(updatedProfile);
+                    setEditMode(true);
+                }
+
+                // Show a modal or toast with what was extracted
+                const extractedFields = [];
+                if (
+                    response.parsedData.firstName ||
+                    response.parsedData.lastName
+                ) {
+                    extractedFields.push("Name");
+                }
+                if (response.parsedData.email) {
+                    extractedFields.push("Email");
+                }
+                if (response.parsedData.phone) {
+                    extractedFields.push("Phone");
+                }
+                if (
+                    response.parsedData.skills &&
+                    response.parsedData.skills.length > 0
+                ) {
+                    extractedFields.push("Skills");
+                }
+                if (
+                    response.parsedData.education &&
+                    response.parsedData.education.length > 0
+                ) {
+                    extractedFields.push("Education");
+                }
+                if (response.parsedData.experience) {
+                    extractedFields.push("Experience");
+                }
+
+                if (extractedFields.length > 0) {
+                    setTimeout(() => {
+                        toast.info(
+                            `Extracted: ${extractedFields.join(
+                                ", "
+                            )}. Please review and save the changes.`,
+                            {
+                                autoClose: 8000,
+                            }
+                        );
+                    }, 2000);
+                }
+            } else {
+                toast.success("Resume uploaded successfully!");
+                if (response.parsed === false) {
+                    toast.warn(
+                        "Resume parsing failed, but file was uploaded. You can fill your profile manually."
+                    );
+                }
+            }
         } catch (err) {
             toast.error(err.message || "Upload failed");
         }
@@ -109,6 +177,88 @@ const UploadResume = () => {
         }
     };
 
+    const handleReParseResume = async () => {
+        if (!formData?.resume) {
+            toast.error("No resume found to parse");
+            return;
+        }
+
+        setUploading(true);
+        try {
+            const response = await candidateAPI.parseExistingResume();
+
+            if (response.parsed && response.parsedData) {
+                toast.success("Resume re-parsed successfully!");
+
+                // Update form data with newly parsed information
+                const updatedFormData = { ...formData };
+
+                // Apply parsed data to form (similar to upload logic)
+                const parsedData = response.parsedData;
+
+                if (parsedData.firstName && !updatedFormData.firstName) {
+                    updatedFormData.firstName = parsedData.firstName;
+                }
+                if (parsedData.lastName && !updatedFormData.lastName) {
+                    updatedFormData.lastName = parsedData.lastName;
+                }
+                if (parsedData.email && !updatedFormData.email) {
+                    updatedFormData.email = parsedData.email;
+                }
+                if (parsedData.phone && !updatedFormData.phone) {
+                    updatedFormData.phone = parsedData.phone;
+                }
+                if (parsedData.skills && parsedData.skills.length > 0) {
+                    const existingSkills = updatedFormData.skills || [];
+                    const newSkills = parsedData.skills || [];
+                    const combinedSkills = [
+                        ...new Set([...existingSkills, ...newSkills]),
+                    ];
+                    updatedFormData.skills = combinedSkills;
+                }
+                if (parsedData.education && parsedData.education.length > 0) {
+                    updatedFormData.education = [
+                        ...(updatedFormData.education || []),
+                        ...parsedData.education,
+                    ];
+                }
+                if (parsedData.experience && !updatedFormData.experience) {
+                    updatedFormData.experience = parsedData.experience;
+                }
+                if (
+                    parsedData.address &&
+                    Object.keys(parsedData.address).length > 0
+                ) {
+                    updatedFormData.address = {
+                        ...(updatedFormData.address || {}),
+                        ...parsedData.address,
+                    };
+                }
+                if (parsedData.portfolioUrl && !updatedFormData.portfolioUrl) {
+                    updatedFormData.portfolioUrl = parsedData.portfolioUrl;
+                }
+                if (parsedData.linkedinUrl && !updatedFormData.linkedinUrl) {
+                    updatedFormData.linkedinUrl = parsedData.linkedinUrl;
+                }
+
+                setFormData(updatedFormData);
+                setEditMode(true); // Enable edit mode for review
+
+                toast.info(
+                    "Please review the extracted data and save your profile.",
+                    {
+                        autoClose: 5000,
+                    }
+                );
+            } else {
+                toast.error("Failed to parse resume. Please try again.");
+            }
+        } catch (err) {
+            toast.error(err.message || "Failed to parse resume");
+        }
+        setUploading(false);
+    };
+
     if (loading) {
         return <div className="text-center py-10">Loading...</div>;
     }
@@ -156,14 +306,30 @@ const UploadResume = () => {
                         className="hidden"
                         id="resume-upload"
                     />
-                    <label
-                        htmlFor="resume-upload"
-                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer"
-                    >
-                        Choose File
-                    </label>
+                    <div className="flex gap-3 flex-wrap justify-center">
+                        <label
+                            htmlFor="resume-upload"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer"
+                        >
+                            Choose File
+                        </label>
+                        {formData?.resume && (
+                            <button
+                                type="button"
+                                onClick={handleReParseResume}
+                                disabled={uploading}
+                                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                🔄 Re-parse Resume
+                            </button>
+                        )}
+                    </div>
                     {uploading && (
-                        <div className="mt-2 text-blue-600">Uploading...</div>
+                        <div className="mt-2 text-blue-600">
+                            {uploadedFile
+                                ? "Uploading and parsing..."
+                                : "Parsing resume..."}
+                        </div>
                     )}
                 </div>
             </div>

@@ -3,6 +3,7 @@ const multer = require("multer");
 const path = require("path");
 const Candidate = require("../models/Candidate");
 const { protectCandidate, protectRecruiter } = require("../middleware/auth");
+const { parseResumeWithAPI } = require("../services/resumeParser");
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-// Upload resume endpoint
+// Upload resume endpoint with AI parsing
 router.post(
     "/upload-resume",
     protectCandidate,
@@ -38,6 +39,7 @@ router.post(
             if (!candidate)
                 return res.status(404).json({ message: "Candidate not found" });
 
+            // Save resume file info
             candidate.resume = {
                 filename: req.file.filename,
                 originalName: req.file.originalname,
@@ -45,12 +47,86 @@ router.post(
                 size: req.file.size,
                 uploadDate: new Date(),
             };
+
+            let parsedData = {};
+            let parseSuccess = false;
+
+            // Try to parse the resume with AI
+            try {
+                console.log("Attempting to parse resume with AI...");
+                parsedData = await parseResumeWithAPI(req.file.path);
+                parseSuccess = true;
+                console.log("Resume parsed successfully:", parsedData);
+            } catch (parseError) {
+                console.error("Resume parsing failed:", parseError.message);
+                // Continue without parsed data if parsing fails
+                parsedData = {};
+            }
+
+            // Update candidate with parsed data (only if parsing was successful)
+            if (parseSuccess && Object.keys(parsedData).length > 0) {
+                // Merge parsed data with existing candidate data, but don't overwrite existing non-empty fields
+                Object.keys(parsedData).forEach((key) => {
+                    if (
+                        parsedData[key] !== undefined &&
+                        parsedData[key] !== null &&
+                        parsedData[key] !== ""
+                    ) {
+                        // For arrays, merge with existing data
+                        if (Array.isArray(parsedData[key])) {
+                            if (key === "skills") {
+                                // Merge skills arrays, avoiding duplicates
+                                const existingSkills = candidate.skills || [];
+                                const newSkills = parsedData[key] || [];
+                                const combinedSkills = [
+                                    ...new Set([
+                                        ...existingSkills,
+                                        ...newSkills,
+                                    ]),
+                                ];
+                                candidate.skills = combinedSkills;
+                            } else if (key === "education") {
+                                // For education, add new entries
+                                const existingEducation =
+                                    candidate.education || [];
+                                const newEducation = parsedData[key] || [];
+                                candidate.education = [
+                                    ...existingEducation,
+                                    ...newEducation,
+                                ];
+                            } else {
+                                candidate[key] = parsedData[key];
+                            }
+                        } else if (
+                            typeof parsedData[key] === "object" &&
+                            parsedData[key] !== null
+                        ) {
+                            // For nested objects (like address), merge carefully
+                            candidate[key] = {
+                                ...(candidate[key] || {}),
+                                ...parsedData[key],
+                            };
+                        } else {
+                            // Only update if the candidate field is empty or undefined
+                            if (!candidate[key] || candidate[key] === "") {
+                                candidate[key] = parsedData[key];
+                            }
+                        }
+                    }
+                });
+            }
+
             await candidate.save();
+
             res.json({
                 message: "Resume uploaded successfully",
                 resume: candidate.resume,
+                parsed: parseSuccess,
+                parsedData: parseSuccess ? parsedData : null,
+                candidateProfile: candidate,
             });
         } catch (err) {
+            console.error("Resume upload error:", err);
             res.status(500).json({ message: err.message });
         }
     }
@@ -89,6 +165,42 @@ router.put("/profile", protectCandidate, async (req, res) => {
         await candidate.save();
         res.json(candidate);
     } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+// Parse existing resume endpoint (for re-parsing)
+router.post("/parse-existing", protectCandidate, async (req, res) => {
+    try {
+        const candidate = await Candidate.findById(req.user.id);
+        if (!candidate) {
+            return res.status(404).json({ message: "Candidate not found" });
+        }
+
+        if (!candidate.resume || !candidate.resume.path) {
+            return res
+                .status(400)
+                .json({ message: "No resume found to parse" });
+        }
+
+        try {
+            console.log("Re-parsing existing resume...");
+            const parsedData = await parseResumeWithAPI(candidate.resume.path);
+
+            res.json({
+                message: "Resume parsed successfully",
+                parsed: true,
+                parsedData: parsedData,
+            });
+        } catch (parseError) {
+            console.error("Resume re-parsing failed:", parseError.message);
+            res.status(500).json({
+                message: "Failed to parse resume",
+                error: parseError.message,
+            });
+        }
+    } catch (err) {
+        console.error("Parse existing resume error:", err);
         res.status(500).json({ message: err.message });
     }
 });
