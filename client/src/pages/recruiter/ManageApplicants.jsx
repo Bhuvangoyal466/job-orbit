@@ -17,10 +17,18 @@ import {
     Clock,
     XIcon,
     CalendarPlus,
+    Filter,
+    Search,
+    Users,
+    TrendingUp,
+    Star,
+    MessageCircle,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { recruiterAPI } from "../../utils/api";
+import { formatSalaryRange } from "../../utils/currency";
 import ResumeViewer from "../../components/ResumeViewer";
 
 const ManageApplicants = () => {
@@ -277,7 +285,7 @@ const ManageApplicants = () => {
 
         return (
             <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4"
+                className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4"
                 onClick={closeModal}
             >
                 <div
@@ -479,17 +487,12 @@ const ManageApplicants = () => {
                                                 Expected Salary
                                             </label>
                                             <p className="text-gray-700">
-                                                {selectedApplicant.candidate
-                                                    .expectedSalary.min &&
-                                                selectedApplicant.candidate
-                                                    .expectedSalary.max
-                                                    ? `${
-                                                          selectedApplicant
-                                                              .candidate
-                                                              .expectedSalary
-                                                              .currency || "USD"
-                                                      } ${selectedApplicant.candidate.expectedSalary.min.toLocaleString()} - ${selectedApplicant.candidate.expectedSalary.max.toLocaleString()}`
-                                                    : "Not specified"}
+                                                {formatSalaryRange(
+                                                    selectedApplicant.candidate
+                                                        ?.expectedSalary?.min,
+                                                    selectedApplicant.candidate
+                                                        ?.expectedSalary?.max
+                                                )}
                                             </p>
                                         </div>
                                     )}
@@ -726,380 +729,365 @@ const ManageApplicants = () => {
     };
 
     return (
-        <div className="space-y-6">
-            <div className="mb-8 flex justify-between items-center">
-                <div>
-                    <h1 className="text-3xl font-bold text-gray-900">
-                        Manage Applicants
-                    </h1>
-                    <p className="text-gray-600 mt-2">
-                        Review and manage job applications
-                    </p>
-                </div>
-                <button
-                    onClick={fetchApplicants}
-                    disabled={loading}
-                    className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        <motion.div
+            className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
+        >
+            <div className="max-w-7xl mx-auto p-6 space-y-8">
+                {/* Enhanced Header Section */}
+                <motion.div
+                    className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8"
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
                 >
-                    <RefreshCw
-                        className={`-ml-0.5 mr-2 h-4 w-4 cursor-pointer ${
-                            loading ? "animate-spin" : ""
-                        }`}
-                    />
-                    Refresh
-                </button>
-            </div>
-
-            {/* Error Message */}
-            {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                    <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
-                    <div>
-                        <p className="text-red-800 font-medium">
-                            Error loading applicants
-                        </p>
-                        <p className="text-red-600 text-sm">{error}</p>
-                        <button
-                            onClick={fetchApplicants}
-                            className="text-red-600 hover:text-red-800 text-sm underline mt-1"
-                        >
-                            Try again
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Filters and Sorting */}
-            <div className="bg-white shadow rounded-lg p-4">
-                <div className="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                    {/* Status Filter */}
-                    <div className="flex items-center space-x-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Filter by status:
-                        </label>
-                        <select
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value)}
-                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
-                            disabled={loading}
-                        >
-                            <option value="all">All Statuses</option>
-                            <option value="applied">Applied</option>
-                            <option value="under-review">Under Review</option>
-                            <option value="interviewed">Interviewed</option>
-                            <option value="hired">Hired</option>
-                            <option value="rejected">Rejected</option>
-                        </select>
-                    </div>
-
-                    {/* Sort By */}
-                    <div className="flex items-center space-x-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Sort by:
-                        </label>
-                        <select
-                            value={sortBy}
-                            onChange={(e) => setSortBy(e.target.value)}
-                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
-                            disabled={loading}
-                        >
-                            <option value="appliedDate">Applied Date</option>
-                            <option value="name">Name</option>
-                            <option value="profileCompleteness">
-                                Profile Completeness
-                            </option>
-                            <option value="experience">Experience</option>
-                        </select>
-                    </div>
-
-                    {/* Sort Order */}
-                    <div className="flex items-center space-x-2">
-                        <label className="text-sm font-medium text-gray-700">
-                            Order:
-                        </label>
-                        <select
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(e.target.value)}
-                            className="border border-gray-300 rounded-md px-3 py-1 text-sm"
-                            disabled={loading}
-                        >
-                            <option value="desc">Descending</option>
-                            <option value="asc">Ascending</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            {/* Applicants List */}
-            <div className="bg-white shadow rounded-lg">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-900">
-                        Applications ({applicants.length})
-                    </h2>
-                </div>
-
-                {loading ? (
-                    <div className="p-6">
-                        <div className="animate-pulse space-y-4">
-                            {[...Array(3)].map((_, i) => (
-                                <div
-                                    key={i}
-                                    className="flex items-center space-x-4"
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-3">
+                                <motion.div
+                                    className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl"
+                                    whileHover={{ scale: 1.05, rotate: 5 }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                    }}
                                 >
-                                    <div className="bg-gray-300 rounded-full h-12 w-12"></div>
-                                    <div className="flex-1 space-y-2">
-                                        <div className="h-4 bg-gray-300 rounded w-1/4"></div>
-                                        <div className="h-3 bg-gray-300 rounded w-1/3"></div>
-                                        <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-                                    </div>
-                                    <div className="h-6 bg-gray-300 rounded w-20"></div>
+                                    <Users className="h-8 w-8 text-white" />
+                                </motion.div>
+                                <div>
+                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                        Manage Applicants
+                                    </h1>
+                                    <p className="text-gray-600 text-lg mt-1">
+                                        Review and manage job applications (
+                                        {applicants.length} total)
+                                    </p>
                                 </div>
-                            ))}
+                            </div>
+                        </div>
+                        <motion.button
+                            onClick={fetchApplicants}
+                            disabled={loading}
+                            className="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:scale-105"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="relative flex items-center gap-2">
+                                <motion.div
+                                    animate={{ rotate: loading ? 360 : 0 }}
+                                    transition={{
+                                        duration: 1,
+                                        repeat: loading ? Infinity : 0,
+                                        ease: "linear",
+                                    }}
+                                >
+                                    <RefreshCw className="h-5 w-5" />
+                                </motion.div>
+                                <span>Refresh Data</span>
+                            </div>
+                        </motion.button>
+                    </div>
+                </motion.div>
+
+                {/* Enhanced Error Message */}
+                <AnimatePresence>
+                    {error && (
+                        <motion.div
+                            className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm"
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <div className="flex items-start gap-4">
+                                <motion.div
+                                    animate={{ rotate: [0, -10, 10, -10, 0] }}
+                                    transition={{ duration: 0.5, delay: 0.2 }}
+                                >
+                                    <AlertCircle className="h-6 w-6 text-red-500 flex-shrink-0" />
+                                </motion.div>
+                                <div className="flex-1">
+                                    <p className="text-red-800 font-semibold text-lg">
+                                        Unable to load applicants
+                                    </p>
+                                    <p className="text-red-600 mt-1">{error}</p>
+                                    <motion.button
+                                        onClick={fetchApplicants}
+                                        className="mt-3 px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-medium rounded-lg transition-colors duration-200"
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        Try Again
+                                    </motion.button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Enhanced Filters and Sorting */}
+                <motion.div
+                    className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                    <div className="flex items-center gap-3 mb-6">
+                        <motion.div
+                            animate={{ rotate: [0, 10, -10, 0] }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatDelay: 3,
+                            }}
+                        >
+                            <Filter className="h-6 w-6 text-blue-600" />
+                        </motion.div>
+                        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                            Filter & Sort Applications
+                        </h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* Status Filter */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="space-y-2"
+                        >
+                            <label className="block text-sm font-semibold text-gray-800">
+                                📊 Filter by Status
+                            </label>
+                            <select
+                                value={selectedStatus}
+                                onChange={(e) =>
+                                    setSelectedStatus(e.target.value)
+                                }
+                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm font-medium"
+                                disabled={loading}
+                            >
+                                <option value="all">All Statuses</option>
+                                <option value="applied">📝 Applied</option>
+                                <option value="under-review">
+                                    👀 Under Review
+                                </option>
+                                <option value="interviewed">
+                                    🎯 Interviewed
+                                </option>
+                                <option value="hired">✅ Hired</option>
+                                <option value="rejected">❌ Rejected</option>
+                            </select>
+                        </motion.div>
+
+                        {/* Sort By */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.4 }}
+                            className="space-y-2"
+                        >
+                            <label className="block text-sm font-semibold text-gray-800">
+                                🔄 Sort by Field
+                            </label>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm font-medium"
+                                disabled={loading}
+                            >
+                                <option value="appliedDate">
+                                    📅 Applied Date
+                                </option>
+                                <option value="name">👤 Name</option>
+                                <option value="profileCompleteness">
+                                    📋 Profile Completeness
+                                </option>
+                                <option value="experience">
+                                    💼 Experience
+                                </option>
+                            </select>
+                        </motion.div>
+
+                        {/* Sort Order */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="space-y-2"
+                        >
+                            <label className="block text-sm font-semibold text-gray-800">
+                                📈 Sort Order
+                            </label>
+                            <select
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm font-medium"
+                                disabled={loading}
+                            >
+                                <option value="desc">⬇️ Descending</option>
+                                <option value="asc">⬆️ Ascending</option>
+                            </select>
+                        </motion.div>
+                    </div>
+                </motion.div>
+
+                {/* Enhanced Applicants List */}
+                <motion.div
+                    className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20"
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                >
+                    <div className="p-6 border-b border-gray-200/50">
+                        <div className="flex items-center gap-3">
+                            <motion.div
+                                animate={{ scale: [1, 1.1, 1] }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    repeatDelay: 3,
+                                }}
+                            >
+                                <TrendingUp className="h-6 w-6 text-blue-600" />
+                            </motion.div>
+                            <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                                Applications ({applicants.length})
+                            </h2>
                         </div>
                     </div>
-                ) : applicants.length === 0 ? (
-                    <div className="p-12 text-center">
-                        <User className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-4 text-lg font-medium text-gray-900">
-                            No applicants found
-                        </h3>
-                        <p className="mt-2 text-gray-500">
-                            {selectedStatus === "all"
-                                ? "No applications have been received yet."
-                                : `No applications with status "${formatStatus(
-                                      selectedStatus
-                                  )}" found.`}
-                        </p>
-                    </div>
-                ) : (
-                    <div className="divide-y divide-gray-200">
-                        {sortedApplicants.map((applicant) => {
-                            const statusKey = `${applicant.jobId}-${applicant.candidateId}`;
-                            const isUpdating = updatingStatus[statusKey];
 
-                            return (
-                                <div key={applicant.id} className="p-4 sm:p-6">
-                                    {/* Desktop Layout */}
-                                    <div className="hidden md:flex items-center justify-between">
-                                        <div className="flex items-center space-x-4">
-                                            <div className="bg-gray-100 rounded-full p-3">
-                                                <User className="h-8 w-8 text-gray-600" />
+                    {loading ? (
+                        <div className="p-6">
+                            <div className="space-y-4">
+                                {[...Array(3)].map((_, i) => (
+                                    <motion.div
+                                        key={i}
+                                        className="bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-white/20"
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.4,
+                                            delay: i * 0.1,
+                                        }}
+                                    >
+                                        <div className="flex items-center space-x-4 animate-pulse">
+                                            <div className="bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-16 w-16"></div>
+                                            <div className="flex-1 space-y-3">
+                                                <div className="h-5 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/3"></div>
+                                                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/2"></div>
+                                                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-2/3"></div>
                                             </div>
-                                            <div>
-                                                <h3 className="text-lg font-semibold text-gray-900">
-                                                    {applicant.name}
-                                                </h3>
-                                                <p className="text-gray-600">
-                                                    {applicant.jobTitle}
-                                                </p>
-                                                <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-                                                    <div className="flex items-center space-x-1">
-                                                        <Mail className="h-4 w-4" />
-                                                        <span>
-                                                            {applicant.email}
-                                                        </span>
-                                                    </div>
-                                                    {applicant.phone && (
+                                            <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-24"></div>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+                    ) : applicants.length === 0 ? (
+                        <div className="p-16 text-center">
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{
+                                    type: "spring",
+                                    stiffness: 200,
+                                    delay: 0.2,
+                                }}
+                                className="mx-auto mb-6 p-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl w-fit"
+                            >
+                                <User className="h-16 w-16 text-gray-400" />
+                            </motion.div>
+                            <motion.h3
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="text-2xl font-bold text-gray-900 mb-2"
+                            >
+                                No applicants found
+                            </motion.h3>
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="text-gray-500"
+                            >
+                                {selectedStatus === "all"
+                                    ? "No applications have been received yet. Start posting jobs to attract candidates!"
+                                    : `No applications with status "${formatStatus(
+                                          selectedStatus
+                                      )}" found. Try changing the filter.`}
+                            </motion.p>
+                        </div>
+                    ) : (
+                        <div className="p-6 space-y-4">
+                            {sortedApplicants.map((applicant, index) => {
+                                const statusKey = `${applicant.jobId}-${applicant.candidateId}`;
+                                const isUpdating = updatingStatus[statusKey];
+
+                                return (
+                                    <motion.div
+                                        key={applicant.id}
+                                        className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+                                        initial={{ opacity: 0, y: 30 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{
+                                            duration: 0.5,
+                                            delay: index * 0.1,
+                                        }}
+                                        whileHover={{ y: -2 }}
+                                    >
+                                        {/* Desktop Layout */}
+                                        <div className="hidden md:flex items-center justify-between">
+                                            <div className="flex items-center space-x-4">
+                                                <div className="bg-gray-100 rounded-full p-3">
+                                                    <User className="h-8 w-8 text-gray-600" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-gray-900">
+                                                        {applicant.name}
+                                                    </h3>
+                                                    <p className="text-gray-600">
+                                                        {applicant.jobTitle}
+                                                    </p>
+                                                    <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
                                                         <div className="flex items-center space-x-1">
-                                                            <Phone className="h-4 w-4" />
+                                                            <Mail className="h-4 w-4" />
                                                             <span>
                                                                 {
-                                                                    applicant.phone
+                                                                    applicant.email
                                                                 }
                                                             </span>
                                                         </div>
-                                                    )}
-                                                </div>
-                                                <p className="text-xs text-gray-400 mt-1">
-                                                    Applied on{" "}
-                                                    {new Date(
-                                                        applicant.appliedDate
-                                                    ).toLocaleDateString()}
-                                                </p>
-                                                {/* Profile Completeness */}
-                                                <div className="flex items-center space-x-2 mt-1">
-                                                    <span className="text-xs text-gray-500">
-                                                        Profile:
-                                                    </span>
-                                                    <div className="flex items-center space-x-1">
-                                                        <div className="w-16 bg-gray-200 rounded-full h-2">
-                                                            <div
-                                                                className={`h-2 rounded-full ${
-                                                                    (applicant
-                                                                        .candidate
-                                                                        ?.profileCompleteness ||
-                                                                        0) >= 80
-                                                                        ? "bg-green-500"
-                                                                        : (applicant
-                                                                              .candidate
-                                                                              ?.profileCompleteness ||
-                                                                              0) >=
-                                                                          60
-                                                                        ? "bg-yellow-500"
-                                                                        : "bg-red-500"
-                                                                }`}
-                                                                style={{
-                                                                    width: `${
-                                                                        applicant
-                                                                            .candidate
-                                                                            ?.profileCompleteness ||
-                                                                        0
-                                                                    }%`,
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <span className="text-xs text-gray-600">
-                                                            {applicant.candidate
-                                                                ?.profileCompleteness ||
-                                                                0}
-                                                            %
-                                                        </span>
+                                                        {applicant.phone && (
+                                                            <div className="flex items-center space-x-1">
+                                                                <Phone className="h-4 w-4" />
+                                                                <span>
+                                                                    {
+                                                                        applicant.phone
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex items-center space-x-4">
-                                            <span
-                                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
-                                                    applicant.status
-                                                )} ${
-                                                    applicant.status === "hired"
-                                                        ? "ring-2 ring-green-300"
-                                                        : ""
-                                                }`}
-                                            >
-                                                {formatStatus(applicant.status)}
-                                                {applicant.status ===
-                                                    "hired" && (
-                                                    <Check className="h-3 w-3 ml-1" />
-                                                )}
-                                            </span>
-
-                                            <div className="flex items-center space-x-2">
-                                                <button
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
-                                                    onClick={() =>
-                                                        handleViewApplication(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="View Application"
-                                                >
-                                                    <Eye className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
-                                                    onClick={() =>
-                                                        handleViewResume(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="View Resume"
-                                                >
-                                                    <FileText className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    className="p-2 text-purple-600 hover:bg-purple-50 rounded-md cursor-pointer"
-                                                    onClick={() =>
-                                                        handleScheduleInterview(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="Schedule Interview"
-                                                >
-                                                    <CalendarPlus className="h-4 w-4" />
-                                                </button>
-                                                {applicant.status !== "hired" &&
-                                                    applicant.status !==
-                                                        "rejected" &&
-                                                    canHireForJob(
-                                                        applicant.jobId,
-                                                        applicants
-                                                    ) && (
-                                                        <button
-                                                            className="p-2 text-green-600 hover:bg-green-50 rounded-md cursor-pointer disabled:opacity-50"
-                                                            onClick={() =>
-                                                                handleAcceptApplicant(
-                                                                    applicant
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                isUpdating
-                                                            }
-                                                            title="Accept/Hire"
-                                                        >
-                                                            <Check className="h-4 w-4" />
-                                                        </button>
-                                                    )}
-                                                {applicant.status !==
-                                                    "rejected" &&
-                                                    applicant.status !==
-                                                        "hired" && (
-                                                        <button
-                                                            className="p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer disabled:opacity-50"
-                                                            onClick={() =>
-                                                                handleRejectApplicant(
-                                                                    applicant
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                isUpdating
-                                                            }
-                                                            title="Reject"
-                                                        >
-                                                            <X className="h-4 w-4" />
-                                                        </button>
-                                                    )}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Mobile Layout */}
-                                    <div className="md:hidden space-y-4">
-                                        <div className="flex items-start space-x-3">
-                                            <div className="bg-gray-100 rounded-full p-2 flex-shrink-0">
-                                                <User className="h-6 w-6 text-gray-600" />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="text-base font-semibold text-gray-900 truncate">
-                                                    {applicant.name}
-                                                </h3>
-                                                <p className="text-sm text-gray-600 truncate">
-                                                    {applicant.jobTitle}
-                                                </p>
-                                                <div className="mt-2 space-y-1">
-                                                    <div className="flex items-center space-x-1 text-xs text-gray-500">
-                                                        <Mail className="h-3 w-3 flex-shrink-0" />
-                                                        <span className="truncate">
-                                                            {applicant.email}
-                                                        </span>
-                                                    </div>
-                                                    {applicant.phone && (
-                                                        <div className="flex items-center space-x-1 text-xs text-gray-500">
-                                                            <Phone className="h-3 w-3 flex-shrink-0" />
-                                                            <span>
-                                                                {
-                                                                    applicant.phone
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                    <p className="text-xs text-gray-400">
-                                                        Applied:{" "}
+                                                    <p className="text-xs text-gray-400 mt-1">
+                                                        Applied on{" "}
                                                         {new Date(
                                                             applicant.appliedDate
                                                         ).toLocaleDateString()}
                                                     </p>
-                                                    {/* Profile Completeness for Mobile */}
-                                                    <div className="flex items-center space-x-2">
+                                                    {/* Profile Completeness */}
+                                                    <div className="flex items-center space-x-2 mt-1">
                                                         <span className="text-xs text-gray-500">
                                                             Profile:
                                                         </span>
                                                         <div className="flex items-center space-x-1">
-                                                            <div className="w-12 bg-gray-200 rounded-full h-1.5">
+                                                            <div className="w-16 bg-gray-200 rounded-full h-2">
                                                                 <div
-                                                                    className={`h-1.5 rounded-full ${
+                                                                    className={`h-2 rounded-full ${
                                                                         (applicant
                                                                             .candidate
                                                                             ?.profileCompleteness ||
@@ -1135,128 +1123,317 @@ const ManageApplicants = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        {/* Status and Actions for Mobile */}
-                                        <div className="flex items-center justify-between">
-                                            <span
-                                                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                                                    applicant.status
-                                                )} ${
-                                                    applicant.status === "hired"
-                                                        ? "ring-2 ring-green-300"
-                                                        : ""
-                                                }`}
-                                            >
-                                                {formatStatus(applicant.status)}
-                                                {applicant.status ===
-                                                    "hired" && (
-                                                    <Check className="h-3 w-3 ml-1" />
-                                                )}
-                                            </span>
-
-                                            <div className="flex items-center space-x-1">
-                                                <button
-                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
-                                                    onClick={() =>
-                                                        handleViewApplication(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="View Application"
+                                            <div className="flex items-center space-x-4">
+                                                <span
+                                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                                                        applicant.status
+                                                    )} ${
+                                                        applicant.status ===
+                                                        "hired"
+                                                            ? "ring-2 ring-green-300"
+                                                            : ""
+                                                    }`}
                                                 >
-                                                    <Eye className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
-                                                    onClick={() =>
-                                                        handleViewResume(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="View Resume"
-                                                >
-                                                    <FileText className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    className="p-1.5 text-purple-600 hover:bg-purple-50 rounded cursor-pointer"
-                                                    onClick={() =>
-                                                        handleScheduleInterview(
-                                                            applicant
-                                                        )
-                                                    }
-                                                    title="Schedule Interview"
-                                                >
-                                                    <CalendarPlus className="h-4 w-4" />
-                                                </button>
-                                                {applicant.status !== "hired" &&
-                                                    applicant.status !==
-                                                        "rejected" &&
-                                                    canHireForJob(
-                                                        applicant.jobId,
-                                                        applicants
-                                                    ) && (
-                                                        <button
-                                                            className="p-1.5 text-green-600 hover:bg-green-50 rounded cursor-pointer disabled:opacity-50"
-                                                            onClick={() =>
-                                                                handleAcceptApplicant(
-                                                                    applicant
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                isUpdating
-                                                            }
-                                                            title="Accept/Hire"
-                                                        >
-                                                            <Check className="h-4 w-4" />
-                                                        </button>
+                                                    {formatStatus(
+                                                        applicant.status
                                                     )}
-                                                {applicant.status !==
-                                                    "rejected" &&
-                                                    applicant.status !==
+                                                    {applicant.status ===
                                                         "hired" && (
-                                                        <button
-                                                            className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50"
-                                                            onClick={() =>
-                                                                handleRejectApplicant(
-                                                                    applicant
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                isUpdating
-                                                            }
-                                                            title="Reject"
-                                                        >
-                                                            <X className="h-4 w-4" />
-                                                        </button>
+                                                        <Check className="h-3 w-3 ml-1" />
                                                     )}
+                                                </span>
+
+                                                <div className="flex items-center space-x-2">
+                                                    <button
+                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
+                                                        onClick={() =>
+                                                            handleViewApplication(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="View Application"
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-md cursor-pointer"
+                                                        onClick={() =>
+                                                            handleViewResume(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="View Resume"
+                                                    >
+                                                        <FileText className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        className="p-2 text-purple-600 hover:bg-purple-50 rounded-md cursor-pointer"
+                                                        onClick={() =>
+                                                            handleScheduleInterview(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="Schedule Interview"
+                                                    >
+                                                        <CalendarPlus className="h-4 w-4" />
+                                                    </button>
+                                                    {applicant.status !==
+                                                        "hired" &&
+                                                        applicant.status !==
+                                                            "rejected" &&
+                                                        canHireForJob(
+                                                            applicant.jobId,
+                                                            applicants
+                                                        ) && (
+                                                            <button
+                                                                className="p-2 text-green-600 hover:bg-green-50 rounded-md cursor-pointer disabled:opacity-50"
+                                                                onClick={() =>
+                                                                    handleAcceptApplicant(
+                                                                        applicant
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isUpdating
+                                                                }
+                                                                title="Accept/Hire"
+                                                            >
+                                                                <Check className="h-4 w-4" />
+                                                            </button>
+                                                        )}
+                                                    {applicant.status !==
+                                                        "rejected" &&
+                                                        applicant.status !==
+                                                            "hired" && (
+                                                            <button
+                                                                className="p-2 text-red-600 hover:bg-red-50 rounded-md cursor-pointer disabled:opacity-50"
+                                                                onClick={() =>
+                                                                    handleRejectApplicant(
+                                                                        applicant
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isUpdating
+                                                                }
+                                                                title="Reject"
+                                                            >
+                                                                <X className="h-4 w-4" />
+                                                            </button>
+                                                        )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
+
+                                        {/* Mobile Layout */}
+                                        <div className="md:hidden space-y-4">
+                                            <div className="flex items-start space-x-3">
+                                                <div className="bg-gray-100 rounded-full p-2 flex-shrink-0">
+                                                    <User className="h-6 w-6 text-gray-600" />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <h3 className="text-base font-semibold text-gray-900 truncate">
+                                                        {applicant.name}
+                                                    </h3>
+                                                    <p className="text-sm text-gray-600 truncate">
+                                                        {applicant.jobTitle}
+                                                    </p>
+                                                    <div className="mt-2 space-y-1">
+                                                        <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                                            <Mail className="h-3 w-3 flex-shrink-0" />
+                                                            <span className="truncate">
+                                                                {
+                                                                    applicant.email
+                                                                }
+                                                            </span>
+                                                        </div>
+                                                        {applicant.phone && (
+                                                            <div className="flex items-center space-x-1 text-xs text-gray-500">
+                                                                <Phone className="h-3 w-3 flex-shrink-0" />
+                                                                <span>
+                                                                    {
+                                                                        applicant.phone
+                                                                    }
+                                                                </span>
+                                                            </div>
+                                                        )}
+                                                        <p className="text-xs text-gray-400">
+                                                            Applied:{" "}
+                                                            {new Date(
+                                                                applicant.appliedDate
+                                                            ).toLocaleDateString()}
+                                                        </p>
+                                                        {/* Profile Completeness for Mobile */}
+                                                        <div className="flex items-center space-x-2">
+                                                            <span className="text-xs text-gray-500">
+                                                                Profile:
+                                                            </span>
+                                                            <div className="flex items-center space-x-1">
+                                                                <div className="w-12 bg-gray-200 rounded-full h-1.5">
+                                                                    <div
+                                                                        className={`h-1.5 rounded-full ${
+                                                                            (applicant
+                                                                                .candidate
+                                                                                ?.profileCompleteness ||
+                                                                                0) >=
+                                                                            80
+                                                                                ? "bg-green-500"
+                                                                                : (applicant
+                                                                                      .candidate
+                                                                                      ?.profileCompleteness ||
+                                                                                      0) >=
+                                                                                  60
+                                                                                ? "bg-yellow-500"
+                                                                                : "bg-red-500"
+                                                                        }`}
+                                                                        style={{
+                                                                            width: `${
+                                                                                applicant
+                                                                                    .candidate
+                                                                                    ?.profileCompleteness ||
+                                                                                0
+                                                                            }%`,
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                                <span className="text-xs text-gray-600">
+                                                                    {applicant
+                                                                        .candidate
+                                                                        ?.profileCompleteness ||
+                                                                        0}
+                                                                    %
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Status and Actions for Mobile */}
+                                            <div className="flex items-center justify-between">
+                                                <span
+                                                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                                                        applicant.status
+                                                    )} ${
+                                                        applicant.status ===
+                                                        "hired"
+                                                            ? "ring-2 ring-green-300"
+                                                            : ""
+                                                    }`}
+                                                >
+                                                    {formatStatus(
+                                                        applicant.status
+                                                    )}
+                                                    {applicant.status ===
+                                                        "hired" && (
+                                                        <Check className="h-3 w-3 ml-1" />
+                                                    )}
+                                                </span>
+
+                                                <div className="flex items-center space-x-1">
+                                                    <button
+                                                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                                                        onClick={() =>
+                                                            handleViewApplication(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="View Application"
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded cursor-pointer"
+                                                        onClick={() =>
+                                                            handleViewResume(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="View Resume"
+                                                    >
+                                                        <FileText className="h-4 w-4" />
+                                                    </button>
+                                                    <button
+                                                        className="p-1.5 text-purple-600 hover:bg-purple-50 rounded cursor-pointer"
+                                                        onClick={() =>
+                                                            handleScheduleInterview(
+                                                                applicant
+                                                            )
+                                                        }
+                                                        title="Schedule Interview"
+                                                    >
+                                                        <CalendarPlus className="h-4 w-4" />
+                                                    </button>
+                                                    {applicant.status !==
+                                                        "hired" &&
+                                                        applicant.status !==
+                                                            "rejected" &&
+                                                        canHireForJob(
+                                                            applicant.jobId,
+                                                            applicants
+                                                        ) && (
+                                                            <button
+                                                                className="p-1.5 text-green-600 hover:bg-green-50 rounded cursor-pointer disabled:opacity-50"
+                                                                onClick={() =>
+                                                                    handleAcceptApplicant(
+                                                                        applicant
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isUpdating
+                                                                }
+                                                                title="Accept/Hire"
+                                                            >
+                                                                <Check className="h-4 w-4" />
+                                                            </button>
+                                                        )}
+                                                    {applicant.status !==
+                                                        "rejected" &&
+                                                        applicant.status !==
+                                                            "hired" && (
+                                                            <button
+                                                                className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer disabled:opacity-50"
+                                                                onClick={() =>
+                                                                    handleRejectApplicant(
+                                                                        applicant
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isUpdating
+                                                                }
+                                                                title="Reject"
+                                                            >
+                                                                <X className="h-4 w-4" />
+                                                            </button>
+                                                        )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </motion.div>
+                <div className="flex items-center gap-1">
+                    {/* Application Details Modal */}
+                    <ApplicationModal />
+
+                    {/* Resume Viewer Modal */}
+                    {selectedResumeCandidate && (
+                        <ResumeViewer
+                            candidateId={selectedResumeCandidate.id}
+                            candidateName={selectedResumeCandidate.name}
+                            isOpen={showResumeViewer}
+                            onClose={() => {
+                                setShowResumeViewer(false);
+                                setSelectedResumeCandidate(null);
+                            }}
+                            onError={handleResumeError}
+                        />
+                    )}
+                </div>
             </div>
-
-            {/* Application Details Modal */}
-            <ApplicationModal />
-
-            {/* Resume Viewer Modal */}
-            {selectedResumeCandidate && (
-                <ResumeViewer
-                    candidateId={selectedResumeCandidate.id}
-                    candidateName={selectedResumeCandidate.name}
-                    isOpen={showResumeViewer}
-                    onClose={() => {
-                        setShowResumeViewer(false);
-                        setSelectedResumeCandidate(null);
-                    }}
-                    onError={handleResumeError}
-                />
-            )}
-        </div>
+        </motion.div>
     );
 };
 

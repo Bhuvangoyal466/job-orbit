@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
     ArrowLeft,
     MapPin,
@@ -17,10 +18,20 @@ import {
     Tag,
     Gift,
     Check,
+    Star,
+    Award,
+    Shield,
+    Zap,
+    Target,
+    Share2,
+    BookOpen,
+    TrendingUp,
 } from "lucide-react";
 import { toast } from "react-toastify";
 import { jobsAPI } from "../../utils/api";
 import { useAuth } from "../../context/useAuth";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import { formatSalaryRange } from "../../utils/currency";
 
 const JobDetails = () => {
     const { id } = useParams();
@@ -157,32 +168,52 @@ const JobDetails = () => {
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <Loader className="h-8 w-8 animate-spin text-blue-500 mb-4" />
-                <p className="text-gray-600">Loading job details...</p>
-            </div>
+            <LoadingSpinner
+                fullScreen={true}
+                message="Loading job details..."
+            />
         );
     }
 
     if (error) {
         return (
-            <div className="max-w-4xl mx-auto px-4 py-8">
-                <div className="text-center py-12">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                        {error}
-                    </h2>
-                    <p className="text-gray-600 mb-6">
-                        The job you're looking for might have been removed or is
-                        no longer active.
-                    </p>
-                    <Link
-                        to="/candidate/jobs"
-                        className="inline-flex items-center text-blue-600 hover:underline"
-                    >
-                        <ArrowLeft className="h-4 w-4 mr-2" />
-                        Back to Job Board
-                    </Link>
-                </div>
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+                <motion.div
+                    className="text-center max-w-md"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <div className="bg-red-50 border border-red-200 rounded-3xl p-8 shadow-2xl">
+                        <motion.div
+                            className="p-4 bg-red-100 rounded-2xl w-fit mx-auto mb-6"
+                            animate={{ rotate: [0, -10, 10, 0] }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                repeatDelay: 3,
+                            }}
+                        >
+                            <Briefcase className="h-12 w-12 text-red-600" />
+                        </motion.div>
+                        <h2 className="text-2xl font-bold text-red-800 mb-4">
+                            Job Not Found
+                        </h2>
+                        <p className="text-red-600 mb-6">{error}</p>
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                        >
+                            <Link
+                                to="/candidate/jobs"
+                                className="inline-flex items-center gap-2 bg-red-600 text-white px-6 py-3 rounded-xl hover:bg-red-700 transition-colors font-semibold"
+                            >
+                                <ArrowLeft className="h-4 w-4" />
+                                Back to Job Board
+                            </Link>
+                        </motion.div>
+                    </div>
+                </motion.div>
             </div>
         );
     }
@@ -192,86 +223,187 @@ const JobDetails = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-4 py-8">
-            {/* Back Link */}
-            <div className="mb-6">
-                <Link
-                    to="/candidate/jobs"
-                    className="inline-flex items-center text-gray-600 hover:text-blue-600"
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+            <div className="max-w-6xl mx-auto px-4 py-8">
+                {/* Modern Back Link */}
+                <motion.div
+                    className="mb-8"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5 }}
                 >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Job Board
-                </Link>
-            </div>
+                    <Link
+                        to="/candidate/jobs"
+                        className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 bg-white/70 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20 shadow-sm hover:shadow-md transition-all duration-300"
+                    >
+                        <ArrowLeft className="h-4 w-4" />
+                        Back to Job Board
+                    </Link>
+                </motion.div>
 
-            {/* Job Header */}
-            <div className="bg-white shadow rounded-lg overflow-hidden mb-6">
-                <div className="p-6 border-b">
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                        <div className="mb-4 md:mb-0">
-                            <div className="mb-4">
-                                <img
-                                    src={
-                                        job.company?.logo ||
-                                        "https://via.placeholder.com/64x64/e5e7eb/6b7280?text=?"
-                                    }
-                                    alt={job.company?.name || "Company Logo"}
-                                    className="h-10 w-auto "
-                                />
-                            </div>
-                            <div className="flex items-center mr-10 space-x-2 mb-2">
-                                <h1 className="text-3xl font-bold mr-10 text-gray-900 w-4/5">
+                {/* Modern Job Header */}
+                <motion.div
+                    className="glass rounded-3xl p-8 border border-white/20 shadow-2xl mb-8"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                        {/* Left Content */}
+                        <div className="flex-1">
+                            {/* Company Logo & Badge */}
+                            <motion.div
+                                className="flex items-center gap-4 mb-6"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2, duration: 0.5 }}
+                            >
+                                <motion.div
+                                    className="relative"
+                                    whileHover={{ scale: 1.1, rotate: 5 }}
+                                    transition={{
+                                        type: "spring",
+                                        stiffness: 300,
+                                    }}
+                                >
+                                    <img
+                                        src={
+                                            job.company?.logo ||
+                                            "https://via.placeholder.com/80x80/e5e7eb/6b7280?text=?"
+                                        }
+                                        alt={
+                                            job.company?.name || "Company Logo"
+                                        }
+                                        className="h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50"
+                                    />
+                                    <div className="absolute -top-1 -right-1 p-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                                        <Star className="h-3 w-3 text-white" />
+                                    </div>
+                                </motion.div>
+
+                                <div>
+                                    <motion.span
+                                        className="px-3 py-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 text-sm font-semibold rounded-full border border-blue-200"
+                                        whileHover={{ scale: 1.05 }}
+                                    >
+                                        {job.type}
+                                    </motion.span>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <div className="flex items-center gap-1">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                            <span className="text-xs text-green-600 font-medium">
+                                                Active Hiring
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            {/* Job Title & Company */}
+                            <motion.div
+                                className="mb-6"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3, duration: 0.5 }}
+                            >
+                                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-3">
                                     {job.title}
                                 </h1>
-                                <span className="px-2 w-1/5 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
-                                    {job.type}
-                                </span>
-                            </div>
-                            <p className="text-xl text-gray-700 mb-1">
-                                {job.company?.name ||
-                                    "Company Name Not Provided"}
-                            </p>
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                                <div className="flex items-center space-x-1">
-                                    <MapPin className="h-4 w-4" />
-                                    <span>
-                                        {job.location?.remote
-                                            ? "Remote"
-                                            : [
-                                                  job.location?.city,
-                                                  job.location?.state,
-                                                  job.location?.country,
-                                              ]
-                                                  .filter(Boolean)
-                                                  .join(", ") ||
-                                              "Location not specified"}
-                                    </span>
+                                <div className="flex items-center gap-2 mb-4">
+                                    <Building className="h-5 w-5 text-gray-500" />
+                                    <p className="text-xl text-gray-700 font-medium">
+                                        {job.company?.name ||
+                                            "Company Name Not Provided"}
+                                    </p>
+                                    <motion.div
+                                        className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full"
+                                        whileHover={{ scale: 1.1 }}
+                                    >
+                                        <Award className="h-3 w-3 inline mr-1" />
+                                        Verified
+                                    </motion.div>
                                 </div>
-                                <div className="flex items-center space-x-1">
-                                    <IndianRupee className="h-4 w-4" />
-                                    <span>
-                                        {job.salary?.min && job.salary?.max
-                                            ? `${
-                                                  job.salary.currency || "USD"
-                                              } ${job.salary.min.toLocaleString(
-                                                  "en-IN"
-                                              )} - ${job.salary.max.toLocaleString(
-                                                  "en-IN"
-                                              )}`
-                                            : "Salary not specified"}
-                                    </span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                    <Calendar className="h-4 w-4" />
-                                    <span>
-                                        {job.applicationDeadline
-                                            ? `Deadline: ${formatDate(
-                                                  job.applicationDeadline
-                                              )}`
-                                            : "No application deadline"}
-                                    </span>
-                                </div>
-                            </div>
+                            </motion.div>
+
+                            {/* Job Details Grid */}
+                            <motion.div
+                                className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.5 }}
+                            >
+                                {/* Location */}
+                                <motion.div
+                                    className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                >
+                                    <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+                                        <MapPin className="h-4 w-4 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-medium">
+                                            Location
+                                        </p>
+                                        <p className="text-sm font-semibold text-gray-900">
+                                            {job.location?.remote
+                                                ? "🌐 Remote"
+                                                : [
+                                                      job.location?.city,
+                                                      job.location?.state,
+                                                      job.location?.country,
+                                                  ]
+                                                      .filter(Boolean)
+                                                      .join(", ") ||
+                                                  "Not specified"}
+                                        </p>
+                                    </div>
+                                </motion.div>
+
+                                {/* Salary */}
+                                <motion.div
+                                    className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                >
+                                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
+                                        <IndianRupee className="h-4 w-4 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-medium">
+                                            Salary
+                                        </p>
+                                        <p className="text-sm font-semibold text-gray-900">
+                                            {job.salary?.min || job.salary?.max
+                                                ? formatSalaryRange(
+                                                      job.salary?.min,
+                                                      job.salary?.max
+                                                  )
+                                                : "💰 Competitive"}
+                                        </p>
+                                    </div>
+                                </motion.div>
+
+                                {/* Deadline */}
+                                <motion.div
+                                    className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
+                                    whileHover={{ scale: 1.02, y: -2 }}
+                                >
+                                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                                        <Calendar className="h-4 w-4 text-white" />
+                                    </div>
+                                    <div>
+                                        <p className="text-xs text-gray-500 font-medium">
+                                            Deadline
+                                        </p>
+                                        <p className="text-sm font-semibold text-gray-900">
+                                            {job.applicationDeadline
+                                                ? formatDate(
+                                                      job.applicationDeadline
+                                                  )
+                                                : "⏰ Open"}
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
                         </div>
                         <div className="flex flex-col space-y-2">
                             <button
@@ -327,11 +459,11 @@ const JobDetails = () => {
                             Posted on {formatDate(job.createdAt)}
                         </span>
                     </div>
-                </div>
+                </motion.div>
             </div>
 
             {/* Job Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-10 py-10">
                 {/* Main Job Content */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Job Description */}

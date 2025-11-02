@@ -1,5 +1,18 @@
 import React from "react";
-import { Target, Users, Award, Zap } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+    Target,
+    Users,
+    Award,
+    Zap,
+    Heart,
+    Rocket,
+    Shield,
+    Globe,
+    TrendingUp,
+    Star,
+    Briefcase,
+} from "lucide-react";
 
 const About = () => {
     const values = [
@@ -30,20 +43,104 @@ const About = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white overflow-x-hidden">
             {/* Hero Section */}
-            <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center">
-                        <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                            About JobOrbit
-                        </h1>
-                        <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto">
+            <section className="relative min-h-screen flex items-center bg-gradient-hero text-white overflow-hidden">
+                {/* Animated Background Elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full animate-float"></div>
+                    <div
+                        className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-300 opacity-10 rounded-full animate-float"
+                        style={{ animationDelay: "2s" }}
+                    ></div>
+                    <div
+                        className="absolute top-1/3 right-1/3 w-32 h-32 bg-purple-300 opacity-20 rounded-full animate-bounce-slow"
+                        style={{ animationDelay: "1s" }}
+                    ></div>
+                </div>
+
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        className="text-center"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <motion.h1
+                            className="text-5xl md:text-7xl font-bold mb-8 leading-tight"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 1, delay: 0.2 }}
+                        >
+                            About{" "}
+                            <span className="text-gradient bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
+                                JobOrbit
+                            </span>
+                        </motion.h1>
+
+                        <motion.p
+                            className="text-xl md:text-2xl text-blue-100 max-w-4xl mx-auto leading-relaxed"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                        >
                             Revolutionizing the way people find jobs and
-                            companies find talent through intelligent technology
-                            and seamless user experience.
-                        </p>
-                    </div>
+                            companies find talent through intelligent AI
+                            technology, seamless user experience, and meaningful
+                            connections.
+                        </motion.p>
+
+                        {/* Floating Stats */}
+                        <motion.div
+                            className="flex flex-wrap justify-center gap-8 mt-16"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1, delay: 0.8 }}
+                        >
+                            {[
+                                {
+                                    number: "10K+",
+                                    label: "Jobs Posted",
+                                    icon: Rocket,
+                                },
+                                {
+                                    number: "50K+",
+                                    label: "Happy Users",
+                                    icon: Users,
+                                },
+                                {
+                                    number: "95%",
+                                    label: "Success Rate",
+                                    icon: TrendingUp,
+                                },
+                                {
+                                    number: "24/7",
+                                    label: "Support",
+                                    icon: Shield,
+                                },
+                            ].map((stat, index) => (
+                                <motion.div
+                                    key={index}
+                                    className="glass rounded-2xl p-6 text-center"
+                                    initial={{ opacity: 0, y: 50 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: 0.8 + index * 0.1,
+                                    }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                >
+                                    <stat.icon className="h-8 w-8 mx-auto mb-2 text-blue-300" />
+                                    <div className="text-2xl font-bold">
+                                        {stat.number}
+                                    </div>
+                                    <div className="text-blue-200 text-sm">
+                                        {stat.label}
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </motion.div>
+                    </motion.div>
                 </div>
             </section>
 
@@ -102,37 +199,81 @@ const About = () => {
                 </div>
             </section>
 
-            {/* Values Section */}
-            <section className="py-20 bg-gray-50">
+            {/* Enhanced Values Section */}
+            <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-16">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                            Our Values
-                        </h2>
+                    <motion.div
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                    >
+                        <motion.h2
+                            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            viewport={{ once: true }}
+                        >
+                            Our Core Values
+                        </motion.h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                            The principles that guide everything we do at
-                            JobOrbit
+                            The principles that drive innovation and excellence
+                            in everything we do
                         </p>
-                    </div>
+                    </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {values.map((value, index) => {
                             const Icon = value.icon;
                             return (
-                                <div
+                                <motion.div
                                     key={index}
-                                    className="bg-white p-8 rounded-lg shadow-lg text-center"
+                                    className="glass p-8 rounded-2xl shadow-2xl text-center border border-white/20 hover:shadow-3xl transition-all duration-300 group"
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{
+                                        duration: 0.6,
+                                        delay: index * 0.1,
+                                    }}
+                                    whileHover={{ y: -10, scale: 1.02 }}
+                                    viewport={{ once: true }}
                                 >
-                                    <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <Icon className="h-8 w-8 text-blue-600" />
-                                    </div>
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                                    <motion.div
+                                        className="bg-gradient-to-br from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+                                        whileHover={{
+                                            rotate: 360,
+                                            scale: 1.1,
+                                        }}
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                            damping: 10,
+                                        }}
+                                    >
+                                        <Icon className="h-8 w-8 text-white" />
+                                    </motion.div>
+
+                                    <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors">
                                         {value.title}
                                     </h3>
-                                    <p className="text-gray-600">
+                                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors">
                                         {value.description}
                                     </p>
-                                </div>
+
+                                    {/* Decorative element */}
+                                    <motion.div
+                                        className="mt-6 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: "100%" }}
+                                        transition={{
+                                            duration: 0.8,
+                                            delay: 0.5 + index * 0.1,
+                                        }}
+                                        viewport={{ once: true }}
+                                    />
+                                </motion.div>
                             );
                         })}
                     </div>
@@ -157,29 +298,135 @@ const About = () => {
                         </p>
                     </div>
 
-                    <div className="bg-blue-600 text-white rounded-lg p-8 text-center">
-                        <h3 className="text-2xl font-bold mb-4">
-                            Ready to Join Our Community?
-                        </h3>
-                        <p className="text-blue-100 mb-6">
-                            Experience the future of job searching and
-                            recruiting with JobOrbit's intelligent platform.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a
-                                href="/candidate/signup"
-                                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
-                            >
-                                Start as Job Seeker
-                            </a>
-                            <a
-                                href="/recruiter/signup"
-                                className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
-                            >
-                                Join as Recruiter
-                            </a>
+                    <motion.div
+                        className="bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600 text-white rounded-3xl p-12 text-center relative overflow-hidden shadow-2xl"
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                    >
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 opacity-10">
+                            <div className="absolute top-4 left-4 w-32 h-32 border border-white rounded-full"></div>
+                            <div className="absolute bottom-4 right-4 w-24 h-24 border border-white rounded-full"></div>
+                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 border border-white rounded-full"></div>
                         </div>
-                    </div>
+
+                        <div className="relative z-10">
+                            <motion.div
+                                className="flex items-center justify-center gap-3 mb-6"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                transition={{ duration: 0.6, delay: 0.2 }}
+                                viewport={{ once: true }}
+                            >
+                                <motion.div
+                                    className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm"
+                                    animate={{
+                                        rotate: [0, 10, -10, 0],
+                                        scale: [1, 1.1, 1],
+                                    }}
+                                    transition={{
+                                        duration: 4,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
+                                >
+                                    <Rocket className="h-8 w-8 text-white" />
+                                </motion.div>
+                                <h3 className="text-3xl md:text-4xl font-bold">
+                                    Ready to Launch Your Career?
+                                </h3>
+                            </motion.div>
+
+                            <motion.p
+                                className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                                viewport={{ once: true }}
+                            >
+                                Join thousands of professionals who have
+                                discovered their dream jobs through JobOrbit's
+                                intelligent platform
+                            </motion.p>
+
+                            <motion.div
+                                className="flex flex-col md:flex-row gap-4 justify-center items-center"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: 0.6 }}
+                                viewport={{ once: true }}
+                            >
+                                <motion.a
+                                    href="/candidate/signup"
+                                    className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-lg flex items-center gap-2 min-w-[200px] justify-center"
+                                    whileHover={{
+                                        scale: 1.05,
+                                        boxShadow:
+                                            "0 20px 40px rgba(0,0,0,0.1)",
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <Users className="h-5 w-5" />
+                                    Join as Job Seeker
+                                </motion.a>
+
+                                <motion.div
+                                    className="text-white/60 font-medium"
+                                    animate={{ opacity: [0.6, 1, 0.6] }}
+                                    transition={{
+                                        duration: 2,
+                                        repeat: Infinity,
+                                    }}
+                                >
+                                    OR
+                                </motion.div>
+
+                                <motion.a
+                                    href="/recruiter/signup"
+                                    className="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-blue-600 transition-all duration-300 backdrop-blur-sm flex items-center gap-2 min-w-[200px] justify-center"
+                                    whileHover={{
+                                        scale: 1.05,
+                                        backgroundColor:
+                                            "rgba(255,255,255,0.9)",
+                                    }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <Briefcase className="h-5 w-5" />
+                                    Hire Top Talent
+                                </motion.a>
+                            </motion.div>
+
+                            {/* Trust Indicators */}
+                            <motion.div
+                                className="flex justify-center items-center gap-8 mt-8 text-blue-200"
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                transition={{ duration: 0.6, delay: 0.8 }}
+                                viewport={{ once: true }}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Shield className="h-5 w-5" />
+                                    <span className="text-sm font-medium">
+                                        Secure Platform
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Star className="h-5 w-5 fill-current" />
+                                    <span className="text-sm font-medium">
+                                        5-Star Rated
+                                    </span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Globe className="h-5 w-5" />
+                                    <span className="text-sm font-medium">
+                                        Global Reach
+                                    </span>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </div>

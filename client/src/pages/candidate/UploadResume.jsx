@@ -1,8 +1,28 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
-import { Upload } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    Upload,
+    FileText,
+    CheckCircle,
+    AlertCircle,
+    Edit,
+    Save,
+    X,
+    User,
+    Mail,
+    Phone,
+    MapPin,
+    Briefcase,
+    GraduationCap,
+    Award,
+    Trash2,
+    Plus,
+    Eye,
+} from "lucide-react";
 import { toast } from "react-toastify";
 import { candidateAPI } from "../../utils/api";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 const UploadResume = () => {
     const [dragActive, setDragActive] = useState(false);
@@ -260,130 +280,353 @@ const UploadResume = () => {
     };
 
     if (loading) {
-        return <div className="text-center py-10">Loading...</div>;
+        return (
+            <LoadingSpinner
+                fullScreen={true}
+                message="Loading your profile..."
+            />
+        );
     }
 
     return (
-        <div className="space-y-6">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900">
-                    Upload Resume
-                </h1>
-                <p className="text-gray-600 mt-2">
-                    Upload your resume (PDF). Your profile info will be
-                    autofilled below and can be edited.
-                </p>
-            </div>
-
-            {/* Upload Section */}
-            <div className="bg-white shadow rounded-lg p-6">
-                <div
-                    className={`border-2 border-dashed rounded-lg p-8 text-center ${
-                        dragActive
-                            ? "border-blue-400 bg-blue-50"
-                            : "border-gray-300"
-                    }`}
-                    onDragEnter={handleDrag}
-                    onDragLeave={handleDrag}
-                    onDragOver={handleDrag}
-                    onDrop={handleDrop}
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+            <div className="max-w-4xl mx-auto px-4 space-y-8">
+                {/* Header */}
+                <motion.div
+                    className="text-center"
+                    initial={{ opacity: 0, y: -30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
                 >
-                    <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <p className="text-lg font-medium text-gray-900 mb-2">
-                        {uploadedFile
-                            ? uploadedFile.name
-                            : "Drop your resume here"}
+                    <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                        Upload Your Resume
+                    </h1>
+                    <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                        Upload your resume and let our AI automatically extract
+                        and organize your information. Review and edit before
+                        saving.
                     </p>
-                    <p className="text-gray-600 mb-4">
-                        or click to browse files (PDF or Word only)
-                    </p>
+                </motion.div>
+
+                {/* Upload Section */}
+                <motion.div
+                    className="bg-white/80 backdrop-blur-sm shadow-2xl rounded-3xl p-8 border border-white/20"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                    <AnimatePresence mode="wait">
+                        {!uploadedFile ? (
+                            <motion.div
+                                key="upload-area"
+                                className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
+                                    dragActive
+                                        ? "border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 scale-105"
+                                        : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
+                                }`}
+                                onDragEnter={handleDrag}
+                                onDragLeave={handleDrag}
+                                onDragOver={handleDrag}
+                                onDrop={handleDrop}
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                whileHover={{ scale: 1.02 }}
+                            >
+                                {/* Background Pattern */}
+                                <div className="absolute inset-0 opacity-5">
+                                    <div className="absolute top-4 left-4 w-8 h-8 bg-blue-600 rounded-full"></div>
+                                    <div className="absolute top-8 right-8 w-6 h-6 bg-purple-600 rounded-full"></div>
+                                    <div className="absolute bottom-8 left-8 w-4 h-4 bg-green-600 rounded-full"></div>
+                                </div>
+
+                                <motion.div
+                                    className="relative z-10"
+                                    animate={
+                                        dragActive
+                                            ? { scale: 1.1 }
+                                            : { scale: 1 }
+                                    }
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <motion.div
+                                        className="mx-auto mb-6 p-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl w-fit"
+                                        animate={{
+                                            rotate: dragActive ? 360 : 0,
+                                            y: [0, -5, 0],
+                                        }}
+                                        transition={{
+                                            rotate: { duration: 0.6 },
+                                            y: {
+                                                duration: 2,
+                                                repeat: Infinity,
+                                            },
+                                        }}
+                                    >
+                                        <Upload className="h-12 w-12 text-white" />
+                                    </motion.div>
+
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                                        {dragActive
+                                            ? "Drop it like it's hot!"
+                                            : "Drag & Drop Your Resume"}
+                                    </h3>
+                                    <p className="text-gray-600 mb-6 text-lg">
+                                        or click to browse files (PDF, DOC, DOCX
+                                        supported)
+                                    </p>
+
+                                    <div className="flex items-center justify-center gap-4 mb-6">
+                                        <div className="flex items-center gap-2 text-green-600">
+                                            <CheckCircle className="h-5 w-5" />
+                                            <span className="text-sm font-medium">
+                                                AI-Powered Parsing
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-blue-600">
+                                            <CheckCircle className="h-5 w-5" />
+                                            <span className="text-sm font-medium">
+                                                Secure Upload
+                                            </span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="uploaded-file"
+                                className="text-center"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                            >
+                                <motion.div
+                                    className="mx-auto mb-6 p-6 bg-green-500 rounded-2xl shadow-xl w-fit"
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{
+                                        type: "spring",
+                                        duration: 0.6,
+                                    }}
+                                >
+                                    <FileText className="h-12 w-12 text-white" />
+                                </motion.div>
+
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                                    {uploadedFile.name}
+                                </h3>
+                                <p className="text-green-600 font-semibold flex items-center justify-center gap-2">
+                                    <CheckCircle className="h-5 w-5" />
+                                    Resume uploaded successfully!
+                                </p>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <input
                         type="file"
-                        accept=".pdf"
+                        accept=".pdf,.doc,.docx"
                         onChange={(e) =>
                             e.target.files && handleFile(e.target.files[0])
                         }
                         className="hidden"
                         id="resume-upload"
                     />
-                    <div className="flex gap-3 flex-wrap justify-center">
-                        <label
+
+                    <div className="flex gap-4 flex-wrap justify-center mt-8">
+                        <motion.label
                             htmlFor="resume-upload"
-                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer"
+                            className="btn-primary cursor-pointer flex items-center gap-2"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
                         >
+                            <Upload className="h-5 w-5" />
                             Choose File
-                        </label>
+                        </motion.label>
+
                         {formData?.resume && (
-                            <button
+                            <motion.button
                                 type="button"
                                 onClick={handleReParseResume}
                                 disabled={uploading}
-                                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                whileHover={{ scale: uploading ? 1 : 1.05 }}
+                                whileTap={{ scale: uploading ? 1 : 0.95 }}
                             >
-                                🔄 Re-parse Resume
-                            </button>
+                                <FileText className="h-5 w-5" />
+                                Re-parse Resume
+                            </motion.button>
+                        )}
+
+                        {formData?.resume && (
+                            <motion.button
+                                type="button"
+                                onClick={() =>
+                                    window.open(
+                                        `http://localhost:5000/api/candidate/resume/${formData.candidateId}`,
+                                        "_blank"
+                                    )
+                                }
+                                className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-xl font-semibold shadow-lg hover:bg-gray-700 transition-all duration-300"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <Eye className="h-5 w-5" />
+                                View Resume
+                            </motion.button>
                         )}
                     </div>
-                    {uploading && (
-                        <div className="mt-2 text-blue-600">
-                            {uploadedFile
-                                ? "Uploading and parsing..."
-                                : "Parsing resume..."}
-                        </div>
-                    )}
-                </div>
+
+                    <AnimatePresence>
+                        {uploading && (
+                            <motion.div
+                                className="mt-6 text-center"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                            >
+                                <div className="inline-flex items-center gap-3 px-6 py-3 bg-blue-100 text-blue-700 rounded-xl">
+                                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent"></div>
+                                    <span className="font-medium">
+                                        {uploadedFile
+                                            ? "Uploading and parsing your resume..."
+                                            : "Parsing resume with AI..."}
+                                    </span>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </motion.div>
             </div>
 
             {/* Profile Form */}
             {formData && (
-                <div className="bg-white shadow rounded-lg p-6">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 space-y-3 sm:space-y-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-                            <h2 className="text-xl font-semibold text-gray-900">
-                                Profile Information
-                            </h2>
-                            {/* Profile Completeness Indicator */}
-                            <div className="flex items-center space-x-2">
-                                <div className="w-24 bg-gray-200 rounded-full h-2">
-                                    <div
-                                        className={`h-2 rounded-full transition-all duration-300 ${
-                                            (formData.profileCompleteness ||
-                                                0) >= 80
-                                                ? "bg-green-500"
-                                                : (formData.profileCompleteness ||
-                                                      0) >= 60
-                                                ? "bg-yellow-500"
-                                                : "bg-red-500"
-                                        }`}
-                                        style={{
-                                            width: `${
-                                                formData.profileCompleteness ||
-                                                0
-                                            }%`,
-                                        }}
-                                    />
+                <motion.div
+                    className="glass p-8 rounded-3xl border border-white/20 shadow-2xl"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 space-y-4 lg:space-y-0">
+                        <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-6">
+                            <motion.div
+                                className="flex items-center gap-3"
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.5 }}
+                            >
+                                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl">
+                                    <User className="h-6 w-6 text-white" />
                                 </div>
-                                <span className="text-sm font-medium text-gray-700">
+                                <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                                    Profile Information
+                                </h2>
+                            </motion.div>
+
+                            {/* Enhanced Profile Completeness Indicator */}
+                            <motion.div
+                                className="flex items-center space-x-3"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.6 }}
+                            >
+                                <div className="relative">
+                                    <div className="w-32 h-3 bg-gray-200 rounded-full overflow-hidden">
+                                        <motion.div
+                                            className={`h-full rounded-full transition-all duration-1000 ${
+                                                (formData.profileCompleteness ||
+                                                    0) >= 80
+                                                    ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                                                    : (formData.profileCompleteness ||
+                                                          0) >= 60
+                                                    ? "bg-gradient-to-r from-yellow-500 to-orange-500"
+                                                    : "bg-gradient-to-r from-red-500 to-pink-500"
+                                            }`}
+                                            initial={{ width: 0 }}
+                                            animate={{
+                                                width: `${
+                                                    formData.profileCompleteness ||
+                                                    0
+                                                }%`,
+                                            }}
+                                            transition={{
+                                                duration: 1.5,
+                                                delay: 0.8,
+                                            }}
+                                        />
+                                    </div>
+                                    {/* Progress indicator dots */}
+                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-1">
+                                        {[25, 50, 75].map((mark) => (
+                                            <div
+                                                key={mark}
+                                                className={`w-1 h-1 rounded-full ${
+                                                    (formData.profileCompleteness ||
+                                                        0) >= mark
+                                                        ? "bg-white"
+                                                        : "bg-gray-400"
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                                <span className="text-sm font-semibold text-gray-700 bg-white/50 px-3 py-1 rounded-full">
                                     {formData.profileCompleteness || 0}%
                                     Complete
                                 </span>
-                            </div>
+                            </motion.div>
                         </div>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
                             {(formData.profileCompleteness || 0) < 100 && (
-                                <div className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-md">
-                                    💡 Complete your profile to stand out to
-                                    recruiters!
-                                </div>
-                            )}
-                            {!editMode && (
-                                <button
-                                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 whitespace-nowrap cursor-pointer"
-                                    onClick={() => setEditMode(true)}
+                                <motion.div
+                                    className="flex items-center gap-2 text-sm text-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-2 rounded-full border border-blue-200"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.7 }}
+                                    whileHover={{ scale: 1.05 }}
                                 >
-                                    Edit
-                                </button>
+                                    <Award className="h-4 w-4 text-blue-600" />
+                                    Complete your profile to stand out!
+                                </motion.div>
                             )}
+
+                            <div className="flex gap-3">
+                                {!editMode ? (
+                                    <motion.button
+                                        className="btn-primary flex items-center gap-2"
+                                        onClick={() => setEditMode(true)}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
+                                        <Edit className="h-4 w-4" />
+                                        Edit Profile
+                                    </motion.button>
+                                ) : (
+                                    <div className="flex gap-2">
+                                        <motion.button
+                                            type="button"
+                                            className="btn-primary flex items-center gap-2"
+                                            onClick={handleSave}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <Save className="h-4 w-4" />
+                                            Save Changes
+                                        </motion.button>
+                                        <motion.button
+                                            type="button"
+                                            className="btn-secondary flex items-center gap-2"
+                                            onClick={() => setEditMode(false)}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <X className="h-4 w-4" />
+                                            Cancel
+                                        </motion.button>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <form
@@ -394,69 +637,124 @@ const UploadResume = () => {
                         }}
                     >
                         {/* Personal Information Section */}
-                        <div className="bg-gray-50 p-6 rounded-lg">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
-                                Personal Information
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        <motion.div
+                            className="bg-gradient-to-br from-white/90 to-blue-50/50 p-8 rounded-2xl border border-blue-100 shadow-lg backdrop-blur-sm"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.8, duration: 0.5 }}
+                        >
+                            <div className="flex items-center gap-3 mb-6">
+                                <motion.div
+                                    className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl"
+                                    whileHover={{ rotate: 10, scale: 1.1 }}
+                                >
+                                    <User className="h-5 w-5 text-white" />
+                                </motion.div>
+                                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                                    Personal Information
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.9, duration: 0.4 }}
+                                >
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                        <User className="h-4 w-4 text-blue-500" />
                                         First Name{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
-                                    <input
-                                        type="text"
-                                        name="firstName"
-                                        value={formData.firstName || ""}
-                                        onChange={handleInputChange}
-                                        disabled={!editMode}
-                                        required
-                                        className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                            !editMode
-                                                ? "bg-gray-100 cursor-not-allowed"
-                                                : "bg-white"
-                                        }`}
-                                        placeholder="Enter your first name"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <div className="relative group">
+                                        <input
+                                            type="text"
+                                            name="firstName"
+                                            value={formData.firstName || ""}
+                                            onChange={handleInputChange}
+                                            disabled={!editMode}
+                                            required
+                                            className={`w-full border-2 rounded-xl px-4 py-3 text-gray-900 transition-all duration-300 ${
+                                                !editMode
+                                                    ? "bg-gray-50 border-gray-200 cursor-not-allowed"
+                                                    : "bg-white border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-blue-300"
+                                            } placeholder-gray-400 shadow-sm group-hover:shadow-md`}
+                                            placeholder="Enter your first name"
+                                        />
+                                        {editMode && (
+                                            <motion.div
+                                                className="absolute inset-0 border-2 border-blue-500 rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"
+                                                layoutId="input-focus"
+                                            />
+                                        )}
+                                    </div>
+                                </motion.div>
+
+                                <motion.div
+                                    initial={{ opacity: 0, x: 20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 1.0, duration: 0.4 }}
+                                >
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                        <User className="h-4 w-4 text-blue-500" />
                                         Last Name{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
-                                    <input
-                                        type="text"
-                                        name="lastName"
-                                        value={formData.lastName || ""}
-                                        onChange={handleInputChange}
-                                        disabled={!editMode}
-                                        required
-                                        className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                            !editMode
-                                                ? "bg-gray-100 cursor-not-allowed"
-                                                : "bg-white"
-                                        }`}
-                                        placeholder="Enter your last name"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    <div className="relative group">
+                                        <input
+                                            type="text"
+                                            name="lastName"
+                                            value={formData.lastName || ""}
+                                            onChange={handleInputChange}
+                                            disabled={!editMode}
+                                            required
+                                            className={`w-full border-2 rounded-xl px-4 py-3 text-gray-900 transition-all duration-300 ${
+                                                !editMode
+                                                    ? "bg-gray-50 border-gray-200 cursor-not-allowed"
+                                                    : "bg-white border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-blue-300"
+                                            } placeholder-gray-400 shadow-sm group-hover:shadow-md`}
+                                            placeholder="Enter your last name"
+                                        />
+                                        {editMode && (
+                                            <motion.div
+                                                className="absolute inset-0 border-2 border-blue-500 rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none"
+                                                layoutId="input-focus"
+                                            />
+                                        )}
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 1.1, duration: 0.4 }}
+                                >
+                                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                                        <Mail className="h-4 w-4 text-blue-500" />
                                         Email Address{" "}
                                         <span className="text-red-500">*</span>
                                     </label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email || ""}
-                                        onChange={handleInputChange}
-                                        disabled
-                                        className="w-full border border-gray-300 rounded-lg px-4 py-3 bg-gray-100 cursor-not-allowed text-gray-600"
-                                        placeholder="Your email address"
-                                    />
-                                    <p className="text-xs text-gray-500 mt-1">
-                                        Email cannot be changed
+                                    <div className="relative group">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email || ""}
+                                            onChange={handleInputChange}
+                                            disabled
+                                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 cursor-not-allowed text-gray-600 shadow-sm"
+                                            placeholder="Your email address"
+                                        />
+                                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                                            <div className="bg-gray-300 text-gray-600 text-xs px-2 py-1 rounded-md">
+                                                Read-only
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
+                                        <AlertCircle className="h-3 w-3" />
+                                        Email cannot be changed for security
+                                        reasons
                                     </p>
-                                </div>
+                                </motion.div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Phone Number{" "}
@@ -504,7 +802,7 @@ const UploadResume = () => {
                                     />
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Address Information Section */}
                         <div className="bg-gray-50 p-6 rounded-lg">
@@ -1003,7 +1301,7 @@ const UploadResume = () => {
                                     <select
                                         value={
                                             formData.expectedSalary?.currency ||
-                                            "USD"
+                                            "INR"
                                         }
                                         onChange={(e) =>
                                             handleNestedChange(
@@ -1019,12 +1317,12 @@ const UploadResume = () => {
                                                 : "bg-white"
                                         }`}
                                     >
+                                        <option value="INR">INR (₹)</option>
                                         <option value="USD">USD ($)</option>
                                         <option value="EUR">EUR (€)</option>
                                         <option value="GBP">GBP (£)</option>
                                         <option value="CAD">CAD (C$)</option>
                                         <option value="AUD">AUD (A$)</option>
-                                        <option value="INR">INR (₹)</option>
                                         <option value="JPY">JPY (¥)</option>
                                         <option value="SGD">SGD (S$)</option>
                                     </select>
@@ -1150,7 +1448,7 @@ const UploadResume = () => {
                             </div>
                         )}
                     </form>
-                </div>
+                </motion.div>
             )}
         </div>
     );

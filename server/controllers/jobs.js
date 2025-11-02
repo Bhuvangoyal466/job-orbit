@@ -560,8 +560,11 @@ exports.getCandidateApplications = async (req, res) => {
                     appliedDate: candidateApplication.appliedAt,
                     status: candidateApplication.status,
                     salary:
-                        job.salary?.min && job.salary?.max
-                            ? `$${job.salary.min.toLocaleString()} - $${job.salary.max.toLocaleString()}`
+                        job.salary?.min || job.salary?.max
+                            ? require("../utils/currency").formatSalaryRange(
+                                  job.salary?.min,
+                                  job.salary?.max
+                              )
                             : "Not disclosed",
                     jobDescription: job.description,
                 });
