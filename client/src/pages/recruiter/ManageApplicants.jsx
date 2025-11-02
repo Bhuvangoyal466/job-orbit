@@ -28,7 +28,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { recruiterAPI } from "../../utils/api";
-import { formatSalaryRange } from "../../utils/currency";
 import ResumeViewer from "../../components/ResumeViewer";
 
 const ManageApplicants = () => {
@@ -442,9 +441,7 @@ const ManageApplicants = () => {
                         )}
 
                         {/* Professional Information */}
-                        {(selectedApplicant.candidate?.experience ||
-                            selectedApplicant.candidate?.expectedSalary ||
-                            selectedApplicant.candidate?.preferredJobType) && (
+                        {selectedApplicant.candidate?.experience && (
                             <div className="bg-gray-50 rounded-lg p-4">
                                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                                     <Briefcase className="h-5 w-5 text-gray-500" />
@@ -466,51 +463,6 @@ const ManageApplicants = () => {
                                             </p>
                                         </div>
                                     )}
-                                    {selectedApplicant.candidate
-                                        ?.preferredJobType && (
-                                        <div>
-                                            <label className="text-sm font-medium text-gray-500">
-                                                Preferred Job Type
-                                            </label>
-                                            <p className="text-gray-700 capitalize">
-                                                {selectedApplicant.candidate.preferredJobType.replace(
-                                                    "-",
-                                                    " "
-                                                )}
-                                            </p>
-                                        </div>
-                                    )}
-                                    {selectedApplicant.candidate
-                                        ?.expectedSalary && (
-                                        <div>
-                                            <label className="text-sm font-medium text-gray-500">
-                                                Expected Salary
-                                            </label>
-                                            <p className="text-gray-700">
-                                                {formatSalaryRange(
-                                                    selectedApplicant.candidate
-                                                        ?.expectedSalary?.min,
-                                                    selectedApplicant.candidate
-                                                        ?.expectedSalary?.max
-                                                )}
-                                            </p>
-                                        </div>
-                                    )}
-                                    {selectedApplicant.candidate
-                                        ?.preferredLocations &&
-                                        selectedApplicant.candidate
-                                            .preferredLocations.length > 0 && (
-                                            <div>
-                                                <label className="text-sm font-medium text-gray-500">
-                                                    Preferred Locations
-                                                </label>
-                                                <p className="text-gray-700">
-                                                    {selectedApplicant.candidate.preferredLocations.join(
-                                                        ", "
-                                                    )}
-                                                </p>
-                                            </div>
-                                        )}
                                 </div>
                             </div>
                         )}

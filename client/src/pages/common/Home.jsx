@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -176,10 +177,8 @@ const Home = () => {
                                 delay: 0.2,
                             }}
                         >
-                            Find Your Dream Job with{" "}
-                            <span className="text-gradient bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
-                                JobOrbit
-                            </span>
+                            Find Your Dream Job with JobOrbit
+                            
                         </motion.h1>
 
                         <motion.p

@@ -104,29 +104,6 @@ const updateProfileValidation = [
         .optional()
         .matches(/^https?:\/\/(www\.)?linkedin\.com\/.+/)
         .withMessage("LinkedIn URL must be a valid LinkedIn profile URL"),
-    body("preferredJobType")
-        .optional()
-        .isIn(["full-time", "part-time", "contract", "internship", "remote"])
-        .withMessage("Invalid job type"),
-    body("expectedSalary.min")
-        .optional()
-        .isInt({ min: 0 })
-        .withMessage("Minimum salary must be a positive number"),
-    body("expectedSalary.max")
-        .optional()
-        .isInt({ min: 0 })
-        .withMessage("Maximum salary must be a positive number")
-        .custom((value, { req }) => {
-            if (
-                req.body.expectedSalary?.min &&
-                value < req.body.expectedSalary.min
-            ) {
-                throw new Error(
-                    "Maximum salary must be greater than minimum salary"
-                );
-            }
-            return true;
-        }),
 ];
 
 const changePasswordValidation = [

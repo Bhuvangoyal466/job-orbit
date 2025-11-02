@@ -97,6 +97,17 @@ const candidateSchema = new mongoose.Schema(
             },
         ],
 
+        // Projects
+        projects: [
+            {
+                name: String,
+                description: [String],
+                link: String,
+                technologies: [String],
+                duration: String,
+            },
+        ],
+
         // Resume and Portfolio
         resume: {
             filename: String,
@@ -119,28 +130,6 @@ const candidateSchema = new mongoose.Schema(
                 "LinkedIn URL must be a valid LinkedIn profile URL",
             ],
         },
-
-        // Job Preferences
-        preferredJobType: {
-            type: String,
-            enum: [
-                "full-time",
-                "part-time",
-                "contract",
-                "internship",
-                "remote",
-            ],
-            default: "full-time",
-        },
-        expectedSalary: {
-            min: Number,
-            max: Number,
-            currency: {
-                type: String,
-                default: "INR",
-            },
-        },
-        preferredLocations: [String],
 
         // Application Tracking
         applications: [
@@ -230,20 +219,20 @@ candidateSchema.pre("save", function (next) {
 
     // Define fields with their weights (must add up to 100)
     const fieldWeights = {
-        firstName: 8, // 8%
-        lastName: 8, // 8%
-        email: 8, // 8% (always present but counted)
+        firstName: 7, // 7%
+        lastName: 7, // 7%
+        email: 7, // 7% (always present but counted)
         phone: 8, // 8%
-        dateOfBirth: 8, // 8%
+        dateOfBirth: 7, // 7%
         "address.city": 5, // 5%
         "address.country": 5, // 5%
         "address.street": 3, // 3%
-        experience: 8, // 8%
-        skills: 15, // 15%
+        experience: 10, // 10%
+        skills: 16, // 16%
         education: 15, // 15%
-        preferredJobType: 5, // 5%
-        portfolioUrl: 2, // 2%
-        linkedinUrl: 2, // 2%
+        projects: 12, // 12%
+        portfolioUrl: 3, // 3%
+        linkedinUrl: 3, // 3%
         // Total: 100%
     };
 
@@ -313,7 +302,6 @@ candidateSchema.methods.createPasswordResetToken = function () {
 // Note: email index is already created by unique: true in schema
 candidateSchema.index({ "applications.jobId": 1 });
 candidateSchema.index({ skills: 1 });
-candidateSchema.index({ preferredLocations: 1 });
 candidateSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model("Candidate", candidateSchema);

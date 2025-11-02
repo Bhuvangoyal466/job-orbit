@@ -218,9 +218,6 @@ const updateCandidateProfile = async (req, res, next) => {
             "education",
             "portfolioUrl",
             "linkedinUrl",
-            "preferredJobType",
-            "expectedSalary",
-            "preferredLocations",
         ];
 
         const updateData = {};

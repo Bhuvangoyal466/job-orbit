@@ -1,3 +1,4 @@
+const fetch = require("node-fetch");
 const FormData = require("form-data");
 const fs = require("fs");
 const path = require("path");
@@ -13,9 +14,24 @@ const RESUME_PARSER_URL =
  */
 async function parseResumeWithAPI(filePath) {
     try {
+        // Check if file exists
+        if (!fs.existsSync(filePath)) {
+            throw new Error(`Resume file not found: ${filePath}`);
+        }
+
+        console.log(`Parsing resume at: ${filePath}`);
+
+        // Create form data with file stream
         const formData = new FormData();
         const fileStream = fs.createReadStream(filePath);
-        formData.append("file", fileStream);
+        const fileName = path.basename(filePath);
+
+        formData.append("file", fileStream, {
+            filename: fileName,
+            contentType: "application/pdf",
+        });
+
+        console.log(`Sending request to: ${RESUME_PARSER_URL}/parse-resume/`);
 
         const response = await fetch(`${RESUME_PARSER_URL}/parse-resume/`, {
             method: "POST",
@@ -23,8 +39,11 @@ async function parseResumeWithAPI(filePath) {
             headers: formData.getHeaders(),
         });
 
+        console.log(`Response status: ${response.status}`);
+
         if (!response.ok) {
             const errorText = await response.text();
+            console.error(`FastAPI error response: ${errorText}`);
             throw new Error(
                 `Resume parsing failed: ${response.status} - ${errorText}`
             );
@@ -49,7 +68,15 @@ function transformParsedData(parsedData) {
     const transformed = {};
 
     // Personal Information
-    if (parsedData.name) {
+    if (parsedData.firstName) {
+        transformed.firstName = parsedData.firstName.trim();
+    }
+    if (parsedData.lastName) {
+        transformed.lastName = parsedData.lastName.trim();
+    }
+
+    // Fallback for name field (backward compatibility)
+    if (!transformed.firstName && !transformed.lastName && parsedData.name) {
         const nameParts = parsedData.name.split(" ");
         transformed.firstName = nameParts[0] || "";
         transformed.lastName = nameParts.slice(1).join(" ") || "";
@@ -61,6 +88,56 @@ function transformParsedData(parsedData) {
 
     if (parsedData.phone) {
         transformed.phone = parsedData.phone;
+    }
+
+    // Date of Birth (if provided)
+    if (parsedData.dateOfBirth) {
+        try {
+            transformed.dateOfBirth = new Date(parsedData.dateOfBirth);
+        } catch (error) {
+            console.warn(
+                "Invalid date of birth format:",
+                parsedData.dateOfBirth
+            );
+        }
+    }
+
+    // Address Information
+    if (parsedData.address) {
+        transformed.address = {
+            street: parsedData.address.street || "",
+            city: parsedData.address.city || "",
+            state: parsedData.address.state || "",
+            zipCode: parsedData.address.zipCode || "",
+            country: parsedData.address.country || "",
+        };
+    }
+    // Backward compatibility for location field
+    else if (parsedData.location) {
+        transformed.address = {
+            city: parsedData.location.city || "",
+            state: parsedData.location.state || "",
+            country: parsedData.location.country || "",
+        };
+    }
+
+    // Experience - handle both number and array formats
+    if (typeof parsedData.experience === "number") {
+        transformed.experience = Math.min(parsedData.experience, 10); // Cap at 10 years
+    } else if (parsedData.experience && Array.isArray(parsedData.experience)) {
+        // Calculate total experience in years from experience array
+        let totalExperience = 0;
+        parsedData.experience.forEach((exp) => {
+            if (exp.duration) {
+                const yearMatch = exp.duration.match(/(\d+)\s*year/i);
+                if (yearMatch) {
+                    totalExperience += parseInt(yearMatch[1]);
+                }
+            }
+        });
+        if (totalExperience > 0) {
+            transformed.experience = Math.min(totalExperience, 10);
+        }
     }
 
     // Skills
@@ -77,51 +154,44 @@ function transformParsedData(parsedData) {
                 degree: edu.degree || edu.qualification || "",
                 institution:
                     edu.institution || edu.university || edu.school || "",
-                graduationYear: edu.year || edu.graduationYear || null,
+                graduationYear: edu.graduationYear || edu.year || null,
                 grade: edu.grade || edu.gpa || "",
             }))
             .filter((edu) => edu.degree || edu.institution);
     }
 
-    // Experience - estimate total experience
-    if (parsedData.experience && Array.isArray(parsedData.experience)) {
-        // Calculate total experience in years
-        let totalExperience = 0;
-        parsedData.experience.forEach((exp) => {
-            if (exp.duration) {
-                // Try to extract years from duration string
-                const yearMatch = exp.duration.match(/(\d+)\s*year/i);
-                if (yearMatch) {
-                    totalExperience += parseInt(yearMatch[1]);
-                }
-            }
-        });
-        if (totalExperience > 0) {
-            transformed.experience = Math.min(totalExperience, 10); // Cap at 10+ years option
-        }
-    }
-
-    // Additional fields that might be extracted
+    // Projects
     if (parsedData.projects && Array.isArray(parsedData.projects)) {
-        transformed.projects = parsedData.projects;
+        transformed.projects = parsedData.projects
+            .map((project) => ({
+                name: project.name || "",
+                description: Array.isArray(project.description)
+                    ? project.description
+                    : project.description
+                    ? [project.description]
+                    : [],
+                link: project.link || project.url || "",
+                technologies: Array.isArray(project.technologies)
+                    ? project.technologies
+                    : project.technologies
+                    ? [project.technologies]
+                    : [],
+                duration: project.duration || "",
+            }))
+            .filter((project) => project.name);
     }
 
-    // Portfolio/LinkedIn URLs (if extracted)
-    if (parsedData.portfolio || parsedData.website) {
-        transformed.portfolioUrl = parsedData.portfolio || parsedData.website;
+    // Portfolio URL
+    if (parsedData.portfolioUrl || parsedData.portfolio || parsedData.website) {
+        transformed.portfolioUrl =
+            parsedData.portfolioUrl ||
+            parsedData.portfolio ||
+            parsedData.website;
     }
 
-    if (parsedData.linkedin) {
-        transformed.linkedinUrl = parsedData.linkedin;
-    }
-
-    // Location information
-    if (parsedData.location) {
-        transformed.address = {
-            city: parsedData.location.city || "",
-            state: parsedData.location.state || "",
-            country: parsedData.location.country || "",
-        };
+    // LinkedIn URL
+    if (parsedData.linkedinUrl || parsedData.linkedin) {
+        transformed.linkedinUrl = parsedData.linkedinUrl || parsedData.linkedin;
     }
 
     return transformed;

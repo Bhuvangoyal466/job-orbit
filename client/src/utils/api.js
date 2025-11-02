@@ -63,6 +63,14 @@ export const candidateAPI = {
         });
     },
 
+    // Update full candidate profile (for resume page)
+    updateFullProfile: async (userData) => {
+        return makeRequest("/candidate/profile", {
+            method: "PUT",
+            body: JSON.stringify(userData),
+        });
+    },
+
     // Change password
     changePassword: async (passwordData) => {
         return makeRequest("/auth/candidate/password", {
@@ -122,6 +130,31 @@ export const candidateAPI = {
         return makeRequest("/candidate/parse-existing", {
             method: "POST",
         });
+    },
+
+    // Auto-fill profile from existing resume
+    autoFillProfile: async () => {
+        return makeRequest("/candidate/auto-fill-profile", {
+            method: "POST",
+        });
+    },
+
+    // View candidate's own resume
+    viewMyResume: async () => {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_BASE_URL}/candidate/my-resume`, {
+            method: "GET",
+            headers: {
+                Authorization: token ? `Bearer ${token}` : undefined,
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || "Failed to fetch resume");
+        }
+
+        return response; // Return the response for blob handling
     },
 };
 

@@ -197,86 +197,25 @@ const UploadResume = () => {
         }
     };
 
-    const handleReParseResume = async () => {
-        if (!formData?.resume) {
-            toast.error("No resume found to parse");
-            return;
-        }
-
-        setUploading(true);
+    const handleViewResume = async () => {
         try {
-            const response = await candidateAPI.parseExistingResume();
+            const response = await candidateAPI.viewMyResume();
+            const blob = await response.blob();
 
-            if (response.parsed && response.parsedData) {
-                toast.success("Resume re-parsed successfully!");
-
-                // Update form data with newly parsed information
-                const updatedFormData = { ...formData };
-
-                // Apply parsed data to form (similar to upload logic)
-                const parsedData = response.parsedData;
-
-                if (parsedData.firstName && !updatedFormData.firstName) {
-                    updatedFormData.firstName = parsedData.firstName;
-                }
-                if (parsedData.lastName && !updatedFormData.lastName) {
-                    updatedFormData.lastName = parsedData.lastName;
-                }
-                if (parsedData.email && !updatedFormData.email) {
-                    updatedFormData.email = parsedData.email;
-                }
-                if (parsedData.phone && !updatedFormData.phone) {
-                    updatedFormData.phone = parsedData.phone;
-                }
-                if (parsedData.skills && parsedData.skills.length > 0) {
-                    const existingSkills = updatedFormData.skills || [];
-                    const newSkills = parsedData.skills || [];
-                    const combinedSkills = [
-                        ...new Set([...existingSkills, ...newSkills]),
-                    ];
-                    updatedFormData.skills = combinedSkills;
-                }
-                if (parsedData.education && parsedData.education.length > 0) {
-                    updatedFormData.education = [
-                        ...(updatedFormData.education || []),
-                        ...parsedData.education,
-                    ];
-                }
-                if (parsedData.experience && !updatedFormData.experience) {
-                    updatedFormData.experience = parsedData.experience;
-                }
-                if (
-                    parsedData.address &&
-                    Object.keys(parsedData.address).length > 0
-                ) {
-                    updatedFormData.address = {
-                        ...(updatedFormData.address || {}),
-                        ...parsedData.address,
-                    };
-                }
-                if (parsedData.portfolioUrl && !updatedFormData.portfolioUrl) {
-                    updatedFormData.portfolioUrl = parsedData.portfolioUrl;
-                }
-                if (parsedData.linkedinUrl && !updatedFormData.linkedinUrl) {
-                    updatedFormData.linkedinUrl = parsedData.linkedinUrl;
-                }
-
-                setFormData(updatedFormData);
-                setEditMode(true); // Enable edit mode for review
-
-                toast.info(
-                    "Please review the extracted data and save your profile.",
-                    {
-                        autoClose: 5000,
-                    }
-                );
-            } else {
-                toast.error("Failed to parse resume. Please try again.");
+            if (blob.type !== "application/pdf") {
+                throw new Error("Invalid file format. Expected PDF.");
             }
+
+            // Create a URL for the blob and open it in a new tab
+            const url = URL.createObjectURL(blob);
+            window.open(url, "_blank");
+
+            // Clean up the URL after a short delay to free memory
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         } catch (err) {
-            toast.error(err.message || "Failed to parse resume");
+            console.error("Error viewing resume:", err);
+            toast.error(err.message || "Failed to load resume");
         }
-        setUploading(false);
     };
 
     if (loading) {
@@ -290,7 +229,7 @@ const UploadResume = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
-            <div className="max-w-4xl mx-auto px-4 space-y-8">
+            <div className="max-w-4xl mx-auto px-4 space-y-8 mt-15">
                 {/* Header */}
                 <motion.div
                     className="text-center"
@@ -444,29 +383,10 @@ const UploadResume = () => {
                             Choose File
                         </motion.label>
 
-                        {formData?.resume && (
+                        {formData?.resume?.path && (
                             <motion.button
                                 type="button"
-                                onClick={handleReParseResume}
-                                disabled={uploading}
-                                className="btn-secondary flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                whileHover={{ scale: uploading ? 1 : 1.05 }}
-                                whileTap={{ scale: uploading ? 1 : 0.95 }}
-                            >
-                                <FileText className="h-5 w-5" />
-                                Re-parse Resume
-                            </motion.button>
-                        )}
-
-                        {formData?.resume && (
-                            <motion.button
-                                type="button"
-                                onClick={() =>
-                                    window.open(
-                                        `http://localhost:5000/api/candidate/resume/${formData.candidateId}`,
-                                        "_blank"
-                                    )
-                                }
+                                onClick={handleViewResume}
                                 className="flex items-center gap-2 px-6 py-3 bg-gray-600 text-white rounded-xl font-semibold shadow-lg hover:bg-gray-700 transition-all duration-300"
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -578,19 +498,6 @@ const UploadResume = () => {
                         </div>
 
                         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-                            {(formData.profileCompleteness || 0) < 100 && (
-                                <motion.div
-                                    className="flex items-center gap-2 text-sm text-blue-700 bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-2 rounded-full border border-blue-200"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: 0.7 }}
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <Award className="h-4 w-4 text-blue-600" />
-                                    Complete your profile to stand out!
-                                </motion.div>
-                            )}
-
                             <div className="flex gap-3">
                                 {!editMode ? (
                                     <motion.button
@@ -1210,6 +1117,145 @@ const UploadResume = () => {
                             </div>
                         </div>
 
+                        {/* Projects Section */}
+                        <div className="bg-gray-50 p-6 rounded-lg">
+                            <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                                <Briefcase className="h-5 w-5" />
+                                Projects
+                            </h3>
+                            <div className="space-y-4">
+                                {(formData.projects || []).map(
+                                    (project, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="border border-gray-200 rounded-lg p-4"
+                                        >
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Project Name
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Project Name"
+                                                        value={
+                                                            project.name || ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleArrayChange(
+                                                                "projects",
+                                                                idx,
+                                                                "name",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        disabled={!editMode}
+                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                                                            !editMode
+                                                                ? "bg-gray-100 cursor-not-allowed"
+                                                                : "bg-white"
+                                                        }`}
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                        Project Link
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="GitHub/Website URL"
+                                                        value={
+                                                            project.link || ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            handleArrayChange(
+                                                                "projects",
+                                                                idx,
+                                                                "link",
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        disabled={!editMode}
+                                                        className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                                                            !editMode
+                                                                ? "bg-gray-100 cursor-not-allowed"
+                                                                : "bg-white"
+                                                        }`}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="mt-4">
+                                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                                    Description
+                                                </label>
+                                                <textarea
+                                                    placeholder="Brief description of the project"
+                                                    value={
+                                                        Array.isArray(
+                                                            project.description
+                                                        )
+                                                            ? project.description.join(
+                                                                  "; "
+                                                              )
+                                                            : project.description ||
+                                                              ""
+                                                    }
+                                                    onChange={(e) =>
+                                                        handleArrayChange(
+                                                            "projects",
+                                                            idx,
+                                                            "description",
+                                                            e.target.value.split(
+                                                                "; "
+                                                            )
+                                                        )
+                                                    }
+                                                    disabled={!editMode}
+                                                    rows={3}
+                                                    className={`w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
+                                                        !editMode
+                                                            ? "bg-gray-100 cursor-not-allowed"
+                                                            : "bg-white"
+                                                    }`}
+                                                />
+                                            </div>
+                                            {editMode && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        handleRemoveArrayItem(
+                                                            "projects",
+                                                            idx
+                                                        )
+                                                    }
+                                                    className="mt-3 text-red-600 hover:text-red-800 text-sm font-medium cursor-pointer"
+                                                >
+                                                    Remove Project
+                                                </button>
+                                            )}
+                                        </div>
+                                    )
+                                )}
+                                {editMode && (
+                                    <button
+                                        type="button"
+                                        onClick={() =>
+                                            handleAddArrayItem("projects", {
+                                                name: "",
+                                                description: [],
+                                                link: "",
+                                                technologies: [],
+                                                duration: "",
+                                            })
+                                        }
+                                        className="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-400 hover:text-blue-600 transition-colors cursor-pointer"
+                                    >
+                                        + Add Project
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+
                         {/* Links & Portfolio Section */}
                         <div className="bg-gray-50 p-6 rounded-lg">
                             <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
@@ -1251,178 +1297,6 @@ const UploadResume = () => {
                                         }`}
                                         placeholder="https://linkedin.com/in/yourprofile"
                                     />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Job Preferences Section */}
-                        <div className="bg-gray-50 p-6 rounded-lg">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4 border-b border-gray-200 pb-2">
-                                Job Preferences
-                            </h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Preferred Job Type
-                                    </label>
-                                    <select
-                                        name="preferredJobType"
-                                        value={
-                                            formData.preferredJobType ||
-                                            "full-time"
-                                        }
-                                        onChange={handleInputChange}
-                                        disabled={!editMode}
-                                        className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                            !editMode
-                                                ? "bg-gray-100 cursor-not-allowed"
-                                                : "bg-white"
-                                        }`}
-                                    >
-                                        <option value="full-time">
-                                            Full-time
-                                        </option>
-                                        <option value="part-time">
-                                            Part-time
-                                        </option>
-                                        <option value="contract">
-                                            Contract
-                                        </option>
-                                        <option value="internship">
-                                            Internship
-                                        </option>
-                                        <option value="remote">Remote</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Currency
-                                    </label>
-                                    <select
-                                        value={
-                                            formData.expectedSalary?.currency ||
-                                            "INR"
-                                        }
-                                        onChange={(e) =>
-                                            handleNestedChange(
-                                                "expectedSalary",
-                                                "currency",
-                                                e.target.value
-                                            )
-                                        }
-                                        disabled={!editMode}
-                                        className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                            !editMode
-                                                ? "bg-gray-100 cursor-not-allowed"
-                                                : "bg-white"
-                                        }`}
-                                    >
-                                        <option value="INR">INR (₹)</option>
-                                        <option value="USD">USD ($)</option>
-                                        <option value="EUR">EUR (€)</option>
-                                        <option value="GBP">GBP (£)</option>
-                                        <option value="CAD">CAD (C$)</option>
-                                        <option value="AUD">AUD (A$)</option>
-                                        <option value="JPY">JPY (¥)</option>
-                                        <option value="SGD">SGD (S$)</option>
-                                    </select>
-                                </div>
-                                <div className="lg:col-span-1 md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Preferred Locations
-                                    </label>
-                                    <textarea
-                                        rows={2}
-                                        value={
-                                            Array.isArray(
-                                                formData.preferredLocations
-                                            )
-                                                ? formData.preferredLocations.join(
-                                                      ", "
-                                                  )
-                                                : ""
-                                        }
-                                        onChange={(e) =>
-                                            setFormData((prev) => ({
-                                                ...prev,
-                                                preferredLocations:
-                                                    e.target.value
-                                                        .split(",")
-                                                        .map((s) => s.trim())
-                                                        .filter(Boolean),
-                                            }))
-                                        }
-                                        disabled={!editMode}
-                                        className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none ${
-                                            !editMode
-                                                ? "bg-gray-100 cursor-not-allowed"
-                                                : "bg-white"
-                                        }`}
-                                        placeholder="New York, San Francisco, Remote, etc. (comma separated)"
-                                    />
-                                    <p className="text-xs text-gray-500 mt-1">
-                                        Separate locations with commas
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mt-6">
-                                <label className="block text-sm font-medium text-gray-700 mb-4">
-                                    Expected Salary Range (Annually)
-                                </label>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-xs text-gray-600 mb-1">
-                                            Minimum
-                                        </label>
-                                        <input
-                                            type="number"
-                                            value={
-                                                formData.expectedSalary?.min ||
-                                                ""
-                                            }
-                                            onChange={(e) =>
-                                                handleNestedChange(
-                                                    "expectedSalary",
-                                                    "min",
-                                                    e.target.value
-                                                )
-                                            }
-                                            disabled={!editMode}
-                                            className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                                !editMode
-                                                    ? "bg-gray-100 cursor-not-allowed"
-                                                    : "bg-white"
-                                            }`}
-                                            placeholder="50000"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs text-gray-600 mb-1">
-                                            Maximum
-                                        </label>
-                                        <input
-                                            type="number"
-                                            value={
-                                                formData.expectedSalary?.max ||
-                                                ""
-                                            }
-                                            onChange={(e) =>
-                                                handleNestedChange(
-                                                    "expectedSalary",
-                                                    "max",
-                                                    e.target.value
-                                                )
-                                            }
-                                            disabled={!editMode}
-                                            className={`w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors ${
-                                                !editMode
-                                                    ? "bg-gray-100 cursor-not-allowed"
-                                                    : "bg-white"
-                                            }`}
-                                            placeholder="80000"
-                                        />
-                                    </div>
                                 </div>
                             </div>
                         </div>
