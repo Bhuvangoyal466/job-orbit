@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useCallback } from "react";
 import {
     User,
@@ -687,7 +688,7 @@ const ManageApplicants = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
         >
-            <div className="max-w-7xl mx-auto p-6 space-y-8">
+            <div className="max-w-7xl mx-auto p-6 space-y-8 mt-15">
                 {/* Enhanced Header Section */}
                 <motion.div
                     className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8"
@@ -709,7 +710,7 @@ const ManageApplicants = () => {
                                     <Users className="h-8 w-8 text-white" />
                                 </motion.div>
                                 <div>
-                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent  mb-2">
                                         Manage Applicants
                                     </h1>
                                     <p className="text-gray-600 text-lg mt-1">

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -80,7 +81,7 @@ const RecruiterDashboard = () => {
             <div className="max-w-7xl mx-auto p-6 space-y-8">
                 {/* Enhanced Header Section */}
                 <motion.div
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8"
+                    className="bg-white/80 backdrop-blur-sm mt-15 rounded-2xl shadow-xl border border-white/20 p-8"
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
