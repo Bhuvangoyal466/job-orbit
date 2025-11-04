@@ -218,11 +218,6 @@ export const recruiterAPI = {
         return makeRequest("/auth/recruiter/dashboard");
     },
 
-    // Get verification status
-    getVerificationStatus: async () => {
-        return makeRequest("/auth/recruiter/verification");
-    },
-
     // Create a new job posting
     createJob: async (jobData) => {
         return makeRequest("/jobs", {

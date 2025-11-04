@@ -194,74 +194,6 @@ const protectRecruiter = async (req, res, next) => {
     }
 };
 
-// Check if recruiter can post jobs (subscription limits)
-const checkJobPostingLimit = async (req, res, next) => {
-    try {
-        if (req.userType !== "recruiter") {
-            return res.status(403).json({
-                success: false,
-                message: "Only recruiters can post jobs",
-            });
-        }
-
-        const recruiter = req.user;
-
-        if (!recruiter.canPostJob()) {
-            return res.status(403).json({
-                success: false,
-                message: `Job posting limit reached. Your ${recruiter.subscription.plan} plan allows ${recruiter.subscription.jobPostingLimit} job postings. Please upgrade your plan to post more jobs.`,
-                data: {
-                    currentPlan: recruiter.subscription.plan,
-                    jobPostingLimit: recruiter.subscription.jobPostingLimit,
-                    jobPostingsUsed: recruiter.subscription.jobPostingsUsed,
-                },
-            });
-        }
-
-        next();
-    } catch (error) {
-        console.error("Job posting limit middleware error:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error checking job posting limits",
-        });
-    }
-};
-
-// Check if company is verified (for certain actions)
-const requireCompanyVerification = async (req, res, next) => {
-    try {
-        if (req.userType !== "recruiter") {
-            return res.status(403).json({
-                success: false,
-                message: "Only recruiters can access this resource",
-            });
-        }
-
-        const recruiter = req.user;
-
-        if (!recruiter.isCompanyVerified) {
-            return res.status(403).json({
-                success: false,
-                message:
-                    "Company verification required to access this feature. Please complete company verification process.",
-                data: {
-                    verificationStatus: "pending",
-                    profileCompleteness: recruiter.profileCompleteness,
-                },
-            });
-        }
-
-        next();
-    } catch (error) {
-        console.error("Company verification middleware error:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Server error checking company verification",
-        });
-    }
-};
-
 // Role-based access control
 const authorize = (...roles) => {
     return (req, res, next) => {
@@ -279,7 +211,5 @@ module.exports = {
     protect,
     protectCandidate,
     protectRecruiter,
-    checkJobPostingLimit,
-    requireCompanyVerification,
     authorize,
 };

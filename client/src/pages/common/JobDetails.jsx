@@ -315,13 +315,6 @@ const JobDetails = () => {
                                         {job.company?.name ||
                                             "Company Name Not Provided"}
                                     </p>
-                                    <motion.div
-                                        className="ml-2 px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full"
-                                        whileHover={{ scale: 1.1 }}
-                                    >
-                                        <Award className="h-3 w-3 inline mr-1" />
-                                        Verified
-                                    </motion.div>
                                 </div>
                             </motion.div>
 

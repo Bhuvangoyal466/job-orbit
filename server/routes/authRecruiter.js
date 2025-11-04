@@ -11,7 +11,6 @@ const {
     updateSubscription,
     deactivateAccount,
     getDashboardStats,
-    getVerificationStatus,
 } = require("../controllers/authRecruiter");
 const { protect } = require("../middleware/auth");
 
@@ -263,6 +262,5 @@ router.put("/password", changePasswordValidation, changePassword);
 router.put("/subscription", subscriptionValidation, updateSubscription);
 router.delete("/account", deactivateAccount);
 router.get("/dashboard", getDashboardStats);
-router.get("/verification", getVerificationStatus);
 
 module.exports = router;

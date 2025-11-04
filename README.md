@@ -27,8 +27,8 @@ A comprehensive full-stack job board platform built with MERN stack and powered 
 - ✅ **Interview Scheduling**: Complete interview management system with multiple types (video, phone, in-person)
 - ✅ **Resume Viewing**: Integrated PDF resume viewer for candidate evaluation
 - ✅ **Real-time Analytics**: Live dashboard with hiring pipeline metrics
-- ✅ **Company Profile**: Complete company information and verification system
-- ✅ **Subscription Management**: Tiered plans with job posting limits
+- ✅ **Company Profile**: Complete company information management
+- ✅ **Subscription Management**: Tiered plans for different user needs
 
 ## 🛠️ Technology Stack
 
@@ -198,7 +198,7 @@ job-orbit/
 - [ ] **Mobile App**: React Native mobile application
 
 #### Enterprise Features
-- [ ] **Company Verification**: KYC system for recruiter verification
+
 - [ ] **Payment Gateway**: Stripe/PayPal integration for premium features
 - [ ] **Admin Dashboard**: Platform management and analytics
 - [ ] **API Rate Limiting**: Advanced security and usage controls

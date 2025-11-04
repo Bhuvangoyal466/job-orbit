@@ -199,10 +199,6 @@ const recruiterSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
-        isCompanyVerified: {
-            type: Boolean,
-            default: false,
-        },
         emailVerificationToken: String,
         passwordResetToken: String,
         passwordResetExpires: Date,
@@ -216,10 +212,6 @@ const recruiterSchema = new mongoose.Schema(
             },
             startDate: Date,
             endDate: Date,
-            jobPostLimit: {
-                type: Number,
-                default: 3, // Free plan limit
-            },
         },
 
         // Profile Completion
@@ -305,45 +297,9 @@ recruiterSchema.pre("save", function (next) {
     next();
 });
 
-// Pre-save middleware to set subscription limits based on plan
-recruiterSchema.pre("save", function (next) {
-    if (this.isModified("subscription.plan")) {
-        switch (this.subscription.plan) {
-            case "free":
-                this.subscription.jobPostingLimit = 3;
-                break;
-            case "basic":
-                this.subscription.jobPostingLimit = 15;
-                break;
-            case "premium":
-                this.subscription.jobPostingLimit = 50;
-                break;
-            case "enterprise":
-                this.subscription.jobPostingLimit = -1; // Unlimited
-                break;
-        }
-    }
-    next();
-});
-
 // Instance method to compare password
 recruiterSchema.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
-};
-
-// Instance method to check if can post more jobs
-recruiterSchema.methods.canPostJob = function () {
-    if (this.subscription.jobPostingLimit === -1) return true; // Unlimited
-    return (
-        this.subscription.jobPostingsUsed < this.subscription.jobPostingLimit
-    );
-};
-
-// Instance method to increment job posting count
-recruiterSchema.methods.incrementJobPosting = function () {
-    this.subscription.jobPostingsUsed += 1;
-    this.stats.totalJobsPosted += 1;
-    this.stats.activeJobs += 1;
 };
 
 // Instance method to generate password reset token

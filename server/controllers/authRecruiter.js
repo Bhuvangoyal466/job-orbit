@@ -472,10 +472,6 @@ const getDashboardStats = async (req, res, next) => {
             totalHires: recruiter.stats.totalHires,
             profileCompleteness: recruiter.profileCompleteness,
             subscriptionPlan: recruiter.subscription.plan,
-            jobPostingLimit: recruiter.subscription.jobPostingLimit,
-            jobPostingsUsed: recruiter.subscription.jobPostingsUsed,
-            canPostMoreJobs: recruiter.canPostJob(),
-            isCompanyVerified: recruiter.isCompanyVerified,
         };
 
         res.status(200).json({
@@ -493,45 +489,6 @@ const getDashboardStats = async (req, res, next) => {
     }
 };
 
-// @desc    Get company verification status
-// @route   GET /api/auth/recruiter/verification
-// @access  Private
-const getVerificationStatus = async (req, res, next) => {
-    try {
-        const recruiter = await Recruiter.findById(req.user.id);
-
-        if (!recruiter) {
-            return res.status(404).json({
-                success: false,
-                message: "Recruiter not found",
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            data: {
-                isEmailVerified: recruiter.isEmailVerified,
-                isCompanyVerified: recruiter.isCompanyVerified,
-                verificationRequirements: {
-                    emailVerification: recruiter.isEmailVerified
-                        ? "Completed"
-                        : "Pending",
-                    companyVerification: recruiter.isCompanyVerified
-                        ? "Completed"
-                        : "Pending",
-                    profileCompletion: `${recruiter.profileCompleteness}%`,
-                },
-            },
-        });
-    } catch (error) {
-        console.error("Get verification status error:", error);
-        res.status(500).json({
-            success: false,
-            message: "Server error",
-        });
-    }
-};
-
 module.exports = {
     registerRecruiter,
     loginRecruiter,
@@ -542,5 +499,4 @@ module.exports = {
     updateSubscription,
     deactivateAccount,
     getDashboardStats,
-    getVerificationStatus,
 };

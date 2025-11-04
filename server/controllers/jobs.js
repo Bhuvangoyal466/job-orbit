@@ -335,12 +335,6 @@ exports.createJob = async (req, res) => {
             recruiter.stats.totalJobsPosted += 1;
             recruiter.stats.activeJobs += 1;
 
-            // Update subscription usage if applicable
-            if (recruiter.subscription.jobPostingLimit !== -1) {
-                recruiter.subscription.jobPostingsUsed =
-                    (recruiter.subscription.jobPostingsUsed || 0) + 1;
-            }
-
             await recruiter.save();
         }
 
