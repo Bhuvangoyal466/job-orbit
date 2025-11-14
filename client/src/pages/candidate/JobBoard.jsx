@@ -28,6 +28,7 @@ import { jobsAPI } from "../../utils/api";
 import { useAuth } from "../../context/useAuth";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import AdvancedJobSearch from "../../components/AdvancedJobSearch";
 import { formatSalaryRange } from "../../utils/currency";
 
 // Import API URL
@@ -321,124 +322,25 @@ const JobBoard = () => {
 
                     {/* Modern Search and Filters */}
                     <motion.div
-                        className="glass p-8 rounded-3xl border border-white/20 shadow-2xl"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
                     >
-                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4 xl:grid-cols-5 mb-6">
-                            {/* Search Term */}
-                            <motion.div
-                                className="lg:col-span-2"
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.3, duration: 0.4 }}
-                            >
-                                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                    <Search className="h-4 w-4 text-blue-500" />
-                                    Job Title or Company
-                                </label>
-                                <div className="relative group">
-                                    <Search className="h-5 w-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2 group-focus-within:text-blue-500 transition-colors" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search for your dream job..."
-                                        className="pl-12 w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 hover:border-blue-300 bg-white/80 backdrop-blur-sm shadow-sm group-hover:shadow-md placeholder-gray-400"
-                                        value={searchTerm}
-                                        onChange={(e) =>
-                                            setSearchTerm(e.target.value)
-                                        }
-                                    />
-                                    <motion.div className="absolute inset-0 border-2 border-blue-500 rounded-xl opacity-0 group-focus-within:opacity-100 transition-opacity duration-200 pointer-events-none" />
-                                </div>
-                            </motion.div>
-
-                            {/* Location */}
-                            <motion.div
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.4, duration: 0.4 }}
-                            >
-                                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                    <MapPin className="h-4 w-4 text-green-500" />
-                                    Location
-                                </label>
-                                <div className="relative group">
-                                    <MapPin className="h-5 w-5 text-gray-400 absolute left-4 top-1/2 transform -translate-y-1/2 group-focus-within:text-green-500 transition-colors" />
-                                    <input
-                                        type="text"
-                                        placeholder="City, State or Remote"
-                                        className="pl-12 w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 transition-all duration-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 hover:border-green-300 bg-white/80 backdrop-blur-sm shadow-sm group-hover:shadow-md placeholder-gray-400"
-                                        value={location}
-                                        onChange={(e) =>
-                                            setLocation(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </motion.div>
-
-                            {/* Job Type */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.5, duration: 0.4 }}
-                            >
-                                <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-                                    <Briefcase className="h-4 w-4 text-purple-500" />
-                                    Job Type
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-gray-900 transition-all duration-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 hover:border-purple-300 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md appearance-none cursor-pointer"
-                                        value={jobType}
-                                        onChange={(e) =>
-                                            setJobType(e.target.value)
-                                        }
-                                    >
-                                        <option value="all">All Types</option>
-                                        <option value="full-time">
-                                            Full-time
-                                        </option>
-                                        <option value="part-time">
-                                            Part-time
-                                        </option>
-                                        <option value="contract">
-                                            Contract
-                                        </option>
-                                        <option value="internship">
-                                            Internship
-                                        </option>
-                                    </select>
-                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <SortAsc className="h-5 w-5 text-gray-400" />
-                                    </div>
-                                </div>
-                            </motion.div>
-
-                            {/* Search Button */}
-                            <motion.div
-                                className="flex items-end"
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.6, duration: 0.4 }}
-                            >
-                                <motion.button
-                                    onClick={() =>
-                                        fetchJobs({
-                                            search: searchTerm,
-                                            location,
-                                            type: jobType,
-                                        })
-                                    }
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 flex items-center justify-center gap-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                                    whileHover={{ scale: 1.05, y: -2 }}
-                                    whileTap={{ scale: 0.95 }}
-                                >
-                                    <Search className="h-5 w-5" />
-                                    Search Jobs
-                                </motion.button>
-                            </motion.div>
-                        </div>
+                        <AdvancedJobSearch
+                            onSearch={fetchJobs}
+                            onFilterChange={(filters) => {
+                                setSearchTerm(filters.search || "");
+                                setLocation(filters.location || "");
+                                setJobType(filters.type || "all");
+                                setSalaryRange(filters.salary || "all");
+                            }}
+                            filters={{
+                                search: searchTerm,
+                                location: location,
+                                type: jobType,
+                                salary: salaryRange,
+                            }}
+                        />
                     </motion.div>
                 </div>
 

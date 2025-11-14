@@ -4,6 +4,7 @@ import { AuthProvider } from "../context/AuthContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Breadcrumb from "../components/Breadcrumb";
 import CandidateLayout from "../layouts/CandidateLayout";
 import RecruiterLayout from "../layouts/RecruiterLayout";
 
@@ -42,7 +43,8 @@ const AppRoutes = () => {
                         element={
                             <>
                                 <Navbar />
-                                <div className="flex-grow">
+                                <Breadcrumb />
+                                <div className="grow">
                                     <Home />
                                 </div>
                                 <Footer />
@@ -54,7 +56,8 @@ const AppRoutes = () => {
                         element={
                             <>
                                 <Navbar />
-                                <div className="flex-grow">
+                                <Breadcrumb />
+                                <div className="grow">
                                     <About />
                                 </div>
                                 <Footer />
@@ -68,7 +71,8 @@ const AppRoutes = () => {
                         element={
                             <>
                                 <Navbar />
-                                <div className="flex-grow">
+                                <Breadcrumb />
+                                <div className="grow">
                                     <JobDetails />
                                 </div>
                                 <Footer />

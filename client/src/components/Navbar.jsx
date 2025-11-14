@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/useAuth";
+
+import MobileNavigation from "./MobileNavigation";
 import {
     Menu,
     X,
@@ -181,111 +183,19 @@ const Navbar = () => {
                     <div className="md:hidden flex items-center">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 cursor-pointer"
+                            className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 cursor-pointer p-2 rounded-lg hover:bg-gray-100 transition-all"
                         >
-                            {isOpen ? (
-                                <X className="h-6 w-6" />
-                            ) : (
-                                <Menu className="h-6 w-6" />
-                            )}
+                            <Menu className="h-6 w-6" />
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isOpen && (
-                <div className="md:hidden">
-                    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
-                        <Link
-                            to="/"
-                            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                                isActive("/")
-                                    ? "text-blue-600 bg-blue-50"
-                                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                            }`}
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            to="/about"
-                            className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                                isActive("/about")
-                                    ? "text-blue-600 bg-blue-50"
-                                    : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                            }`}
-                            onClick={() => setIsOpen(false)}
-                        >
-                            About
-                        </Link>
-
-                        {!user ? (
-                            <>
-                                <Link
-                                    to="/candidate/jobs"
-                                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                                        isActive("/candidate/jobs")
-                                            ? "text-blue-600 bg-blue-50"
-                                            : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                                    }`}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    Browse Jobs
-                                </Link>
-                                <div className="border-t border-gray-200 pt-4">
-                                    <Link
-                                        to="/candidate/login"
-                                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        Job Seeker Login
-                                    </Link>
-                                    <Link
-                                        to="/recruiter/login"
-                                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        Recruiter Login
-                                    </Link>
-                                    <Link
-                                        to="/candidate/signup"
-                                        className="block px-3 py-2 mt-2 bg-blue-600 text-white rounded-md text-base font-medium hover:bg-blue-700 transition-colors text-center"
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        Get Started
-                                    </Link>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="border-t border-gray-200 pt-4">
-                                <Link
-                                    to={
-                                        user.role === "candidate"
-                                            ? "/candidate/dashboard"
-                                            : "/recruiter/dashboard"
-                                    }
-                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-800 hover:text-blue-600 hover:bg-gray-50 transition-colors"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    <div className="text-base font-medium text-gray-800">
-                                        {user.name || user.email}
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                        {user.role}
-                                    </div>
-                                </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-red-600 hover:bg-gray-50 transition-colors cursor-pointer"
-                                >
-                                    Logout
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
+            {/* Mobile Navigation */}
+            <MobileNavigation
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            />
         </motion.nav>
     );
 };

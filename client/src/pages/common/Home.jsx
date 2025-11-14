@@ -1,8 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useAuth } from "../../context/useAuth";
 import {
     Search,
     Upload,
@@ -23,6 +24,9 @@ import {
 } from "lucide-react";
 
 const Home = () => {
+    const navigate = useNavigate();
+    const { user, userRole } = useAuth();
+
     const [heroRef, heroInView] = useInView({
         triggerOnce: true,
         threshold: 0.1,
@@ -45,6 +49,9 @@ const Home = () => {
             description:
                 "Upload your resume and our AI will extract and organize your information automatically.",
             color: "from-blue-500 to-purple-600",
+            path: "/candidate/upload-resume",
+            authRequired: true,
+            role: "candidate",
         },
         {
             icon: Search,
@@ -52,6 +59,9 @@ const Home = () => {
             description:
                 "Find the perfect job with our intelligent matching system and comprehensive filters.",
             color: "from-green-500 to-teal-600",
+            path: "/candidate/jobs",
+            authRequired: true,
+            role: "candidate",
         },
         {
             icon: BarChart3,
@@ -59,6 +69,9 @@ const Home = () => {
             description:
                 "Keep track of all your applications with real-time status updates and analytics.",
             color: "from-orange-500 to-red-600",
+            path: "/candidate/applications",
+            authRequired: true,
+            role: "candidate",
         },
         {
             icon: Users,
@@ -66,8 +79,40 @@ const Home = () => {
             description:
                 "Streamline your hiring process with advanced candidate management tools.",
             color: "from-purple-500 to-pink-600",
+            path: "/recruiter/dashboard",
+            authRequired: true,
+            role: "recruiter",
         },
     ];
+
+    const handleFeatureClick = (feature) => {
+        if (feature.authRequired) {
+            // Check if user is logged in
+            if (!user) {
+                // If not logged in, redirect to appropriate login page
+                if (feature.role === "candidate") {
+                    navigate("/candidate/login");
+                } else if (feature.role === "recruiter") {
+                    navigate("/recruiter/login");
+                }
+                return;
+            }
+
+            // Check if user role matches
+            if (userRole !== feature.role) {
+                // If wrong role, redirect to appropriate login page
+                if (feature.role === "candidate") {
+                    navigate("/candidate/login");
+                } else if (feature.role === "recruiter") {
+                    navigate("/recruiter/login");
+                }
+                return;
+            }
+        }
+
+        // Navigate to the feature page
+        navigate(feature.path);
+    };
 
     const stats = [
         {
@@ -178,7 +223,6 @@ const Home = () => {
                             }}
                         >
                             Find Your Dream Job with JobOrbit
-                            
                         </motion.h1>
 
                         <motion.p
@@ -423,7 +467,7 @@ const Home = () => {
                             return (
                                 <motion.div
                                     key={index}
-                                    className="group relative"
+                                    className="group relative cursor-pointer"
                                     initial={{ opacity: 0, y: 50 }}
                                     animate={
                                         featuresInView
@@ -435,6 +479,7 @@ const Home = () => {
                                         delay: index * 0.1,
                                     }}
                                     whileHover={{ y: -10, scale: 1.02 }}
+                                    onClick={() => handleFeatureClick(feature)}
                                 >
                                     <div className="relative bg-white p-8 rounded-3xl shadow-modern hover:shadow-2xl transition-all duration-500 h-full border border-gray-100 overflow-hidden">
                                         {/* Gradient Background on Hover */}
@@ -455,6 +500,11 @@ const Home = () => {
                                         <p className="text-gray-600 leading-relaxed text-center">
                                             {feature.description}
                                         </p>
+
+                                        {/* Click indicator */}
+                                        <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                            <ArrowRight className="h-5 w-5 text-gray-400" />
+                                        </div>
 
                                         {/* Decorative Element */}
                                         <div className="absolute -bottom-2 -right-2 w-20 h-20 opacity-10 group-hover:opacity-20 transition-opacity">

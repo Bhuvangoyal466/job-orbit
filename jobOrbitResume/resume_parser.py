@@ -154,7 +154,6 @@ URLS & SOCIAL MEDIA:
 Resume text:
 {text}
 """
-
     model = genai.GenerativeModel("gemini-2.5-flash")
     response = model.generate_content(prompt)
     raw_output = response.text.strip()

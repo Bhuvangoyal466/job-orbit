@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import {
     Target,
     Users,
@@ -12,6 +13,11 @@ import {
     TrendingUp,
     Star,
     Briefcase,
+    CheckCircle,
+    ArrowRight,
+    Mail,
+    Phone,
+    MapPin,
 } from "lucide-react";
 
 const About = () => {
@@ -427,6 +433,215 @@ const About = () => {
                             </motion.div>
                         </div>
                     </motion.div>
+                </div>
+            </section>
+
+            {/* Team Section */}
+            <section className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <motion.div
+                        className="text-center mb-16"
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                    >
+                        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
+                            Meet Our Team
+                        </h2>
+                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                            The passionate individuals behind JobOrbit who are
+                            dedicated to revolutionizing the job search
+                            experience.
+                        </p>
+                    </motion.div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {[
+                            {
+                                name: "Sarah Johnson",
+                                role: "CEO & Founder",
+                                image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
+                                bio: "Former HR exec turned tech entrepreneur with 15+ years in talent acquisition.",
+                            },
+                            {
+                                name: "Michael Chen",
+                                role: "CTO",
+                                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+                                bio: "AI/ML expert who previously led engineering teams at major tech companies.",
+                            },
+                            {
+                                name: "Emily Rodriguez",
+                                role: "Head of Product",
+                                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+                                bio: "Product strategist passionate about creating user-centric experiences.",
+                            },
+                        ].map((member, index) => (
+                            <motion.div
+                                key={member.name}
+                                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.6,
+                                    delay: index * 0.1,
+                                }}
+                                viewport={{ once: true }}
+                                whileHover={{ y: -5 }}
+                            >
+                                <div className="relative overflow-hidden">
+                                    <img
+                                        src={member.image}
+                                        alt={member.name}
+                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                </div>
+                                <div className="p-6">
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                        {member.name}
+                                    </h3>
+                                    <p className="text-blue-600 font-medium mb-4">
+                                        {member.role}
+                                    </p>
+                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                        {member.bio}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Contact Section */}
+            <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, x: -30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                        >
+                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                                Get In Touch
+                            </h2>
+                            <p className="text-xl text-gray-600 mb-8">
+                                Have questions, suggestions, or want to partner
+                                with us? We'd love to hear from you.
+                            </p>
+
+                            <div className="space-y-6">
+                                {[
+                                    {
+                                        icon: Mail,
+                                        label: "Email",
+                                        value: "hello@joborbit.com",
+                                    },
+                                    {
+                                        icon: Phone,
+                                        label: "Phone",
+                                        value: "+1 (555) 123-4567",
+                                    },
+                                    {
+                                        icon: MapPin,
+                                        label: "Address",
+                                        value: "123 Innovation Street, Tech City, TC 12345",
+                                    },
+                                ].map((contact, index) => (
+                                    <motion.div
+                                        key={contact.label}
+                                        className="flex items-center gap-4"
+                                        initial={{ opacity: 0, x: -20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        transition={{
+                                            duration: 0.6,
+                                            delay: index * 0.1,
+                                        }}
+                                        viewport={{ once: true }}
+                                    >
+                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                                            <contact.icon className="h-6 w-6" />
+                                        </div>
+                                        <div>
+                                            <p className="font-medium text-gray-900">
+                                                {contact.label}
+                                            </p>
+                                            <p className="text-gray-600">
+                                                {contact.value}
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </motion.div>
+
+                        <motion.div
+                            className="bg-white rounded-2xl shadow-xl p-8"
+                            initial={{ opacity: 0, x: 30 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.6 }}
+                            viewport={{ once: true }}
+                        >
+                            <h3 className="text-2xl font-bold text-gray-900 mb-6">
+                                Send us a message
+                            </h3>
+                            <form className="space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            First Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                            placeholder="John"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                                            Last Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                            placeholder="Doe"
+                                        />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Email
+                                    </label>
+                                    <input
+                                        type="email"
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        placeholder="john@example.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Message
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                                        placeholder="Tell us how we can help you..."
+                                    />
+                                </div>
+                                <motion.button
+                                    type="submit"
+                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    Send Message
+                                    <ArrowRight className="h-5 w-5" />
+                                </motion.button>
+                            </form>
+                        </motion.div>
+                    </div>
                 </div>
             </section>
         </div>

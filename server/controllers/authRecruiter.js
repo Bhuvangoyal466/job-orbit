@@ -222,7 +222,6 @@ const updateRecruiterProfile = async (req, res, next) => {
             "position",
             "department",
             "company",
-            "notifications",
         ];
 
         const updateData = {};

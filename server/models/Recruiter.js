@@ -221,22 +221,6 @@ const recruiterSchema = new mongoose.Schema(
             min: 0,
             max: 100,
         },
-
-        // Communication Preferences
-        notifications: {
-            emailAlerts: {
-                type: Boolean,
-                default: true,
-            },
-            applicationNotifications: {
-                type: Boolean,
-                default: true,
-            },
-            marketingEmails: {
-                type: Boolean,
-                default: false,
-            },
-        },
     },
     {
         timestamps: true,
