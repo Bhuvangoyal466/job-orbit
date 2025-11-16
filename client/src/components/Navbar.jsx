@@ -144,6 +144,23 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <div className="flex items-center space-x-4">
+                                {/* Add Jobs link for candidates */}
+                                {user.role === "candidate" && (
+                                    <motion.div whileHover={{ scale: 1.05 }}>
+                                        <Link
+                                            to="/candidate/jobs"
+                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
+                                                isActive("/candidate/jobs")
+                                                    ? "text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg"
+                                                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                                            }`}
+                                        >
+                                            <Search className="h-4 w-4" />
+                                            Jobs
+                                        </Link>
+                                    </motion.div>
+                                )}
+
                                 <motion.div whileHover={{ scale: 1.05 }}>
                                     <Link
                                         to={

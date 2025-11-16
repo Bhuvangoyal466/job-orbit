@@ -19,8 +19,6 @@ async function parseResumeWithAPI(filePath) {
             throw new Error(`Resume file not found: ${filePath}`);
         }
 
-        console.log(`Parsing resume at: ${filePath}`);
-
         // Create form data with file stream
         const formData = new FormData();
         const fileStream = fs.createReadStream(filePath);
@@ -31,15 +29,11 @@ async function parseResumeWithAPI(filePath) {
             contentType: "application/pdf",
         });
 
-        console.log(`Sending request to: ${RESUME_PARSER_URL}/parse-resume/`);
-
         const response = await fetch(`${RESUME_PARSER_URL}/parse-resume/`, {
             method: "POST",
             body: formData,
             headers: formData.getHeaders(),
         });
-
-        console.log(`Response status: ${response.status}`);
 
         if (!response.ok) {
             const errorText = await response.text();

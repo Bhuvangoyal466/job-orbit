@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { protect } = require("../middleware/auth");
+const { protect, optionalAuth } = require("../middleware/auth");
 const jobController = require("../controllers/jobs");
 
-// Public routes
-router.get("/", jobController.getAllJobs);
+// Public routes with optional authentication for skill matching
+router.get("/", optionalAuth, jobController.getAllJobs);
 
 // Candidate authenticated routes - Place specific routes BEFORE wildcard routes
 router.get("/saved", protect, jobController.getSavedJobs);

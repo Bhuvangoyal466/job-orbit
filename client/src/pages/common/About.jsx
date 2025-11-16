@@ -78,10 +78,7 @@ const About = () => {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, delay: 0.2 }}
                         >
-                            About{" "}
-                            <span className="text-gradient bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
-                                JobOrbit
-                            </span>
+                            About <span className="text-white ">JobOrbit</span>
                         </motion.h1>
 
                         <motion.p
@@ -436,84 +433,6 @@ const About = () => {
                 </div>
             </section>
 
-            {/* Team Section */}
-            <section className="py-20 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <motion.div
-                        className="text-center mb-16"
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        viewport={{ once: true }}
-                    >
-                        <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-                            Meet Our Team
-                        </h2>
-                        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                            The passionate individuals behind JobOrbit who are
-                            dedicated to revolutionizing the job search
-                            experience.
-                        </p>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {[
-                            {
-                                name: "Sarah Johnson",
-                                role: "CEO & Founder",
-                                image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
-                                bio: "Former HR exec turned tech entrepreneur with 15+ years in talent acquisition.",
-                            },
-                            {
-                                name: "Michael Chen",
-                                role: "CTO",
-                                image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-                                bio: "AI/ML expert who previously led engineering teams at major tech companies.",
-                            },
-                            {
-                                name: "Emily Rodriguez",
-                                role: "Head of Product",
-                                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-                                bio: "Product strategist passionate about creating user-centric experiences.",
-                            },
-                        ].map((member, index) => (
-                            <motion.div
-                                key={member.name}
-                                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    duration: 0.6,
-                                    delay: index * 0.1,
-                                }}
-                                viewport={{ once: true }}
-                                whileHover={{ y: -5 }}
-                            >
-                                <div className="relative overflow-hidden">
-                                    <img
-                                        src={member.image}
-                                        alt={member.name}
-                                        className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                </div>
-                                <div className="p-6">
-                                    <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                        {member.name}
-                                    </h3>
-                                    <p className="text-blue-600 font-medium mb-4">
-                                        {member.role}
-                                    </p>
-                                    <p className="text-gray-600 text-sm leading-relaxed">
-                                        {member.bio}
-                                    </p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* Contact Section */}
             <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -537,17 +456,17 @@ const About = () => {
                                     {
                                         icon: Mail,
                                         label: "Email",
-                                        value: "hello@joborbit.com",
+                                        value: "hello@joborbit.in",
                                     },
                                     {
                                         icon: Phone,
                                         label: "Phone",
-                                        value: "+1 (555) 123-4567",
+                                        value: "+91-9876543210",
                                     },
                                     {
                                         icon: MapPin,
                                         label: "Address",
-                                        value: "123 Innovation Street, Tech City, TC 12345",
+                                        value: "Solan, Himachal Pradesh, India",
                                     },
                                 ].map((contact, index) => (
                                     <motion.div

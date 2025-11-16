@@ -47,6 +47,8 @@ const JobBoard = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [totalJobs, setTotalJobs] = useState(0);
     const [sortBy, setSortBy] = useState("saved-first");
+    const [skillMatchingEnabled, setSkillMatchingEnabled] = useState(false);
+    const [candidateSkills, setCandidateSkills] = useState([]);
     const { user } = useAuth();
 
     // Fetch jobs from backend
@@ -57,6 +59,14 @@ const JobBoard = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
+
+    // Refetch jobs when sorting by skill match changes
+    useEffect(() => {
+        if (sortBy === "skill-match" && skillMatchingEnabled) {
+            fetchJobs();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortBy]);
 
     const fetchJobs = async (filters, isLoadMore = false) => {
         setLoading(true);
@@ -72,18 +82,29 @@ const JobBoard = () => {
                 type: jobType !== "all" ? jobType : undefined,
                 salary: salaryRange !== "all" ? salaryRange : undefined,
                 page: currentPage,
-                limit: 10,
+                limit: 50,
+                sortBySkillMatch: sortBy === "skill-match" && user,
             };
 
-            // Just use the jobsAPI helper from our utils
+            // Get jobs with skill matching data
             const responseData = await jobsAPI.getJobs(searchFilters);
 
-            // responseData could either be just the jobs array or the full pagination object
-            const newJobs = Array.isArray(responseData)
-                ? responseData
-                : responseData.jobs || [];
+            // Debug logging
+            // console.log("API Response:", responseData);
+            // console.log("Search Filters:", searchFilters);
+
+            // Extract jobs and other data from response
+            const newJobs = responseData.jobs || [];
+            // console.log("New Jobs:", newJobs);
+            // console.log("Number of jobs received:", newJobs.length);
             const pages = responseData.totalPages || 1;
             const total = responseData.totalJobs || newJobs.length;
+            const skillsEnabled = responseData.skillMatchingEnabled || false;
+            const userSkills = responseData.candidateSkills || [];
+
+            // Update skill matching state
+            setSkillMatchingEnabled(skillsEnabled);
+            setCandidateSkills(userSkills);
 
             if (isLoadMore && jobs.length > 0) {
                 setJobs([...jobs, ...newJobs]);
@@ -147,11 +168,47 @@ const JobBoard = () => {
                 jobType === "all" ||
                 job.type.toLowerCase() === jobType.toLowerCase();
 
+            // Debug logging for filtering
+            if (jobs.length > 0) {
+                // console.log(`Job: ${job.title}`);
+                // console.log(
+                //     `Matches Search: ${matchesSearch}, Search Term: "${searchTerm}"`
+                // );
+                // console.log(
+                //     `Matches Location: ${matchesLocation}, Location: "${location}"`
+                // );
+                // console.log(
+                //     `Matches Type: ${matchesType}, Job Type: "${jobType}", Job's Type: "${job.type}"`
+                // );
+                // console.log(
+                //     `Overall Match: ${
+                //         matchesSearch && matchesLocation && matchesType
+                //     }`
+                // );
+                // console.log("---");
+            }
+
             return matchesSearch && matchesLocation && matchesType;
         })
         .sort((a, b) => {
             // Apply sorting based on selected sort option
             switch (sortBy) {
+                case "skill-match": {
+                    // Sort by skill match percentage (descending)
+                    const aMatch = a.skillMatch?.percentage || 0;
+                    const bMatch = b.skillMatch?.percentage || 0;
+
+                    if (bMatch !== aMatch) {
+                        return bMatch - aMatch;
+                    }
+                    // If skill match is same, sort by saved status, then by date
+                    const aIsSaved = savedJobIds.has(a._id);
+                    const bIsSaved = savedJobIds.has(b._id);
+                    if (aIsSaved && !bIsSaved) return -1;
+                    if (!aIsSaved && bIsSaved) return 1;
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                }
+
                 case "saved-first": {
                     // Sort saved jobs first
                     const aIsSaved = savedJobIds.has(a._id);
@@ -187,27 +244,6 @@ const JobBoard = () => {
                     return 0;
             }
         });
-
-    // Handle job application
-    const handleApply = async (job) => {
-        if (!user) {
-            toast.info("Please login to apply for jobs");
-            return;
-        }
-
-        try {
-            await jobsAPI.applyJob(job._id, {});
-            toast.success(
-                `Applied to "${job.title}" at ${
-                    job.company?.name || "Company"
-                }!`
-            );
-            fetchJobs(); // Refresh jobs to update status
-        } catch (err) {
-            console.error("Failed to apply:", err);
-            toast.error("Failed to apply for job. Please try again.");
-        }
-    };
 
     // Handle saving a job
     const toggleSave = async (job) => {
@@ -367,6 +403,14 @@ const JobBoard = () => {
                                 </span>
                             </div>
                         )}
+                        {skillMatchingEnabled && candidateSkills.length > 0 && (
+                            <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
+                                <Star className="h-4 w-4 text-green-500" />
+                                <span className="text-sm font-medium text-green-700">
+                                    Skill matching enabled
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {filteredJobs.length > 0 && (
@@ -380,6 +424,12 @@ const JobBoard = () => {
                                 onChange={(e) => setSortBy(e.target.value)}
                                 className="border-2 border-gray-200 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 bg-white/80 backdrop-blur-sm cursor-pointer"
                             >
+                                {skillMatchingEnabled &&
+                                    candidateSkills.length > 0 && (
+                                        <option value="skill-match">
+                                            Best Skill Match
+                                        </option>
+                                    )}
                                 <option value="saved-first">
                                     Saved Jobs First
                                 </option>
@@ -476,6 +526,39 @@ const JobBoard = () => {
                                                         <span className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full whitespace-nowrap">
                                                             {job.type}
                                                         </span>
+                                                        {/* Skill Match Badge */}
+                                                        {job.skillMatch &&
+                                                            job.skillMatch
+                                                                .percentage >
+                                                                0 && (
+                                                                <span
+                                                                    className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${
+                                                                        job
+                                                                            .skillMatch
+                                                                            .percentage >=
+                                                                        80
+                                                                            ? "bg-green-100 text-green-800"
+                                                                            : job
+                                                                                  .skillMatch
+                                                                                  .percentage >=
+                                                                              60
+                                                                            ? "bg-yellow-100 text-yellow-800"
+                                                                            : job
+                                                                                  .skillMatch
+                                                                                  .percentage >=
+                                                                              40
+                                                                            ? "bg-orange-100 text-orange-800"
+                                                                            : "bg-red-100 text-red-800"
+                                                                    }`}
+                                                                >
+                                                                    {
+                                                                        job
+                                                                            .skillMatch
+                                                                            .percentage
+                                                                    }
+                                                                    % Match
+                                                                </span>
+                                                            )}
                                                     </div>
                                                 </div>
                                                 <div className="flex-shrink-0">
@@ -551,6 +634,117 @@ const JobBoard = () => {
                                                     : job.description}
                                             </p>
 
+                                            {/* Skill Matching Details */}
+                                            {job.skillMatch &&
+                                                job.skillMatch.totalJobSkills >
+                                                    0 && (
+                                                    <div className="bg-gray-50 rounded-lg p-4 mb-4 border">
+                                                        <div className="flex items-center gap-2 mb-3">
+                                                            <Star className="h-4 w-4 text-blue-600" />
+                                                            <span className="text-sm font-semibold text-gray-800">
+                                                                Skill Match
+                                                                Analysis
+                                                            </span>
+                                                            <span
+                                                                className={`text-sm font-bold ${
+                                                                    job
+                                                                        .skillMatch
+                                                                        .percentage >=
+                                                                    70
+                                                                        ? "text-green-600"
+                                                                        : job
+                                                                              .skillMatch
+                                                                              .percentage >=
+                                                                          50
+                                                                        ? "text-yellow-600"
+                                                                        : "text-red-600"
+                                                                }`}
+                                                            >
+                                                                {
+                                                                    job
+                                                                        .skillMatch
+                                                                        .percentage
+                                                                }
+                                                                %
+                                                            </span>
+                                                        </div>
+
+                                                        {job.skillMatch
+                                                            .matchedSkills
+                                                            .length > 0 && (
+                                                            <div className="mb-2">
+                                                                <p className="text-xs text-green-700 font-medium mb-1">
+                                                                    ✓ Matched
+                                                                    Skills (
+                                                                    {
+                                                                        job
+                                                                            .skillMatch
+                                                                            .matchedSkills
+                                                                            .length
+                                                                    }
+                                                                    )
+                                                                </p>
+                                                                <div className="flex flex-wrap gap-1">
+                                                                    {job.skillMatch.matchedSkills.map(
+                                                                        (
+                                                                            skill,
+                                                                            idx
+                                                                        ) => (
+                                                                            <span
+                                                                                key={
+                                                                                    idx
+                                                                                }
+                                                                                className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-md border border-green-200"
+                                                                            >
+                                                                                {
+                                                                                    skill
+                                                                                }
+                                                                            </span>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {job.skillMatch
+                                                            .missingSkills
+                                                            .length > 0 && (
+                                                            <div>
+                                                                <p className="text-xs text-red-700 font-medium mb-1">
+                                                                    ✗ Missing
+                                                                    Skills (
+                                                                    {
+                                                                        job
+                                                                            .skillMatch
+                                                                            .missingSkills
+                                                                            .length
+                                                                    }
+                                                                    )
+                                                                </p>
+                                                                <div className="flex flex-wrap gap-1">
+                                                                    {job.skillMatch.missingSkills.map(
+                                                                        (
+                                                                            skill,
+                                                                            idx
+                                                                        ) => (
+                                                                            <span
+                                                                                key={
+                                                                                    idx
+                                                                                }
+                                                                                className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded-md border border-red-200"
+                                                                            >
+                                                                                {
+                                                                                    skill
+                                                                                }
+                                                                            </span>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )}
+
                                             {/* Skills */}
                                             <div className="flex flex-wrap gap-2 mb-4">
                                                 {job.skills.map(
@@ -567,15 +761,6 @@ const JobBoard = () => {
 
                                             {/* Actions */}
                                             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-4 border-t border-gray-100">
-                                                <button
-                                                    onClick={() =>
-                                                        handleApply(job)
-                                                    }
-                                                    className="flex-1 sm:flex-none bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium cursor-pointer"
-                                                    disabled={!user}
-                                                >
-                                                    Apply Now
-                                                </button>
                                                 <button
                                                     onClick={() =>
                                                         toggleSave(job)
@@ -602,9 +787,9 @@ const JobBoard = () => {
                                                 </button>
                                                 <Link
                                                     to={`/jobs/${job._id}`}
-                                                    className="text-blue-600 hover:text-blue-500"
+                                                    className="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium no-underline text-center flex items-center justify-center gap-2"
                                                 >
-                                                    <ExternalLink className="h-4 w-4 inline mr-1" />
+                                                    <ExternalLink className="h-4 w-4" />
                                                     View Details
                                                 </Link>
                                             </div>

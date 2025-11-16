@@ -128,17 +128,17 @@ const Footer = () => {
                             {[
                                 {
                                     Icon: Mail,
-                                    text: "contact@joborbit.com",
-                                    href: "mailto:contact@joborbit.com",
+                                    text: "contact@joborbit.in",
+                                    href: "mailto:contact@joborbit.in",
                                 },
                                 {
                                     Icon: Phone,
-                                    text: "+1 (555) 123-4567",
-                                    href: "tel:+15551234567",
+                                    text: "+91-9876543210",
+                                    href: "tel:+919876543210",
                                 },
                                 {
                                     Icon: MapPin,
-                                    text: "New York, NY 10001",
+                                    text: "Solan, Himachal Pradesh, India",
                                     href: "#",
                                 },
                             ].map((contact, index) => (

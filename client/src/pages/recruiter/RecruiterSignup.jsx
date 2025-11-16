@@ -183,231 +183,239 @@ const RecruiterSignup = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-2xl">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Background decorative elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-teal-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+            </div>
+
+            <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-3xl">
                 <div className="flex justify-center">
-                    <Building2 className="h-12 w-12 text-blue-600" />
+                    <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-300">
+                        <Building2 className="h-8 w-8 text-white" />
+                    </div>
                 </div>
-                <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                    Create Recruiter Account
+                <h2 className="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                    Join as Recruiter
                 </h2>
-                <p className="mt-2 text-center text-sm text-gray-600">
-                    Join our platform to find the best talent
+                <p className="mt-2 text-center text-base text-gray-600 font-medium">
+                    Create your recruiter account and find the best talent
                 </p>
             </div>
 
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-2xl">
-                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                    <form className="space-y-6" onSubmit={handleSubmit}>
-                        {/* Personal Information */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-4xl relative z-10">
+                <div className="bg-white/80 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-2xl border border-white/20">
+                    <form className="space-y-8" onSubmit={handleSubmit}>
+                        {/* Personal Information Section */}
+                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 rounded-xl p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
+                                <User className="h-5 w-5 mr-2 text-emerald-600" />
                                 Personal Information
                             </h3>
+                            <p className="text-sm text-gray-600 mb-6">
+                                Tell us about yourself
+                            </p>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="firstName"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         First Name
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="firstName"
                                             name="firstName"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your first name"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="First name"
                                             value={formData.firstName}
                                             onChange={handleChange}
                                         />
-                                        <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <User className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="lastName"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Last Name
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="lastName"
                                             name="lastName"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your last name"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="Last name"
                                             value={formData.lastName}
                                             onChange={handleChange}
                                         />
-                                        <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <User className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="email"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Email Address
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="email"
                                             name="email"
                                             type="email"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your email"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="your@email.com"
                                             value={formData.email}
                                             onChange={handleChange}
                                         />
-                                        <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Mail className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="phone"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Phone Number
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="phone"
                                             name="phone"
                                             type="tel"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your phone number"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="Phone number"
                                             value={formData.phone}
                                             onChange={handleChange}
                                         />
-                                        <Phone className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Phone className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="dateOfBirth"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Date of Birth
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="dateOfBirth"
                                             name="dateOfBirth"
                                             type="date"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                             value={formData.dateOfBirth}
                                             onChange={handleChange}
                                         />
-                                        <Calendar className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Calendar className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="position"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Your Position
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="position"
                                             name="position"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                             placeholder="e.g., HR Manager, Talent Acquisition"
                                             value={formData.position}
                                             onChange={handleChange}
                                         />
-                                        <Briefcase className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Briefcase className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-emerald-500 transition-colors duration-300" />
                                     </div>
                                 </div>
+                            </div>
 
-                                <div>
-                                    <label
-                                        htmlFor="department"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Department
-                                    </label>
-                                    <select
-                                        id="department"
-                                        name="department"
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        value={formData.department}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="HR">
-                                            Human Resources
-                                        </option>
-                                        <option value="Engineering">
-                                            Engineering
-                                        </option>
-                                        <option value="Sales">Sales</option>
-                                        <option value="Marketing">
-                                            Marketing
-                                        </option>
-                                        <option value="Operations">
-                                            Operations
-                                        </option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
+                            <div className="mt-6">
+                                <label
+                                    htmlFor="department"
+                                    className="block text-sm font-semibold text-gray-700 mb-1"
+                                >
+                                    Department
+                                </label>
+                                <select
+                                    id="department"
+                                    name="department"
+                                    className="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                    value={formData.department}
+                                    onChange={handleChange}
+                                >
+                                    <option value="HR">Human Resources</option>
+                                    <option value="Engineering">
+                                        Engineering
+                                    </option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Operations">
+                                        Operations
+                                    </option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                         </div>
 
-                        {/* Company Information */}
-                        <div className="border-b border-gray-200 pb-6">
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">
+                        {/* Company Information Section */}
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
+                                <Building2 className="h-5 w-5 mr-2 text-blue-600" />
                                 Company Information
                             </h3>
+                            <p className="text-sm text-gray-600 mb-6">
+                                Details about your organization
+                            </p>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.name"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Company Name
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="company.name"
                                             name="company.name"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your company name"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="Your company name"
                                             value={formData.company.name}
                                             onChange={handleChange}
                                         />
-                                        <Building2 className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Building2 className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.industry"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Industry
                                     </label>
@@ -415,7 +423,7 @@ const RecruiterSignup = () => {
                                         id="company.industry"
                                         name="company.industry"
                                         required
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                         value={formData.company.industry}
                                         onChange={handleChange}
                                     >
@@ -461,13 +469,11 @@ const RecruiterSignup = () => {
                                         <option value="Other">Other</option>
                                     </select>
                                 </div>
-                            </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.size"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Company Size
                                     </label>
@@ -475,7 +481,7 @@ const RecruiterSignup = () => {
                                         id="company.size"
                                         name="company.size"
                                         required
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                         value={formData.company.size}
                                         onChange={handleChange}
                                     >
@@ -503,10 +509,10 @@ const RecruiterSignup = () => {
                                     </select>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.website"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Company Website
                                     </label>
@@ -514,7 +520,7 @@ const RecruiterSignup = () => {
                                         id="company.website"
                                         name="company.website"
                                         type="url"
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                         placeholder="https://www.company.com"
                                         value={formData.company.website}
                                         onChange={handleChange}
@@ -522,10 +528,10 @@ const RecruiterSignup = () => {
                                 </div>
                             </div>
 
-                            <div className="mt-4">
+                            <div className="mt-6">
                                 <label
                                     htmlFor="company.description"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-semibold text-gray-700 mb-1"
                                 >
                                     Company Description
                                 </label>
@@ -533,42 +539,42 @@ const RecruiterSignup = () => {
                                     id="company.description"
                                     name="company.description"
                                     rows="3"
-                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    className="block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white resize-none"
                                     placeholder="Brief description of your company..."
                                     value={formData.company.description}
                                     onChange={handleChange}
                                 />
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                                <div>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.address.city"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         City
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="company.address.city"
                                             name="company.address.city"
                                             type="text"
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                             placeholder="City"
                                             value={
                                                 formData.company.address.city
                                             }
                                             onChange={handleChange}
                                         />
-                                        <MapPin className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <MapPin className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.address.state"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         State/Province
                                     </label>
@@ -577,17 +583,17 @@ const RecruiterSignup = () => {
                                         name="company.address.state"
                                         type="text"
                                         required
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                         placeholder="State/Province"
                                         value={formData.company.address.state}
                                         onChange={handleChange}
                                     />
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="company.address.country"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Country
                                     </label>
@@ -596,7 +602,7 @@ const RecruiterSignup = () => {
                                         name="company.address.country"
                                         type="text"
                                         required
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
                                         placeholder="Country"
                                         value={formData.company.address.country}
                                         onChange={handleChange}
@@ -605,21 +611,25 @@ const RecruiterSignup = () => {
                             </div>
                         </div>
 
-                        {/* Password Section */}
-                        <div>
-                            <h3 className="text-lg font-medium text-gray-900 mb-4">
-                                Security
+                        {/* Security Section */}
+                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/50 rounded-xl p-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
+                                <Lock className="h-5 w-5 mr-2 text-purple-600" />
+                                Account Security
                             </h3>
+                            <p className="text-sm text-gray-600 mb-6">
+                                Create a secure password for your account
+                            </p>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="password"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Password
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="password"
                                             name="password"
@@ -629,36 +639,36 @@ const RecruiterSignup = () => {
                                                     : "password"
                                             }
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 pr-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Enter your password"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="Create password"
                                             value={formData.password}
                                             onChange={handleChange}
                                         />
-                                        <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Lock className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-purple-500 transition-colors duration-300" />
                                         <button
                                             type="button"
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hover:bg-gray-100 rounded-r-xl transition-colors duration-200"
                                             onClick={() =>
                                                 setShowPassword(!showPassword)
                                             }
                                         >
                                             {showPassword ? (
-                                                <EyeOff className="h-5 w-5 text-gray-400" />
+                                                <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
                                             ) : (
-                                                <Eye className="h-5 w-5 text-gray-400" />
+                                                <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
                                             )}
                                         </button>
                                     </div>
                                 </div>
 
-                                <div>
+                                <div className="space-y-1">
                                     <label
                                         htmlFor="confirmPassword"
-                                        className="block text-sm font-medium text-gray-700"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
                                         Confirm Password
                                     </label>
-                                    <div className="mt-1 relative">
+                                    <div className="relative group">
                                         <input
                                             id="confirmPassword"
                                             name="confirmPassword"
@@ -668,36 +678,71 @@ const RecruiterSignup = () => {
                                                     : "password"
                                             }
                                             required
-                                            className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                            placeholder="Confirm your password"
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 bg-white/70 hover:bg-white focus:bg-white"
+                                            placeholder="Confirm password"
                                             value={formData.confirmPassword}
                                             onChange={handleChange}
                                         />
-                                        <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                        <Lock className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-purple-500 transition-colors duration-300" />
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Password Requirements */}
+                            <div className="bg-purple-50 border border-purple-200 rounded-xl p-4 mt-6">
+                                <p className="text-xs text-purple-800 font-medium mb-2">
+                                    Password must contain:
+                                </p>
+                                <ul className="text-xs text-purple-700 space-y-1 grid grid-cols-1 md:grid-cols-2 gap-1">
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-purple-600 rounded-full mr-2"></span>
+                                        At least 6 characters
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-purple-600 rounded-full mr-2"></span>
+                                        One uppercase letter
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-purple-600 rounded-full mr-2"></span>
+                                        One lowercase letter
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-purple-600 rounded-full mr-2"></span>
+                                        One number
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <div>
+                        <div className="pt-4">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 cursor-pointer"
+                                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
                             >
-                                {loading
-                                    ? "Creating account..."
-                                    : "Create account"}
+                                <span className="flex items-center">
+                                    {loading ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-6 w-6 border-2 border-white/30 border-t-white mr-3"></div>
+                                            Creating account...
+                                        </>
+                                    ) : (
+                                        "Create recruiter account"
+                                    )}
+                                </span>
                             </button>
                         </div>
                     </form>
 
-                    <div className="mt-6 text-center">
+                    <div className="mt-8 text-center">
                         <Link
                             to="/recruiter/login"
-                            className="text-sm text-blue-600 hover:text-blue-500"
+                            className="text-base text-gray-600 hover:text-emerald-600 font-medium transition-colors duration-200"
                         >
-                            Already have an account? Sign in here
+                            Already have an account?{" "}
+                            <span className="text-emerald-600 font-semibold">
+                                Sign in here
+                            </span>
                         </Link>
                     </div>
                 </div>

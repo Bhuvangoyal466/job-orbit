@@ -1,8 +1,11 @@
 const Job = require("../models/Job");
 const Candidate = require("../models/Candidate");
 const mongoose = require("mongoose");
+const {
+    calculateAdvancedSkillMatchPercentage,
+} = require("../utils/skillMatching");
 
-// @desc    Get all jobs with optional filtering
+// @desc    Get all jobs with optional filtering and skill matching
 // @route   GET /api/jobs
 // @access  Public
 exports.getAllJobs = async (req, res) => {
@@ -13,7 +16,8 @@ exports.getAllJobs = async (req, res) => {
             type,
             salary,
             page = 1,
-            limit = 10,
+            limit = 50,
+            sortBySkillMatch = false,
         } = req.query;
         const query = { isActive: true };
 
@@ -53,24 +57,100 @@ exports.getAllJobs = async (req, res) => {
             }
         }
 
+        // Get candidate skills for skill matching (if user is authenticated)
+        let candidateSkills = [];
+        if (req.user && req.userType === "candidate") {
+            try {
+                const candidate = await Candidate.findById(req.user.id).select(
+                    "skills"
+                );
+                if (candidate && candidate.skills) {
+                    candidateSkills = candidate.skills;
+                }
+            } catch (err) {
+                console.log(
+                    "Could not fetch candidate skills for matching:",
+                    err.message
+                );
+            }
+        }
+
         // Pagination
         const skip = (page - 1) * limit;
 
-        // Execute query
+        // Execute query - fetch more jobs if we need to sort by skill match
+        let fetchLimit = parseInt(limit);
+        let fetchSkip = skip;
+
+        // If sorting by skill match, we need to fetch all jobs first, then sort and paginate
+        if (sortBySkillMatch && candidateSkills.length > 0) {
+            fetchLimit = 1000; // Fetch more jobs to get better skill matching results
+            fetchSkip = 0;
+        }
+
         const jobs = await Job.find(query)
             .populate("recruiter", "company")
             .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(parseInt(limit));
+            .skip(fetchSkip)
+            .limit(fetchLimit);
+
+        // Calculate skill matching for each job if candidate skills are available
+        let jobsWithSkillMatch = jobs.map((job) => {
+            const jobObject = job.toObject();
+
+            if (
+                candidateSkills.length > 0 &&
+                jobObject.skills &&
+                jobObject.skills.length > 0
+            ) {
+                const skillMatch = calculateAdvancedSkillMatchPercentage(
+                    candidateSkills,
+                    jobObject.skills
+                );
+                jobObject.skillMatch = skillMatch;
+            } else {
+                jobObject.skillMatch = {
+                    percentage: 0,
+                    matchedSkills: [],
+                    missingSkills: jobObject.skills || [],
+                    totalJobSkills: (jobObject.skills || []).length,
+                    totalMatchedSkills: 0,
+                };
+            }
+
+            return jobObject;
+        });
+
+        // Sort by skill match if requested and candidate has skills
+        if (sortBySkillMatch && candidateSkills.length > 0) {
+            jobsWithSkillMatch.sort((a, b) => {
+                const aMatch = a.skillMatch?.percentage || 0;
+                const bMatch = b.skillMatch?.percentage || 0;
+
+                // Sort by skill match percentage (descending), then by creation date
+                if (bMatch !== aMatch) {
+                    return bMatch - aMatch;
+                }
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+
+            // Apply pagination after sorting
+            jobsWithSkillMatch = jobsWithSkillMatch.slice(
+                skip,
+                skip + parseInt(limit)
+            );
+        }
 
         // Get total count for pagination
         const total = await Job.countDocuments(query);
 
         res.json({
-            jobs,
+            jobs: jobsWithSkillMatch,
             totalJobs: total,
-            currentPage: page,
+            currentPage: parseInt(page),
             totalPages: Math.ceil(total / limit),
+            candidateSkills: candidateSkills, // Send candidate skills for frontend reference
+            skillMatchingEnabled: candidateSkills.length > 0,
         });
     } catch (error) {
         console.error("Error getting jobs:", error);
@@ -461,7 +541,7 @@ exports.getRecruiterJobs = async (req, res) => {
                 .json({ message: "Not authorized to view recruiter jobs" });
         }
 
-        const { status, page = 1, limit = 10 } = req.query;
+        const { status, page = 1, limit = 50 } = req.query;
         const query = { recruiter: req.user.id };
 
         // Filter by status if provided

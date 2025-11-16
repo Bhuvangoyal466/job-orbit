@@ -213,3 +213,73 @@ module.exports = {
     protectRecruiter,
     authorize,
 };
+
+// Optional authentication - doesn't fail if no token provided
+const optionalAuth = async (req, res, next) => {
+    try {
+        let token;
+
+        // Check for token in headers
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith("Bearer")
+        ) {
+            token = req.headers.authorization.split(" ")[1];
+        }
+
+        // If no token, continue without authentication
+        if (!token) {
+            req.user = null;
+            req.userType = null;
+            return next();
+        }
+
+        try {
+            // Verify token
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            // Try to find user as candidate first, then as recruiter
+            let user = await Candidate.findById(decoded.id);
+            let userType = "candidate";
+
+            if (!user) {
+                user = await Recruiter.findById(decoded.id);
+                userType = "recruiter";
+            }
+
+            if (!user) {
+                // Invalid token, continue without authentication
+                req.user = null;
+                req.userType = null;
+                return next();
+            }
+
+            // Check if user account is active
+            if (!user.isActive) {
+                // Inactive user, continue without authentication
+                req.user = null;
+                req.userType = null;
+                return next();
+            }
+
+            // Add user to request object
+            req.user = user;
+            req.userType = userType;
+            next();
+        } catch (error) {
+            // Token verification failed, continue without authentication
+            req.user = null;
+            req.userType = null;
+            next();
+        }
+    } catch (error) {
+        console.error("Optional auth middleware error:", error);
+        // Continue without authentication on any error
+        req.user = null;
+        req.userType = null;
+        next();
+    }
+};
+
+// Update module exports to include optionalAuth
+module.exports.optionalAuth = optionalAuth;

@@ -37,10 +37,10 @@ const ProfileCompletionWizard = () => {
             const completion = calculateCompletionPercentage();
             setCompletionPercentage(completion);
 
-            // Show wizard if profile is less than 70% complete
-            if (completion < 70) {
-                setTimeout(() => setIsVisible(true), 2000);
-            }
+            // Automatic popup disabled - popup will only show when manually triggered
+            // if (completion < 70) {
+            //     setTimeout(() => setIsVisible(true), 2000);
+            // }
         }
     }, [user]);
 

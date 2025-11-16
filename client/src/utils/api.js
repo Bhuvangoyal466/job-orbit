@@ -337,7 +337,7 @@ export const authUtils = {
 
 // Jobs API calls
 export const jobsAPI = {
-    // Get all jobs
+    // Get all jobs with optional skill matching
     getJobs: async (filters = {}) => {
         const queryParams = new URLSearchParams();
 
@@ -348,13 +348,15 @@ export const jobsAPI = {
         if (filters.salary) queryParams.append("salary", filters.salary);
         if (filters.page) queryParams.append("page", filters.page);
         if (filters.limit) queryParams.append("limit", filters.limit);
+        if (filters.sortBySkillMatch)
+            queryParams.append("sortBySkillMatch", "true");
 
         const queryString = queryParams.toString()
             ? `?${queryParams.toString()}`
             : "";
         const response = await makeRequest(`/jobs${queryString}`);
-        // Handle both the paginated response and the array response formats
-        return response.jobs || response || [];
+        // Return the full response to include skill matching data
+        return response;
     },
 
     // Get a specific job by ID

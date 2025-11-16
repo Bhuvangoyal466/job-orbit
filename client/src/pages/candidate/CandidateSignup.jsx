@@ -129,230 +129,283 @@ const CandidateSignup = () => {
 
     return (
         <>
-            <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-md">
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+                {/* Background decorative elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-indigo-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+                </div>
+
+                <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-lg">
                     <div className="flex justify-center">
-                        <User className="h-12 w-12 text-blue-600" />
+                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-300">
+                            <User className="h-8 w-8 text-white" />
+                        </div>
                     </div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                        Create your account
+                    <h2 className="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                        Join JobOrbit
                     </h2>
-                    <p className="mt-2 text-center text-sm text-gray-600">
-                        Job Seeker Registration
+                    <p className="mt-2 text-center text-base text-gray-600 font-medium">
+                        Create your Job Seeker account and start your career
+                        journey
                     </p>
                 </div>
 
-                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                    <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg relative z-10">
+                    <div className="bg-white/80 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-2xl border border-white/20">
                         <form className="space-y-6" onSubmit={handleSubmit}>
-                            <div>
-                                <label
-                                    htmlFor="firstName"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    First Name
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="firstName"
-                                        name="firstName"
-                                        type="text"
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter your first name"
-                                        value={formData.firstName}
-                                        onChange={handleChange}
-                                    />
-                                    <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                            {/* Name Fields */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="firstName"
+                                        className="block text-sm font-semibold text-gray-700"
+                                    >
+                                        First Name
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="firstName"
+                                            name="firstName"
+                                            type="text"
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            placeholder="First name"
+                                            value={formData.firstName}
+                                            onChange={handleChange}
+                                        />
+                                        <User className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="lastName"
+                                        className="block text-sm font-semibold text-gray-700"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="lastName"
+                                            name="lastName"
+                                            type="text"
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            placeholder="Last name"
+                                            value={formData.lastName}
+                                            onChange={handleChange}
+                                        />
+                                        <User className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
-                                <label
-                                    htmlFor="lastName"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Last Name
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="lastName"
-                                        name="lastName"
-                                        type="text"
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter your last name"
-                                        value={formData.lastName}
-                                        onChange={handleChange}
-                                    />
-                                    <User className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
-                                </div>
-                            </div>
-
-                            <div>
+                            {/* Email Field */}
+                            <div className="space-y-1">
                                 <label
                                     htmlFor="email"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm font-semibold text-gray-700"
                                 >
                                     Email address
                                 </label>
-                                <div className="mt-1 relative">
+                                <div className="relative group">
                                     <input
                                         id="email"
                                         name="email"
                                         type="email"
                                         autoComplete="email"
                                         required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter your email"
+                                        className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                        placeholder="your@email.com"
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
-                                    <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
+                                    <Mail className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
                                 </div>
                             </div>
 
-                            <div>
-                                <label
-                                    htmlFor="dateOfBirth"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Date of Birth
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="dateOfBirth"
-                                        name="dateOfBirth"
-                                        type="date"
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        value={formData.dateOfBirth}
-                                        onChange={handleChange}
-                                    />
-                                    <Calendar className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="phone"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Phone Number
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="phone"
-                                        name="phone"
-                                        type="tel"
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter your phone number"
-                                        value={formData.phone}
-                                        onChange={handleChange}
-                                    />
-                                    <Phone className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="password"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Password
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 pr-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter your password"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                    />
-                                    <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
-                                    <button
-                                        type="button"
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
+                            {/* Date of Birth and Phone */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="dateOfBirth"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
-                                        {showPassword ? (
-                                            <EyeOff className="h-5 w-5 text-gray-400" />
-                                        ) : (
-                                            <Eye className="h-5 w-5 text-gray-400" />
-                                        )}
-                                    </button>
+                                        Date of Birth
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="dateOfBirth"
+                                            name="dateOfBirth"
+                                            type="date"
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            value={formData.dateOfBirth}
+                                            onChange={handleChange}
+                                        />
+                                        <Calendar className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div>
-                                <label
-                                    htmlFor="confirmPassword"
-                                    className="block text-sm font-medium text-gray-700"
-                                >
-                                    Confirm Password
-                                </label>
-                                <div className="mt-1 relative">
-                                    <input
-                                        id="confirmPassword"
-                                        name="confirmPassword"
-                                        type={
-                                            showConfirmPassword
-                                                ? "text"
-                                                : "password"
-                                        }
-                                        required
-                                        className="appearance-none block w-full px-3 py-2 pl-10 pr-10 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Confirm your password"
-                                        value={formData.confirmPassword}
-                                        onChange={handleChange}
-                                    />
-                                    <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2.5" />
-                                    <button
-                                        type="button"
-                                        className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                                        onClick={() =>
-                                            setShowConfirmPassword(
-                                                !showConfirmPassword
-                                            )
-                                        }
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="phone"
+                                        className="block text-sm font-semibold text-gray-700"
                                     >
-                                        {showConfirmPassword ? (
-                                            <EyeOff className="h-5 w-5 text-gray-400" />
-                                        ) : (
-                                            <Eye className="h-5 w-5 text-gray-400" />
-                                        )}
-                                    </button>
+                                        Phone Number
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="phone"
+                                            name="phone"
+                                            type="tel"
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            placeholder="Phone number"
+                                            value={formData.phone}
+                                            onChange={handleChange}
+                                        />
+                                        <Phone className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                    </div>
                                 </div>
                             </div>
 
-                            <div>
+                            {/* Password Fields */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-semibold text-gray-700"
+                                    >
+                                        Password
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            placeholder="Password"
+                                            value={formData.password}
+                                            onChange={handleChange}
+                                        />
+                                        <Lock className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                        <button
+                                            type="button"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hover:bg-gray-100 rounded-r-xl transition-colors duration-200"
+                                            onClick={() =>
+                                                setShowPassword(!showPassword)
+                                            }
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                            ) : (
+                                                <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1">
+                                    <label
+                                        htmlFor="confirmPassword"
+                                        className="block text-sm font-semibold text-gray-700"
+                                    >
+                                        Confirm Password
+                                    </label>
+                                    <div className="relative group">
+                                        <input
+                                            id="confirmPassword"
+                                            name="confirmPassword"
+                                            type={
+                                                showConfirmPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            required
+                                            className="appearance-none block w-full px-4 py-3 pl-12 pr-12 border border-gray-300 rounded-xl placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50 hover:bg-white/70 focus:bg-white"
+                                            placeholder="Confirm password"
+                                            value={formData.confirmPassword}
+                                            onChange={handleChange}
+                                        />
+                                        <Lock className="h-5 w-5 text-gray-400 absolute left-4 top-3.5 group-focus-within:text-blue-500 transition-colors duration-300" />
+                                        <button
+                                            type="button"
+                                            className="absolute inset-y-0 right-0 pr-4 flex items-center cursor-pointer hover:bg-gray-100 rounded-r-xl transition-colors duration-200"
+                                            onClick={() =>
+                                                setShowConfirmPassword(
+                                                    !showConfirmPassword
+                                                )
+                                            }
+                                        >
+                                            {showConfirmPassword ? (
+                                                <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                            ) : (
+                                                <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Password Requirements */}
+                            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                                <p className="text-xs text-blue-800 font-medium mb-2">
+                                    Password must contain:
+                                </p>
+                                <ul className="text-xs text-blue-700 space-y-1">
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-blue-600 rounded-full mr-2"></span>
+                                        At least 6 characters
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-blue-600 rounded-full mr-2"></span>
+                                        One uppercase letter
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-blue-600 rounded-full mr-2"></span>
+                                        One lowercase letter
+                                    </li>
+                                    <li className="flex items-center">
+                                        <span className="w-1 h-1 bg-blue-600 rounded-full mr-2"></span>
+                                        One number
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="pt-4">
                                 <button
                                     type="submit"
                                     disabled={loading}
-                                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 cursor-pointer"
+                                    className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-base font-semibold rounded-xl text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
                                 >
-                                    {loading
-                                        ? "Creating account..."
-                                        : "Create account"}
+                                    <span className="flex items-center">
+                                        {loading ? (
+                                            <>
+                                                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-2"></div>
+                                                Creating account...
+                                            </>
+                                        ) : (
+                                            "Create account"
+                                        )}
+                                    </span>
                                 </button>
                             </div>
                         </form>
 
-                        <div className="mt-6">
+                        <div className="mt-8">
                             <div className="relative">
                                 <div className="absolute inset-0 flex items-center">
                                     <div className="w-full border-t border-gray-300" />
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-white text-gray-500">
+                                    <span className="px-4 bg-white/80 text-gray-600 font-medium">
                                         Already have an account?
                                     </span>
                                 </div>
@@ -361,7 +414,7 @@ const CandidateSignup = () => {
                             <div className="mt-6">
                                 <Link
                                     to="/candidate/login"
-                                    className="w-full flex justify-center py-2 px-4 border border-blue-600 text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50"
+                                    className="w-full flex justify-center py-3 px-4 border border-gray-300 text-base font-semibold rounded-xl text-gray-700 bg-white/70 hover:bg-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-all duration-300 transform hover:scale-[1.02]"
                                 >
                                     Sign in to existing account
                                 </Link>
@@ -371,9 +424,12 @@ const CandidateSignup = () => {
                         <div className="mt-6 text-center">
                             <Link
                                 to="/recruiter/signup"
-                                className="text-sm text-blue-600 hover:text-blue-500"
+                                className="text-sm text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
                             >
-                                Are you a recruiter? Register here
+                                Are you a recruiter?{" "}
+                                <span className="text-blue-600 font-semibold">
+                                    Register here
+                                </span>
                             </Link>
                         </div>
                     </div>
