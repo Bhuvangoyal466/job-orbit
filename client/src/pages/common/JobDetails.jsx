@@ -266,16 +266,30 @@ const JobDetails = () => {
                                         stiffness: 300,
                                     }}
                                 >
-                                    <img
-                                        src={
-                                            job.company?.logo ||
-                                            "https://via.placeholder.com/80x80/e5e7eb/6b7280?text=?"
-                                        }
-                                        alt={
-                                            job.company?.name || "Company Logo"
-                                        }
-                                        className="h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50"
-                                    />
+                                    {job.company?.logo ? (
+                                        <img
+                                            src={job.company.logo}
+                                            alt={
+                                                job.company?.name ||
+                                                "Company Logo"
+                                            }
+                                            className="h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50 object-cover"
+                                            onError={(e) => {
+                                                e.target.style.display = "none";
+                                                e.target.nextSibling.style.display =
+                                                    "flex";
+                                            }}
+                                        />
+                                    ) : null}
+                                    <div
+                                        className={`h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50 bg-gradient-to-br from-blue-100 to-purple-100 ${
+                                            job.company?.logo
+                                                ? "hidden"
+                                                : "flex"
+                                        } items-center justify-center`}
+                                    >
+                                        <Building className="h-8 w-8 text-blue-600" />
+                                    </div>
                                     <div className="absolute -top-1 -right-1 p-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
                                         <Star className="h-3 w-3 text-white" />
                                     </div>

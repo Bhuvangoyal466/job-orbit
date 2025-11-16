@@ -172,7 +172,23 @@ exports.getJobById = async (req, res) => {
             return res.status(404).json({ message: "Job not found" });
         }
 
-        res.json(job);
+        // Ensure company information is available from job record or recruiter
+        const jobObject = job.toObject();
+
+        // If job's company info is incomplete but recruiter info is available, use recruiter's company info
+        if (job.recruiter && job.recruiter.company) {
+            jobObject.company = {
+                name: job.company?.name || job.recruiter.company.name,
+                logo: job.company?.logo || job.recruiter.company.logo || "",
+                website:
+                    job.company?.website || job.recruiter.company.website || "",
+                industry:
+                    job.company?.industry || job.recruiter.company.industry,
+                size: job.company?.size || job.recruiter.company.size,
+            };
+        }
+
+        res.json(jobObject);
     } catch (error) {
         console.error("Error getting job:", error);
         if (error.kind === "ObjectId") {
@@ -378,12 +394,27 @@ exports.createJob = async (req, res) => {
             salary,
             location,
             skills,
-            company,
             perks,
             benefits,
             applicationDeadline,
             numberOfOpenings,
         } = req.body;
+
+        // Get recruiter's company information
+        const Recruiter = require("../models/Recruiter");
+        const recruiter = await Recruiter.findById(req.user.id);
+        if (!recruiter) {
+            return res.status(404).json({ message: "Recruiter not found" });
+        }
+
+        // Use company information from recruiter's profile
+        const companyInfo = {
+            name: recruiter.company.name,
+            logo: recruiter.company.logo || "",
+            website: recruiter.company.website || "",
+            industry: recruiter.company.industry,
+            size: recruiter.company.size,
+        };
 
         // Create new job
         const newJob = new Job({
@@ -394,7 +425,7 @@ exports.createJob = async (req, res) => {
             location,
             skills,
             recruiter: req.user.id,
-            company,
+            company: companyInfo,
             perks,
             benefits,
             applicationDeadline,
@@ -405,8 +436,6 @@ exports.createJob = async (req, res) => {
         const job = await newJob.save();
 
         // Update recruiter's jobPostings array and stats
-        const Recruiter = require("../models/Recruiter");
-        const recruiter = await Recruiter.findById(req.user.id);
         if (recruiter) {
             // Add job to recruiter's jobPostings array
             recruiter.jobPostings.push(job._id);
@@ -461,6 +490,20 @@ exports.updateJob = async (req, res) => {
         const updateData = { ...req.body };
         delete updateData.applicants; // Don't allow updating applicants through this endpoint
         delete updateData.savedBy; // Don't allow updating savedBy through this endpoint
+        delete updateData.company; // Don't allow updating company info - use recruiter's profile data
+
+        // Get recruiter's current company information
+        const Recruiter = require("../models/Recruiter");
+        const recruiter = await Recruiter.findById(req.user.id);
+        if (recruiter) {
+            updateData.company = {
+                name: recruiter.company.name,
+                logo: recruiter.company.logo || "",
+                website: recruiter.company.website || "",
+                industry: recruiter.company.industry,
+                size: recruiter.company.size,
+            };
+        }
 
         const updatedJob = await Job.findByIdAndUpdate(
             req.params.id,
@@ -892,5 +935,42 @@ exports.getRecruiterApplicants = async (req, res) => {
     } catch (error) {
         console.error("Error getting recruiter applicants:", error);
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+// @desc    Migrate company info for existing jobs
+// @route   POST /api/jobs/admin/migrate-company-info
+// @access  Private (Admin/Development)
+exports.migrateCompanyInfo = async (req, res) => {
+    try {
+        // Only allow this in development or for admin users
+        if (process.env.NODE_ENV === "production") {
+            return res.status(403).json({
+                message: "Migration endpoint not available in production",
+            });
+        }
+
+        const {
+            migrateJobCompanyInfo,
+        } = require("../utils/migrateJobCompanyInfo");
+        const result = await migrateJobCompanyInfo();
+
+        if (result.success) {
+            res.json({
+                message: "Migration completed successfully",
+                ...result,
+            });
+        } else {
+            res.status(500).json({
+                message: "Migration failed",
+                error: result.error,
+            });
+        }
+    } catch (error) {
+        console.error("Error running migration:", error);
+        res.status(500).json({
+            message: "Server error",
+            error: error.message,
+        });
     }
 };

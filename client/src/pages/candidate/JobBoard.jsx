@@ -68,6 +68,14 @@ const JobBoard = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sortBy]);
 
+    // Set default sort to skill match when skill matching is enabled
+    useEffect(() => {
+        if (skillMatchingEnabled && candidateSkills.length > 0 && sortBy === "saved-first") {
+            setSortBy("skill-match");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [skillMatchingEnabled, candidateSkills]);
+
     const fetchJobs = async (filters, isLoadMore = false) => {
         setLoading(true);
         try {

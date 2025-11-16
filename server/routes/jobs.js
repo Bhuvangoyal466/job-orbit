@@ -30,4 +30,11 @@ router.put("/:id", protect, jobController.updateJob);
 router.delete("/:id", protect, jobController.deleteJob);
 router.put("/:id/status", protect, jobController.updateApplicationStatus);
 
+// Development/Admin route for migrating company info
+router.post(
+    "/admin/migrate-company-info",
+    protect,
+    jobController.migrateCompanyInfo
+);
+
 module.exports = router;
