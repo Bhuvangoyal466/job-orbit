@@ -33,7 +33,7 @@ const MobileNavigation = ({ isOpen, onClose }) => {
             icon: Briefcase,
         },
         { to: "/candidate/interviews", label: "Interviews", icon: Calendar },
-        { to: "/candidate/upload-resume", label: "Upload Resume", icon: User },
+        { to: "/candidate/upload-resume", label: "Upload PDF", icon: User },
     ];
 
     const recruiterNavItems = [

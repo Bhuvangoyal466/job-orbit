@@ -23,8 +23,10 @@ const RecruiterLogin = () => {
     React.useEffect(() => {
         if (location.state?.message) {
             toast.success(location.state.message);
+            // Clear the message to prevent duplicate toasts
+            window.history.replaceState({}, document.title);
         }
-    }, [location.state]);
+    }, [location.state?.message]);
 
     const handleChange = (e) => {
         setFormData((prev) => ({

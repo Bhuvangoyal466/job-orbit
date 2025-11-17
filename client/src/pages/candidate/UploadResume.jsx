@@ -67,6 +67,14 @@ const UploadResume = () => {
     };
 
     const handleFile = async (file) => {
+        // Validate file type - only PDF allowed
+        if (file.type !== "application/pdf") {
+            toast.error(
+                "Only PDF files are supported. Please upload a PDF resume."
+            );
+            return;
+        }
+
         setUploadedFile(file);
         setUploading(true);
         try {
@@ -75,7 +83,7 @@ const UploadResume = () => {
             if (response.parsed && response.parsedData) {
                 // Show success message with parsing info
                 toast.success(
-                    "Resume uploaded and parsed successfully! Your profile has been auto-filled with extracted data."
+                    "PDF resume uploaded and parsed successfully! Your profile has been auto-filled with extracted data."
                 );
 
                 // Update form data with parsed information
@@ -133,10 +141,10 @@ const UploadResume = () => {
                     }, 2000);
                 }
             } else {
-                toast.success("Resume uploaded successfully!");
+                toast.success("PDF resume uploaded successfully!");
                 if (response.parsed === false) {
                     toast.warn(
-                        "Resume parsing failed, but file was uploaded. You can fill your profile manually."
+                        "PDF resume parsing failed, but file was uploaded. You can fill your profile manually."
                     );
                 }
             }
@@ -241,9 +249,9 @@ const UploadResume = () => {
                         Upload Your Resume
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        Upload your resume and let our AI automatically extract
-                        and organize your information. Review and edit before
-                        saving.
+                        Upload your PDF resume and let our AI automatically
+                        extract and organize your information. Review and edit
+                        before saving.
                     </p>
                 </motion.div>
 
@@ -308,11 +316,10 @@ const UploadResume = () => {
                                     <h3 className="text-2xl font-bold text-gray-900 mb-3">
                                         {dragActive
                                             ? "Drop it like it's hot!"
-                                            : "Drag & Drop Your Resume"}
+                                            : "Drag & Drop Your PDF Resume"}
                                     </h3>
                                     <p className="text-gray-600 mb-6 text-lg">
-                                        or click to browse files (PDF, DOC, DOCX
-                                        supported)
+                                        or click to browse files (PDF only)
                                     </p>
 
                                     <div className="flex items-center justify-center gap-4 mb-6">
@@ -356,7 +363,7 @@ const UploadResume = () => {
                                 </h3>
                                 <p className="text-green-600 font-semibold flex items-center justify-center gap-2">
                                     <CheckCircle className="h-5 w-5" />
-                                    Resume uploaded successfully!
+                                    PDF resume uploaded successfully!
                                 </p>
                             </motion.div>
                         )}
@@ -364,7 +371,7 @@ const UploadResume = () => {
 
                     <input
                         type="file"
-                        accept=".pdf,.doc,.docx"
+                        accept=".pdf"
                         onChange={(e) =>
                             e.target.files && handleFile(e.target.files[0])
                         }
@@ -409,8 +416,8 @@ const UploadResume = () => {
                                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-600 border-t-transparent"></div>
                                     <span className="font-medium">
                                         {uploadedFile
-                                            ? "Uploading and parsing your resume..."
-                                            : "Parsing resume with AI..."}
+                                            ? "Uploading and parsing your PDF resume..."
+                                            : "Parsing PDF resume with AI..."}
                                     </span>
                                 </div>
                             </motion.div>

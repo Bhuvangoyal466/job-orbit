@@ -47,7 +47,7 @@ const Home = () => {
             icon: Upload,
             title: "Smart Resume Parsing",
             description:
-                "Upload your resume and our AI will extract and organize your information automatically.",
+                "Upload your PDF resume and our AI will extract and organize your information automatically.",
             color: "from-blue-500 to-purple-600",
             path: "/candidate/upload-resume",
             authRequired: true,

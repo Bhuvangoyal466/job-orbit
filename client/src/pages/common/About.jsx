@@ -497,68 +497,66 @@ const About = () => {
                         </motion.div>
 
                         <motion.div
-                            className="bg-white rounded-2xl shadow-xl p-8"
+                            className="space-y-8"
                             initial={{ opacity: 0, x: 30 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                                Send us a message
-                            </h3>
-                            <form className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            First Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            placeholder="John"
-                                        />
+                            
+
+                            {/* Company Achievements */}
+                            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
+                                <h3 className="text-2xl font-bold mb-6">
+                                    Our Achievements
+                                </h3>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle className="h-6 w-6 text-blue-200" />
+                                        <span>
+                                            AI-powered resume parsing with 95%
+                                            accuracy
+                                        </span>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                                            Last Name
-                                        </label>
-                                        <input
-                                            type="text"
-                                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                            placeholder="Doe"
-                                        />
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle className="h-6 w-6 text-blue-200" />
+                                        <span>
+                                            Real-time application tracking
+                                            system
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle className="h-6 w-6 text-blue-200" />
+                                        <span>
+                                            Comprehensive analytics dashboard
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <CheckCircle className="h-6 w-6 text-blue-200" />
+                                        <span>
+                                            Advanced job matching algorithms
+                                        </span>
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                        placeholder="john@example.com"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Message
-                                    </label>
-                                    <textarea
-                                        rows={4}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                                        placeholder="Tell us how we can help you..."
-                                    />
-                                </div>
-                                <motion.button
-                                    type="submit"
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 flex items-center justify-center gap-2"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+
+                                <motion.div
+                                    className="mt-6 pt-6 border-t border-white/20"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: 0.3 }}
+                                    viewport={{ once: true }}
                                 >
-                                    Send Message
-                                    <ArrowRight className="h-5 w-5" />
-                                </motion.button>
-                            </form>
+                                    <h4 className="text-lg font-bold mb-3">
+                                        Future Roadmap
+                                    </h4>
+                                    <ul className="space-y-2 text-blue-100">
+                                        <li>• Video interview integration</li>
+                                        <li>• Advanced skill assessments</li>
+                                        <li>• Mobile app development</li>
+                                        <li>• International expansion</li>
+                                    </ul>
+                                </motion.div>
+                            </div>
                         </motion.div>
                     </div>
                 </div>

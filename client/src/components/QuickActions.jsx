@@ -26,7 +26,7 @@ const QuickActions = () => {
         },
         {
             icon: Upload,
-            label: "Upload Resume",
+            label: "Upload PDF Resume",
             href: "/candidate/upload-resume",
             color: "bg-green-500 hover:bg-green-600",
         },

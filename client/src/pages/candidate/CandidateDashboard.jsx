@@ -190,8 +190,8 @@ const CandidateDashboard = () => {
             color: "bg-blue-500",
         },
         {
-            title: "Upload Resume",
-            description: "Update your resume",
+            title: "Profile Information",
+            description: "Update your profile & upload PDF resume",
             icon: Upload,
             link: "/candidate/upload-resume",
             color: "bg-green-500",
@@ -273,7 +273,7 @@ const CandidateDashboard = () => {
                                     className="btn-secondary flex items-center gap-2"
                                 >
                                     <Upload className="h-5 w-5" />
-                                    Update Resume
+                                    Profile Info
                                 </Link>
                             </motion.div>
                         </div>

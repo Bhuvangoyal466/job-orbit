@@ -7,7 +7,7 @@ const { parseResumeWithAPI } = require("../services/resumeParser");
 
 const router = express.Router();
 
-// Multer setup for PDF upload
+// Multer setup for PDF upload only (no other file formats supported)
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(__dirname, "../uploads/resumes"));
@@ -22,7 +22,12 @@ const fileFilter = (req, file, cb) => {
     if (file.mimetype === "application/pdf") {
         cb(null, true);
     } else {
-        cb(new Error("Only PDF files are allowed!"), false);
+        cb(
+            new Error(
+                "Only PDF files are allowed! Please upload your resume in PDF format only."
+            ),
+            false
+        );
     }
 };
 
@@ -53,12 +58,12 @@ router.post(
 
             // Try to parse the resume with AI
             try {
-                console.log("Attempting to parse resume with AI...");
+                console.log("Attempting to parse PDF resume with AI...");
                 parsedData = await parseResumeWithAPI(req.file.path);
                 parseSuccess = true;
-                console.log("Resume parsed successfully:", parsedData);
+                console.log("PDF resume parsed successfully:", parsedData);
             } catch (parseError) {
-                console.error("Resume parsing failed:", parseError.message);
+                console.error("PDF resume parsing failed:", parseError.message);
                 // Continue without parsed data if parsing fails
                 parsedData = {};
             }
@@ -66,7 +71,7 @@ router.post(
             // Update candidate with parsed data (only if parsing was successful)
             if (parseSuccess && Object.keys(parsedData).length > 0) {
                 console.log(
-                    "Auto-filling candidate profile with parsed resume data..."
+                    "Auto-filling candidate profile with parsed PDF resume data..."
                 );
 
                 // Auto-fill basic information (always overwrite with parsed data)
@@ -179,7 +184,7 @@ router.post(
             await candidate.save();
 
             res.json({
-                message: "Resume uploaded successfully",
+                message: "PDF resume uploaded and processed successfully",
                 resume: candidate.resume,
                 parsed: parseSuccess,
                 parsedData: parseSuccess ? parsedData : null,
@@ -240,22 +245,22 @@ router.post("/parse-existing", protectCandidate, async (req, res) => {
         if (!candidate.resume || !candidate.resume.path) {
             return res
                 .status(400)
-                .json({ message: "No resume found to parse" });
+                .json({ message: "No PDF resume found to parse" });
         }
 
         try {
-            console.log("Re-parsing existing resume...");
+            console.log("Re-parsing existing PDF resume...");
             const parsedData = await parseResumeWithAPI(candidate.resume.path);
 
             res.json({
-                message: "Resume parsed successfully",
+                message: "PDF resume parsed successfully",
                 parsed: true,
                 parsedData: parsedData,
             });
         } catch (parseError) {
-            console.error("Resume re-parsing failed:", parseError.message);
+            console.error("PDF resume re-parsing failed:", parseError.message);
             res.status(500).json({
-                message: "Failed to parse resume",
+                message: "Failed to parse PDF resume",
                 error: parseError.message,
             });
         }
@@ -276,17 +281,17 @@ router.post("/auto-fill-profile", protectCandidate, async (req, res) => {
         if (!candidate.resume || !candidate.resume.path) {
             return res.status(400).json({
                 message:
-                    "No resume found to parse. Please upload a resume first.",
+                    "No PDF resume found to parse. Please upload a PDF resume first.",
             });
         }
 
         try {
-            console.log("Parsing resume for auto-fill...");
+            console.log("Parsing PDF resume for auto-fill...");
             const parsedData = await parseResumeWithAPI(candidate.resume.path);
 
             if (!parsedData || Object.keys(parsedData).length === 0) {
                 return res.status(400).json({
-                    message: "No data could be extracted from the resume",
+                    message: "No data could be extracted from the PDF resume",
                 });
             }
 
@@ -397,14 +402,14 @@ router.post("/auto-fill-profile", protectCandidate, async (req, res) => {
             await candidate.save();
 
             res.json({
-                message: "Profile auto-filled successfully from resume",
+                message: "Profile auto-filled successfully from PDF resume",
                 parsedData: parsedData,
                 updatedProfile: candidate,
             });
         } catch (parseError) {
-            console.error("Resume parsing failed:", parseError.message);
+            console.error("PDF resume parsing failed:", parseError.message);
             res.status(500).json({
-                message: "Failed to parse resume for auto-fill",
+                message: "Failed to parse PDF resume for auto-fill",
                 error: parseError.message,
             });
         }

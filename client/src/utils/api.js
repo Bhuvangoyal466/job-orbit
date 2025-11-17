@@ -100,7 +100,7 @@ export const candidateAPI = {
         );
     },
 
-    // Upload resume (PDF)
+    // Upload resume (PDF only - no other formats supported)
     uploadResume: async (file) => {
         const formData = new FormData();
         formData.append("resume", file);

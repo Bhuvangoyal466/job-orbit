@@ -8,9 +8,9 @@ const RESUME_PARSER_URL =
     process.env.RESUME_PARSER_URL || "http://127.0.0.1:8000";
 
 /**
- * Parse resume using the FastAPI service
- * @param {string} filePath - Path to the uploaded resume file
- * @returns {Object} Parsed resume data
+ * Parse PDF resume using the FastAPI service
+ * @param {string} filePath - Path to the uploaded PDF resume file
+ * @returns {Object} Parsed resume data from PDF
  */
 async function parseResumeWithAPI(filePath) {
     try {

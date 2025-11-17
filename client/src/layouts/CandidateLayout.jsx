@@ -27,7 +27,7 @@ const CandidateLayout = () => {
             icon: Search,
         },
         {
-            name: "Upload Resume",
+            name: "Upload PDF Resume",
             href: "/candidate/upload-resume",
             icon: Upload,
         },

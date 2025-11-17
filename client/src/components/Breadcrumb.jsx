@@ -16,7 +16,7 @@ const Breadcrumb = () => {
         jobs: "Jobs",
         applications: "Applications",
         interviews: "Interviews",
-        "upload-resume": "Upload Resume",
+        "upload-resume": "Upload PDF Resume",
         "post-job": "Post Job",
         applicants: "Manage Applicants",
         about: "About Us",
