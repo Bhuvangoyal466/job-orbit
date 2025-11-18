@@ -9,6 +9,7 @@ import {
     Settings,
     Building2,
     Calendar,
+    Briefcase,
 } from "lucide-react";
 
 const RecruiterLayout = () => {
@@ -25,6 +26,11 @@ const RecruiterLayout = () => {
             name: "Post Job",
             href: "/recruiter/post-job",
             icon: Plus,
+        },
+        {
+            name: "Manage Jobs",
+            href: "/recruiter/manage-jobs",
+            icon: Briefcase,
         },
         {
             name: "Manage Applicants",

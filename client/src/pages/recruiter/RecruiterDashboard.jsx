@@ -305,7 +305,7 @@ const RecruiterDashboard = () => {
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <Link to="/recruiter/post-job">
                             <motion.div
                                 className="group relative overflow-hidden p-6 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-dashed border-blue-200 rounded-2xl hover:border-blue-400 transition-all duration-300 cursor-pointer"
@@ -340,6 +340,40 @@ const RecruiterDashboard = () => {
                             </motion.div>
                         </Link>
 
+                        <Link to="/recruiter/manage-jobs">
+                            <motion.div
+                                className="group relative overflow-hidden p-6 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-dashed border-orange-200 rounded-2xl hover:border-orange-400 transition-all duration-300 cursor-pointer"
+                                whileHover={{ scale: 1.02, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.55 }}
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                                <div className="relative">
+                                    <motion.div
+                                        className="inline-flex p-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
+                                        whileHover={{ rotate: -10, scale: 1.1 }}
+                                        transition={{
+                                            type: "spring",
+                                            stiffness: 300,
+                                        }}
+                                    >
+                                        <Briefcase className="h-8 w-8 text-white" />
+                                    </motion.div>
+
+                                    <h3 className="font-bold text-gray-900 text-lg mb-2 group-hover:text-orange-600 transition-colors">
+                                        Manage Jobs
+                                    </h3>
+                                    <p className="text-gray-600 group-hover:text-gray-700 transition-colors">
+                                        Edit, update, or remove your existing
+                                        job postings
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </Link>
+
                         <Link to="/recruiter/applicants">
                             <motion.div
                                 className="group relative overflow-hidden p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-dashed border-green-200 rounded-2xl hover:border-green-400 transition-all duration-300 cursor-pointer"
@@ -354,7 +388,7 @@ const RecruiterDashboard = () => {
                                 <div className="relative">
                                     <motion.div
                                         className="inline-flex p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
-                                        whileHover={{ rotate: -10, scale: 1.1 }}
+                                        whileHover={{ rotate: 10, scale: 1.1 }}
                                         transition={{
                                             type: "spring",
                                             stiffness: 300,

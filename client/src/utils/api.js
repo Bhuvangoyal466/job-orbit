@@ -250,6 +250,21 @@ export const recruiterAPI = {
         );
     },
 
+    // Update a job posting
+    updateJob: async (jobId, jobData) => {
+        return makeRequest(`/jobs/${jobId}`, {
+            method: "PUT",
+            body: JSON.stringify(jobData),
+        });
+    },
+
+    // Delete a job posting (sets isActive to false)
+    deleteJob: async (jobId) => {
+        return makeRequest(`/jobs/${jobId}`, {
+            method: "DELETE",
+        });
+    },
+
     // View candidate resume
     viewResume: async (candidateId) => {
         console.log("API: Starting viewResume for candidate:", candidateId);

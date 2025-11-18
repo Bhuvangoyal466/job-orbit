@@ -29,6 +29,7 @@ import RecruiterLogin from "../pages/recruiter/RecruiterLogin";
 import RecruiterSignup from "../pages/recruiter/RecruiterSignup";
 import RecruiterDashboard from "../pages/recruiter/RecruiterDashboard";
 import PostJob from "../pages/recruiter/PostJob";
+import ManageJobs from "../pages/recruiter/ManageJobs";
 import ManageApplicants from "../pages/recruiter/ManageApplicants";
 import RecruiterInterviewManagement from "../pages/recruiter/RecruiterInterviewManagement";
 
@@ -150,6 +151,7 @@ const AppRoutes = () => {
                             element={<RecruiterDashboard />}
                         />
                         <Route path="post-job" element={<PostJob />} />
+                        <Route path="manage-jobs" element={<ManageJobs />} />
                         <Route
                             path="applicants"
                             element={<ManageApplicants />}
