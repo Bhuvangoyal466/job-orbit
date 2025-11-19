@@ -1,6 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
 import {
     Target,
     Users,
@@ -181,19 +179,19 @@ const About = () => {
                             </h3>
                             <ul className="space-y-3 text-gray-600">
                                 <li className="flex items-start">
-                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></div>
                                     Smart resume parsing with AI technology
                                 </li>
                                 <li className="flex items-start">
-                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></div>
                                     Real-time application tracking system
                                 </li>
                                 <li className="flex items-start">
-                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></div>
                                     Comprehensive dashboard with analytics
                                 </li>
                                 <li className="flex items-start">
-                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 shrink-0"></div>
                                     Advanced job matching algorithms
                                 </li>
                             </ul>
