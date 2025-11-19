@@ -230,7 +230,7 @@ const CandidateDashboard = () => {
     }
 
     return (
-        <div className="w-full min-h-full bg-gradient-to-br from-blue-50 to-indigo-100 -m-6 p-6">
+        <div className="w-full min-h-full bg-linear-to-br from-blue-50 to-indigo-100 -m-6 p-6">
             <div className="space-y-6 pb-12">
                 {/* Header */}
                 <motion.div
@@ -241,7 +241,7 @@ const CandidateDashboard = () => {
                 >
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                            <h1 className="text-3xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                                 Dashboard
                             </h1>
                             <p className="text-lg text-gray-600">
@@ -322,7 +322,7 @@ const CandidateDashboard = () => {
                                         }}
                                     >
                                         {/* Background gradient overlay */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-blue-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        <div className="absolute inset-0 bg-linear-to-br from-transparent to-blue-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                         <div className="relative flex items-center justify-between">
                                             <div className="flex-1">
@@ -429,7 +429,7 @@ const CandidateDashboard = () => {
 
                                         {/* Hover effect line */}
                                         <motion.div
-                                            className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
+                                            className="absolute bottom-0 left-0 h-0.5 bg-linear-to-r from-blue-500 to-purple-500"
                                             initial={{ width: 0 }}
                                             whileHover={{ width: "100%" }}
                                             transition={{ duration: 0.3 }}
@@ -453,7 +453,7 @@ const CandidateDashboard = () => {
                     >
                         <div className="flex items-center gap-3 mb-4">
                             <motion.div
-                                className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"
+                                className="p-2 bg-linear-to-r from-blue-500 to-purple-500 rounded-lg"
                                 animate={{ rotate: [0, 5, -5, 0] }}
                                 transition={{
                                     duration: 3,
@@ -463,7 +463,7 @@ const CandidateDashboard = () => {
                             >
                                 <Zap className="h-5 w-5 text-white" />
                             </motion.div>
-                            <h2 className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                            <h2 className="text-xl font-bold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                                 Quick Actions
                             </h2>
                         </div>
@@ -487,7 +487,7 @@ const CandidateDashboard = () => {
                                             className="block p-4 border border-gray-200/50 rounded-xl hover:border-blue-300 hover:shadow-lg transition-all duration-300 group bg-white/50 backdrop-blur-sm relative overflow-hidden"
                                         >
                                             {/* Background hover effect */}
-                                            <motion.div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                            <motion.div className="absolute inset-0 bg-linear-to-br from-blue-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                             <div className="relative flex items-start space-x-3">
                                                 <motion.div
@@ -514,7 +514,7 @@ const CandidateDashboard = () => {
                                                 >
                                                     {/* Shimmer effect */}
                                                     <motion.div
-                                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full"
+                                                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full"
                                                         animate={{
                                                             translateX: [
                                                                 "100%",

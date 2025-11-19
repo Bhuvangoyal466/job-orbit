@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import {
     Edit3,
     Trash2,
@@ -137,7 +137,7 @@ const ManageJobs = () => {
 
     return (
         <motion.div
-            className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8"
+            className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50 py-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -151,7 +151,7 @@ const ManageJobs = () => {
                     transition={{ duration: 0.5 }}
                 >
                     <div>
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                        <h1 className="text-4xl font-bold bg-linear-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
                             Manage Jobs
                         </h1>
                         <p className="text-gray-600 mt-2">
@@ -161,7 +161,7 @@ const ManageJobs = () => {
 
                     <Link to="/recruiter/post-job">
                         <motion.button
-                            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                            className="flex items-center gap-2 px-6 py-3 bg-linear-to-r from-blue-500 to-purple-600 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
                             whileHover={{ scale: 1.05, y: -2 }}
                             whileTap={{ scale: 0.95 }}
                         >

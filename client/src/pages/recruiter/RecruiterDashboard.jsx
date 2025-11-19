@@ -73,7 +73,7 @@ const RecruiterDashboard = () => {
 
     return (
         <motion.div
-            className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"
+            className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -90,7 +90,7 @@ const RecruiterDashboard = () => {
                         <div className="space-y-2">
                             <div className="flex items-center gap-3">
                                 <motion.div
-                                    className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl"
+                                    className="p-3 bg-linear-to-r from-blue-500 to-purple-600 rounded-xl"
                                     whileHover={{ scale: 1.05, rotate: 5 }}
                                     transition={{
                                         type: "spring",
@@ -100,7 +100,7 @@ const RecruiterDashboard = () => {
                                     <Briefcase className="h-8 w-8 text-white" />
                                 </motion.div>
                                 <div>
-                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                                    <h1 className="text-4xl font-bold bg-linear-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                                         Recruiter Dashboard
                                     </h1>
                                     <p className="text-gray-600 text-lg mt-1">
@@ -113,11 +113,11 @@ const RecruiterDashboard = () => {
                         <motion.button
                             onClick={fetchDashboardStats}
                             disabled={loading}
-                            className="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:scale-105"
+                            className="group relative overflow-hidden px-6 py-3 bg-linear-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:scale-105"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             <div className="relative flex items-center gap-2">
                                 <motion.div
                                     animate={{ rotate: loading ? 360 : 0 }}
@@ -139,7 +139,7 @@ const RecruiterDashboard = () => {
                 <AnimatePresence>
                     {error && (
                         <motion.div
-                            className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm"
+                            className="bg-linear-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm"
                             initial={{ opacity: 0, y: -10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -185,11 +185,11 @@ const RecruiterDashboard = () => {
                                 <div className="p-6">
                                     <div className="flex items-center space-x-4">
                                         <div className="animate-pulse">
-                                            <div className="bg-gradient-to-r from-gray-200 to-gray-300 p-4 rounded-xl h-14 w-14"></div>
+                                            <div className="bg-linear-to-r from-gray-200 to-gray-300 p-4 rounded-xl h-14 w-14"></div>
                                         </div>
                                         <div className="flex-1 space-y-3 animate-pulse">
-                                            <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-3/4"></div>
-                                            <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/2"></div>
+                                            <div className="h-4 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-3/4"></div>
+                                            <div className="h-6 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-1/2"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -215,7 +215,7 @@ const RecruiterDashboard = () => {
                                 >
                                     <div className="p-6 relative overflow-hidden">
                                         {/* Background Pattern */}
-                                        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-blue-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                        <div className="absolute inset-0 bg-linear-to-br from-transparent to-blue-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                         <div className="relative flex items-center justify-between">
                                             <div className="flex-1">
@@ -227,7 +227,7 @@ const RecruiterDashboard = () => {
                                                 </dd>
                                             </div>
                                             <motion.div
-                                                className={`p-4 rounded-xl bg-gradient-to-br ${
+                                                className={`p-4 rounded-xl bg-linear-to-br ${
                                                     index === 0
                                                         ? "from-blue-500 to-blue-600"
                                                         : index === 1
@@ -252,7 +252,7 @@ const RecruiterDashboard = () => {
                                         {/* Progress Bar */}
                                         <div className="mt-4 bg-gray-200 rounded-full h-2 overflow-hidden">
                                             <motion.div
-                                                className={`h-full rounded-full bg-gradient-to-r ${
+                                                className={`h-full rounded-full bg-linear-to-r ${
                                                     index === 0
                                                         ? "from-blue-400 to-blue-500"
                                                         : index === 1
@@ -300,7 +300,7 @@ const RecruiterDashboard = () => {
                         >
                             <Clock className="h-6 w-6 text-blue-600" />
                         </motion.div>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                        <h2 className="text-2xl font-bold bg-linear-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
                             Quick Actions
                         </h2>
                     </div>
@@ -308,18 +308,18 @@ const RecruiterDashboard = () => {
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         <Link to="/recruiter/post-job">
                             <motion.div
-                                className="group relative overflow-hidden p-6 bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-dashed border-blue-200 rounded-2xl hover:border-blue-400 transition-all duration-300 cursor-pointer"
+                                className="group relative overflow-hidden p-6 bg-linear-to-br from-blue-50 to-purple-50 border-2 border-dashed border-blue-200 rounded-2xl hover:border-blue-400 transition-all duration-300 cursor-pointer"
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.5, delay: 0.5 }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                 <div className="relative">
                                     <motion.div
-                                        className="inline-flex p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
+                                        className="inline-flex p-3 bg-linear-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
                                         whileHover={{ rotate: 10, scale: 1.1 }}
                                         transition={{
                                             type: "spring",
@@ -342,18 +342,18 @@ const RecruiterDashboard = () => {
 
                         <Link to="/recruiter/manage-jobs">
                             <motion.div
-                                className="group relative overflow-hidden p-6 bg-gradient-to-br from-orange-50 to-red-50 border-2 border-dashed border-orange-200 rounded-2xl hover:border-orange-400 transition-all duration-300 cursor-pointer"
+                                className="group relative overflow-hidden p-6 bg-linear-to-br from-orange-50 to-red-50 border-2 border-dashed border-orange-200 rounded-2xl hover:border-orange-400 transition-all duration-300 cursor-pointer"
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: 0.55 }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-linear-to-br from-orange-500/10 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                 <div className="relative">
                                     <motion.div
-                                        className="inline-flex p-3 bg-gradient-to-r from-orange-500 to-red-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
+                                        className="inline-flex p-3 bg-linear-to-r from-orange-500 to-red-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
                                         whileHover={{ rotate: -10, scale: 1.1 }}
                                         transition={{
                                             type: "spring",
@@ -376,18 +376,18 @@ const RecruiterDashboard = () => {
 
                         <Link to="/recruiter/applicants">
                             <motion.div
-                                className="group relative overflow-hidden p-6 bg-gradient-to-br from-green-50 to-blue-50 border-2 border-dashed border-green-200 rounded-2xl hover:border-green-400 transition-all duration-300 cursor-pointer"
+                                className="group relative overflow-hidden p-6 bg-linear-to-br from-green-50 to-blue-50 border-2 border-dashed border-green-200 rounded-2xl hover:border-green-400 transition-all duration-300 cursor-pointer"
                                 whileHover={{ scale: 1.02, y: -2 }}
                                 whileTap={{ scale: 0.98 }}
                                 initial={{ opacity: 0, x: 20 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.5, delay: 0.6 }}
                             >
-                                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute inset-0 bg-linear-to-br from-green-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                                 <div className="relative">
                                     <motion.div
-                                        className="inline-flex p-3 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
+                                        className="inline-flex p-3 bg-linear-to-r from-green-500 to-blue-500 rounded-xl shadow-lg group-hover:shadow-xl mb-4"
                                         whileHover={{ rotate: 10, scale: 1.1 }}
                                         transition={{
                                             type: "spring",

@@ -293,7 +293,7 @@ const JobBoard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="space-y-8 pb-12">
                     {/* Modern Header */}
@@ -311,7 +311,7 @@ const JobBoard = () => {
                                 transition={{ delay: 0.2, duration: 0.5 }}
                             >
                                 <motion.div
-                                    className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg"
+                                    className="p-3 bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg"
                                     animate={{
                                         rotate: [0, 5, -5, 0],
                                         scale: [1, 1.05, 1],
@@ -324,7 +324,7 @@ const JobBoard = () => {
                                 >
                                     <Briefcase className="h-8 w-8 text-white" />
                                 </motion.div>
-                                <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                                <h1 className="text-5xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                                     Job Board
                                 </h1>
                             </motion.div>

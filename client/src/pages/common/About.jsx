@@ -203,7 +203,7 @@ const About = () => {
             </section>
 
             {/* Enhanced Values Section */}
-            <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+            <section className="py-20 bg-linear-to-br from-gray-50 to-blue-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         className="text-center mb-16"
@@ -213,7 +213,7 @@ const About = () => {
                         viewport={{ once: true }}
                     >
                         <motion.h2
-                            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6"
+                            className="text-4xl md:text-5xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6"
                             initial={{ opacity: 0, scale: 0.8 }}
                             whileInView={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
@@ -244,7 +244,7 @@ const About = () => {
                                     viewport={{ once: true }}
                                 >
                                     <motion.div
-                                        className="bg-gradient-to-br from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
+                                        className="bg-linear-to-br from-blue-500 to-purple-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"
                                         whileHover={{
                                             rotate: 360,
                                             scale: 1.1,
@@ -267,7 +267,7 @@ const About = () => {
 
                                     {/* Decorative element */}
                                     <motion.div
-                                        className="mt-6 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                        className="mt-6 h-1 bg-linear-to-r from-blue-500 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                                         initial={{ width: 0 }}
                                         whileInView={{ width: "100%" }}
                                         transition={{
@@ -302,7 +302,7 @@ const About = () => {
                     </div>
 
                     <motion.div
-                        className="bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600 text-white rounded-3xl p-12 text-center relative overflow-hidden shadow-2xl"
+                        className="bg-linear-to-br from-blue-600 via-purple-600 to-cyan-600 text-white rounded-3xl p-12 text-center relative overflow-hidden shadow-2xl"
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
@@ -434,7 +434,7 @@ const About = () => {
             </section>
 
             {/* Contact Section */}
-            <section className="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+            <section className="py-20 bg-linear-to-br from-blue-50 to-purple-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <motion.div
@@ -480,7 +480,7 @@ const About = () => {
                                         }}
                                         viewport={{ once: true }}
                                     >
-                                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
+                                        <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white">
                                             <contact.icon className="h-6 w-6" />
                                         </div>
                                         <div>
@@ -503,10 +503,8 @@ const About = () => {
                             transition={{ duration: 0.6 }}
                             viewport={{ once: true }}
                         >
-                            
-
                             {/* Company Achievements */}
-                            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
+                            <div className="bg-linear-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
                                 <h3 className="text-2xl font-bold mb-6">
                                     Our Achievements
                                 </h3>

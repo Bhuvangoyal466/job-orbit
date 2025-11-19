@@ -53,7 +53,6 @@ def initialize_resume_json():
 
 
 # Step 3. Ask Gemini to fill the JSON
-import re
 import json
 import google.generativeai as genai
 

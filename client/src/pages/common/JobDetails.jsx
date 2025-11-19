@@ -192,7 +192,7 @@ const JobDetails = () => {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+            <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
                 <motion.div
                     className="text-center max-w-md"
                     initial={{ opacity: 0, scale: 0.9 }}
@@ -238,7 +238,7 @@ const JobDetails = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className="max-w-6xl mx-auto px-4 py-8 mt-15">
                 {/* Modern Back Link */}
                 <motion.div
@@ -297,7 +297,7 @@ const JobDetails = () => {
                                         />
                                     ) : null}
                                     <div
-                                        className={`h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50 bg-gradient-to-br from-blue-100 to-purple-100 ${
+                                        className={`h-16 w-16 rounded-2xl shadow-lg border-2 border-white/50 bg-linear-to-br from-blue-100 to-purple-100 ${
                                             job.company?.logo
                                                 ? "hidden"
                                                 : "flex"
@@ -305,14 +305,14 @@ const JobDetails = () => {
                                     >
                                         <Building className="h-8 w-8 text-blue-600" />
                                     </div>
-                                    <div className="absolute -top-1 -right-1 p-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
+                                    <div className="absolute -top-1 -right-1 p-1 bg-linear-to-r from-blue-500 to-purple-500 rounded-full">
                                         <Star className="h-3 w-3 text-white" />
                                     </div>
                                 </motion.div>
 
                                 <div>
                                     <motion.span
-                                        className="px-3 py-1 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 text-sm font-semibold rounded-full border border-blue-200"
+                                        className="px-3 py-1 bg-linear-to-r from-blue-100 to-purple-100 text-blue-800 text-sm font-semibold rounded-full border border-blue-200"
                                         whileHover={{ scale: 1.05 }}
                                     >
                                         {job.type}
@@ -335,7 +335,7 @@ const JobDetails = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.5 }}
                             >
-                                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-3">
+                                <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent mb-3">
                                     {job.title}
                                 </h1>
                                 <div className="flex items-center gap-2 mb-4">
@@ -359,7 +359,7 @@ const JobDetails = () => {
                                     className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
                                     whileHover={{ scale: 1.02, y: -2 }}
                                 >
-                                    <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg">
+                                    <div className="p-2 bg-linear-to-r from-green-500 to-emerald-500 rounded-lg">
                                         <MapPin className="h-4 w-4 text-white" />
                                     </div>
                                     <div>
@@ -386,7 +386,7 @@ const JobDetails = () => {
                                     className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
                                     whileHover={{ scale: 1.02, y: -2 }}
                                 >
-                                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
+                                    <div className="p-2 bg-linear-to-r from-blue-500 to-cyan-500 rounded-lg">
                                         <IndianRupee className="h-4 w-4 text-white" />
                                     </div>
                                     <div>
@@ -409,7 +409,7 @@ const JobDetails = () => {
                                     className="flex items-center gap-3 bg-white/50 px-4 py-3 rounded-xl backdrop-blur-sm border border-gray-200/50"
                                     whileHover={{ scale: 1.02, y: -2 }}
                                 >
-                                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                                    <div className="p-2 bg-linear-to-r from-purple-500 to-pink-500 rounded-lg">
                                         <Calendar className="h-4 w-4 text-white" />
                                     </div>
                                     <div>

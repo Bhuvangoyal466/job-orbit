@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {  AnimatePresence } from "framer-motion";
 import { Search, MapPin, Filter, X, ChevronDown } from "lucide-react";
 
 const AdvancedJobSearch = ({ onSearch, onFilterChange, filters = {} }) => {
@@ -128,7 +128,7 @@ const AdvancedJobSearch = ({ onSearch, onFilterChange, filters = {} }) => {
 
                     <motion.button
                         onClick={handleSearch}
-                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
+                        className="px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 font-medium"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >

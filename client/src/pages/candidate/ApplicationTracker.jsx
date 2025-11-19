@@ -124,7 +124,7 @@ const ApplicationTracker = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50">
             <div className="space-y-8 pb-12">
                 {/* Modern Header */}
                 <motion.div
@@ -136,7 +136,7 @@ const ApplicationTracker = () => {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         <div className="flex items-center gap-4">
                             <motion.div
-                                className="p-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg"
+                                className="p-3 bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl shadow-lg"
                                 animate={{
                                     rotate: [0, 5, -5, 0],
                                     scale: [1, 1.05, 1],
@@ -150,7 +150,7 @@ const ApplicationTracker = () => {
                                 <BarChart3 className="h-8 w-8 text-white" />
                             </motion.div>
                             <div>
-                                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
+                                <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">
                                     Application Tracker
                                 </h1>
                                 <p className="text-xl text-gray-600 mt-2">
@@ -231,7 +231,7 @@ const ApplicationTracker = () => {
                                         </motion.p>
                                     </div>
                                     <motion.div
-                                        className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl"
+                                        className="p-3 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl"
                                         animate={{ rotate: [0, 5, -5, 0] }}
                                         transition={{
                                             duration: 2,
@@ -244,7 +244,7 @@ const ApplicationTracker = () => {
                                 </div>
                                 <div className="mt-4 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-blue-500 to-blue-600 rounded-full"
+                                        className="h-full bg-linear-to-r from-blue-500 to-blue-600 rounded-full"
                                         initial={{ width: 0 }}
                                         animate={{
                                             width: `${Math.min(
@@ -286,7 +286,7 @@ const ApplicationTracker = () => {
                                         </motion.p>
                                     </div>
                                     <motion.div
-                                        className="p-3 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl"
+                                        className="p-3 bg-linear-to-br from-purple-500 to-purple-600 rounded-xl"
                                         animate={{ scale: [1, 1.1, 1] }}
                                         transition={{
                                             duration: 2,
@@ -299,7 +299,7 @@ const ApplicationTracker = () => {
                                 </div>
                                 <div className="mt-4 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-full"
+                                        className="h-full bg-linear-to-r from-purple-500 to-purple-600 rounded-full"
                                         initial={{ width: 0 }}
                                         animate={{
                                             width: `${Math.min(
@@ -341,7 +341,7 @@ const ApplicationTracker = () => {
                                         </motion.p>
                                     </div>
                                     <motion.div
-                                        className="p-3 bg-gradient-to-br from-green-500 to-green-600 rounded-xl"
+                                        className="p-3 bg-linear-to-br from-green-500 to-green-600 rounded-xl"
                                         animate={{ rotate: [0, 360] }}
                                         transition={{
                                             duration: 3,
@@ -354,7 +354,7 @@ const ApplicationTracker = () => {
                                 </div>
                                 <div className="mt-4 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-green-500 to-green-600 rounded-full"
+                                        className="h-full bg-linear-to-r from-green-500 to-green-600 rounded-full"
                                         initial={{ width: 0 }}
                                         animate={{
                                             width: `${Math.min(
@@ -396,7 +396,7 @@ const ApplicationTracker = () => {
                                         </motion.p>
                                     </div>
                                     <motion.div
-                                        className="p-3 bg-gradient-to-br from-red-500 to-red-600 rounded-xl"
+                                        className="p-3 bg-linear-to-br from-red-500 to-red-600 rounded-xl"
                                         animate={{
                                             rotate: [0, -5, 5, 0],
                                             scale: [1, 0.95, 1],
@@ -412,7 +412,7 @@ const ApplicationTracker = () => {
                                 </div>
                                 <div className="mt-4 h-1.5 bg-gray-200 rounded-full overflow-hidden">
                                     <motion.div
-                                        className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full"
+                                        className="h-full bg-linear-to-r from-red-500 to-red-600 rounded-full"
                                         initial={{ width: 0 }}
                                         animate={{
                                             width: `${Math.min(

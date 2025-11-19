@@ -21,7 +21,7 @@ const NotFound = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col items-center justify-center px-4 relative overflow-hidden">
+        <div className="min-h-screen bg-linear-to-br from-blue-50 via-indigo-50 to-purple-50 flex flex-col items-center justify-center px-4 relative overflow-hidden">
             {/* Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <motion.div
@@ -58,7 +58,7 @@ const NotFound = () => {
                     animate={{ scale: 1, rotate: 0 }}
                     transition={{ type: "spring", damping: 15, duration: 1 }}
                 >
-                    <h1 className="text-9xl md:text-[12rem] font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                    <h1 className="text-9xl md:text-[12rem] font-bold bg-linear-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                         404
                     </h1>
                 </motion.div>
@@ -93,7 +93,7 @@ const NotFound = () => {
                     >
                         <Link
                             to="/"
-                            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                            className="inline-flex items-center px-8 py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                         >
                             <Home className="mr-3 h-5 w-5" />
                             Back to Home

@@ -178,7 +178,7 @@ const PostJob = () => {
 
     return (
         <motion.div
-            className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"
+            className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -202,7 +202,7 @@ const PostJob = () => {
                             </motion.div>
                         </Link>
                         <div className="flex-1">
-                            <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
+                            <h1 className="text-4xl font-bold bg-linear-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent">
                                 Post New Job
                             </h1>
                             <p className="text-gray-600 text-lg mt-2">
@@ -248,7 +248,7 @@ const PostJob = () => {
                                                 relative p-4 rounded-2xl shadow-lg transition-all duration-300
                                                 ${
                                                     isCurrent
-                                                        ? `bg-gradient-to-r ${step.color} text-white shadow-xl`
+                                                        ? `bg-linear-to-r ${step.color} text-white shadow-xl`
                                                         : isCompleted
                                                         ? "bg-green-500 text-white"
                                                         : "bg-gray-100 text-gray-400"
@@ -339,7 +339,7 @@ const PostJob = () => {
                                 >
                                     <div className="text-center mb-8">
                                         <motion.div
-                                            className="inline-flex p-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg mb-4"
+                                            className="inline-flex p-4 bg-linear-to-r from-blue-500 to-blue-600 rounded-2xl shadow-lg mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -469,7 +469,7 @@ const PostJob = () => {
                                 >
                                     <div className="text-center mb-8">
                                         <motion.div
-                                            className="inline-flex p-4 bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg mb-4"
+                                            className="inline-flex p-4 bg-linear-to-r from-purple-500 to-purple-600 rounded-2xl shadow-lg mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -600,7 +600,7 @@ const PostJob = () => {
                                 >
                                     <div className="text-center mb-8">
                                         <motion.div
-                                            className="inline-flex p-4 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-lg mb-4"
+                                            className="inline-flex p-4 bg-linear-to-r from-green-500 to-green-600 rounded-2xl shadow-lg mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -693,7 +693,7 @@ const PostJob = () => {
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: 0.5 }}
-                                            className="flex items-center gap-3 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100"
+                                            className="flex items-center gap-3 p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-100"
                                         >
                                             <input
                                                 type="checkbox"
@@ -810,7 +810,7 @@ const PostJob = () => {
                                 >
                                     <div className="text-center mb-8">
                                         <motion.div
-                                            className="inline-flex p-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl shadow-lg mb-4"
+                                            className="inline-flex p-4 bg-linear-to-r from-orange-500 to-orange-600 rounded-2xl shadow-lg mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -889,7 +889,7 @@ const PostJob = () => {
                                             />
                                             <motion.button
                                                 type="button"
-                                                className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 font-medium shadow-lg"
+                                                className="bg-linear-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-200 font-medium shadow-lg"
                                                 onClick={addSkill}
                                                 whileHover={{ scale: 1.05 }}
                                                 whileTap={{ scale: 0.95 }}
@@ -979,7 +979,7 @@ const PostJob = () => {
                                                 />
                                                 <motion.button
                                                     type="button"
-                                                    className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 font-medium shadow-lg"
+                                                    className="bg-linear-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 font-medium shadow-lg"
                                                     onClick={() => {
                                                         if (perk.trim()) {
                                                             setFormData(
@@ -1086,7 +1086,7 @@ const PostJob = () => {
                                                 />
                                                 <motion.button
                                                     type="button"
-                                                    className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg"
+                                                    className="bg-linear-to-r from-purple-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-lg"
                                                     onClick={() => {
                                                         if (benefit.trim()) {
                                                             setFormData(
@@ -1171,7 +1171,7 @@ const PostJob = () => {
                                 >
                                     <div className="text-center mb-8">
                                         <motion.div
-                                            className="inline-flex p-4 bg-gradient-to-r from-teal-500 to-teal-600 rounded-2xl shadow-lg mb-4"
+                                            className="inline-flex p-4 bg-linear-to-r from-teal-500 to-teal-600 rounded-2xl shadow-lg mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -1305,7 +1305,7 @@ const PostJob = () => {
                                         disabled={!isStepValid(currentStep)}
                                         className={`px-8 py-3 rounded-xl font-medium transition-all duration-200 ${
                                             isStepValid(currentStep)
-                                                ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
+                                                ? "bg-linear-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
                                                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
                                         }`}
                                         whileHover={
@@ -1326,7 +1326,7 @@ const PostJob = () => {
                                     <motion.button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="px-8 py-3 bg-gradient-to-r from-teal-500 to-green-600 text-white rounded-xl font-medium hover:from-teal-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
+                                        className="px-8 py-3 bg-linear-to-r from-teal-500 to-green-600 text-white rounded-xl font-medium hover:from-teal-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl"
                                         whileHover={{
                                             scale: isSubmitting ? 1 : 1.05,
                                         }}

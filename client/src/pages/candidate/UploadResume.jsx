@@ -236,7 +236,7 @@ const UploadResume = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+        <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 py-8">
             <div className="max-w-4xl mx-auto px-4 space-y-8 mt-15">
                 {/* Header */}
                 <motion.div
@@ -245,7 +245,7 @@ const UploadResume = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
                 >
-                    <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                    <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
                         Upload Your Resume
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
@@ -268,7 +268,7 @@ const UploadResume = () => {
                                 key="upload-area"
                                 className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
                                     dragActive
-                                        ? "border-blue-500 bg-gradient-to-br from-blue-50 to-purple-50 scale-105"
+                                        ? "border-blue-500 bg-linear-to-br from-blue-50 to-purple-50 scale-105"
                                         : "border-gray-300 hover:border-blue-400 hover:bg-blue-50"
                                 }`}
                                 onDragEnter={handleDrag}
@@ -297,7 +297,7 @@ const UploadResume = () => {
                                     transition={{ duration: 0.2 }}
                                 >
                                     <motion.div
-                                        className="mx-auto mb-6 p-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl w-fit"
+                                        className="mx-auto mb-6 p-6 bg-linear-to-br from-blue-600 to-purple-600 rounded-2xl shadow-xl w-fit"
                                         animate={{
                                             rotate: dragActive ? 360 : 0,
                                             y: [0, -5, 0],
@@ -442,10 +442,10 @@ const UploadResume = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.5 }}
                             >
-                                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl">
+                                <div className="p-2 bg-linear-to-r from-blue-500 to-purple-500 rounded-xl">
                                     <User className="h-6 w-6 text-white" />
                                 </div>
-                                <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                                <h2 className="text-2xl font-bold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                                     Profile Information
                                 </h2>
                             </motion.div>
@@ -463,11 +463,11 @@ const UploadResume = () => {
                                             className={`h-full rounded-full transition-all duration-1000 ${
                                                 (formData.profileCompleteness ||
                                                     0) >= 80
-                                                    ? "bg-gradient-to-r from-green-500 to-emerald-600"
+                                                    ? "bg-linear-to-r from-green-500 to-emerald-600"
                                                     : (formData.profileCompleteness ||
                                                           0) >= 60
-                                                    ? "bg-gradient-to-r from-yellow-500 to-orange-500"
-                                                    : "bg-gradient-to-r from-red-500 to-pink-500"
+                                                    ? "bg-linear-to-r from-yellow-500 to-orange-500"
+                                                    : "bg-linear-to-r from-red-500 to-pink-500"
                                             }`}
                                             initial={{ width: 0 }}
                                             animate={{
@@ -552,19 +552,19 @@ const UploadResume = () => {
                     >
                         {/* Personal Information Section */}
                         <motion.div
-                            className="bg-gradient-to-br from-white/90 to-blue-50/50 p-8 rounded-2xl border border-blue-100 shadow-lg backdrop-blur-sm"
+                            className="bg-linear-to-br from-white/90 to-blue-50/50 p-8 rounded-2xl border border-blue-100 shadow-lg backdrop-blur-sm"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.8, duration: 0.5 }}
                         >
                             <div className="flex items-center gap-3 mb-6">
                                 <motion.div
-                                    className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl"
+                                    className="p-2 bg-linear-to-r from-blue-500 to-cyan-500 rounded-xl"
                                     whileHover={{ rotate: 10, scale: 1.1 }}
                                 >
                                     <User className="h-5 w-5 text-white" />
                                 </motion.div>
-                                <h3 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                                <h3 className="text-xl font-bold bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
                                     Personal Information
                                 </h3>
                             </div>
@@ -654,7 +654,7 @@ const UploadResume = () => {
                                             value={formData.email || ""}
                                             onChange={handleInputChange}
                                             disabled
-                                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 bg-gradient-to-r from-gray-50 to-gray-100 cursor-not-allowed text-gray-600 shadow-sm"
+                                            className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 bg-linear-to-r from-gray-50 to-gray-100 cursor-not-allowed text-gray-600 shadow-sm"
                                             placeholder="Your email address"
                                         />
                                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">

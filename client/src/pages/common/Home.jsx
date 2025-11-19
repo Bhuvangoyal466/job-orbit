@@ -313,7 +313,7 @@ const Home = () => {
             </section>
             {/* How It Works Section */}
             <section
-                className="py-24 bg-gradient-to-br from-gray-50 to-blue-50"
+                className="py-24 bg-linear-to-br from-gray-50 to-blue-50"
                 data-aos="fade-up"
             >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -378,18 +378,18 @@ const Home = () => {
                                     {/* Background Pattern */}
                                     <div className="absolute top-0 right-0 w-24 h-24 opacity-10">
                                         <div
-                                            className={`w-full h-full bg-gradient-to-br ${step.color} rounded-full transform rotate-45`}
+                                            className={`w-full h-full bg-linear-to-br ${step.color} rounded-full transform rotate-45`}
                                         ></div>
                                     </div>
 
                                     {/* Step Number */}
-                                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-gray-800 to-gray-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                                    <div className="absolute -top-4 -left-4 w-12 h-12 bg-linear-to-br from-gray-800 to-gray-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                                         {step.step}
                                     </div>
 
                                     {/* Icon */}
                                     <div
-                                        className={`relative z-10 w-20 h-20 mx-auto mb-6 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                                        className={`relative z-10 w-20 h-20 mx-auto mb-6 bg-linear-to-br ${step.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
                                     >
                                         <step.icon className="h-10 w-10 text-white" />
                                     </div>
@@ -484,12 +484,12 @@ const Home = () => {
                                     <div className="relative bg-white p-8 rounded-3xl shadow-modern hover:shadow-2xl transition-all duration-500 h-full border border-gray-100 overflow-hidden">
                                         {/* Gradient Background on Hover */}
                                         <div
-                                            className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
+                                            className={`absolute inset-0 bg-linear-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}
                                         ></div>
 
                                         {/* Floating Icon */}
                                         <div
-                                            className={`relative z-10 w-16 h-16 mx-auto mb-6 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}
+                                            className={`relative z-10 w-16 h-16 mx-auto mb-6 bg-linear-to-br ${feature.color} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-300`}
                                         >
                                             <Icon className="h-8 w-8 text-white" />
                                         </div>
@@ -509,7 +509,7 @@ const Home = () => {
                                         {/* Decorative Element */}
                                         <div className="absolute -bottom-2 -right-2 w-20 h-20 opacity-10 group-hover:opacity-20 transition-opacity">
                                             <div
-                                                className={`w-full h-full bg-gradient-to-br ${feature.color} rounded-full`}
+                                                className={`w-full h-full bg-linear-to-br ${feature.color} rounded-full`}
                                             ></div>
                                         </div>
                                     </div>
@@ -522,7 +522,7 @@ const Home = () => {
 
             {/* Stats Section */}
             <section
-                className="py-24 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white relative overflow-hidden"
+                className="py-24 bg-linear-to-r from-blue-600 via-purple-600 to-blue-800 text-white relative overflow-hidden"
                 ref={statsRef}
             >
                 {/* Animated Background Elements */}
@@ -601,7 +601,7 @@ const Home = () => {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
+            <section className="py-24 bg-linear-to-br from-gray-50 to-blue-50 relative overflow-hidden">
                 {/* Background Elements */}
                 <div className="absolute inset-0 opacity-5">
                     <div className="absolute top-20 left-10 w-32 h-32 bg-blue-600 rounded-full animate-float"></div>

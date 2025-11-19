@@ -318,7 +318,7 @@ const RecruiterInterviewManagement = () => {
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-start space-x-3">
-                                            <div className="flex-shrink-0 mt-1">
+                                            <div className="shrink-0 mt-1">
                                                 {getStatusIcon(
                                                     interview.status
                                                 )}

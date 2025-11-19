@@ -183,20 +183,20 @@ const RecruiterSignup = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-blue-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="min-h-screen bg-linear-to-br from-emerald-50 via-teal-50 to-blue-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
             {/* Background decorative elements */}
             <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
+                <div className="absolute -top-40 -right-40 w-80 h-80 bg-linear-to-br from-emerald-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
                 <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-teal-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
             </div>
 
             <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-3xl">
                 <div className="flex justify-center">
-                    <div className="bg-gradient-to-r from-emerald-600 to-teal-600 p-4 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-300">
+                    <div className="bg-linear-to-r from-emerald-600 to-teal-600 p-4 rounded-full shadow-lg transform hover:scale-110 transition-transform duration-300">
                         <Building2 className="h-8 w-8 text-white" />
                     </div>
                 </div>
-                <h2 className="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                <h2 className="mt-6 text-center text-4xl font-bold bg-linear-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                     Join as Recruiter
                 </h2>
                 <p className="mt-2 text-center text-base text-gray-600 font-medium">
@@ -208,7 +208,7 @@ const RecruiterSignup = () => {
                 <div className="bg-white/80 backdrop-blur-xl py-8 px-6 shadow-2xl sm:rounded-2xl border border-white/20">
                     <form className="space-y-8" onSubmit={handleSubmit}>
                         {/* Personal Information Section */}
-                        <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 rounded-xl p-6">
+                        <div className="bg-linear-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 rounded-xl p-6">
                             <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
                                 <User className="h-5 w-5 mr-2 text-emerald-600" />
                                 Personal Information
@@ -380,7 +380,7 @@ const RecruiterSignup = () => {
                         </div>
 
                         {/* Company Information Section */}
-                        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-6">
+                        <div className="bg-linear-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl p-6">
                             <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
                                 <Building2 className="h-5 w-5 mr-2 text-blue-600" />
                                 Company Information
@@ -612,7 +612,7 @@ const RecruiterSignup = () => {
                         </div>
 
                         {/* Security Section */}
-                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200/50 rounded-xl p-6">
+                        <div className="bg-linear-to-r from-purple-50 to-pink-50 border border-purple-200/50 rounded-xl p-6">
                             <h3 className="text-xl font-bold text-gray-900 mb-1 flex items-center">
                                 <Lock className="h-5 w-5 mr-2 text-purple-600" />
                                 Account Security
@@ -718,7 +718,7 @@ const RecruiterSignup = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-xl text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
+                                className="group relative w-full flex justify-center py-4 px-6 border border-transparent text-lg font-semibold rounded-xl text-white bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] transition-all duration-300 shadow-lg hover:shadow-xl"
                             >
                                 <span className="flex items-center">
                                     {loading ? (

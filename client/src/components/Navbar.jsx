@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/useAuth";
 
 import MobileNavigation from "./MobileNavigation";
@@ -64,13 +63,13 @@ const Navbar = () => {
                             className="flex items-center space-x-2 group"
                         >
                             <motion.div
-                                className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
+                                className="p-2 bg-linear-to-br from-blue-600 to-purple-600 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300"
                                 whileHover={{ rotate: 360 }}
                                 transition={{ duration: 0.6 }}
                             >
                                 <Briefcase className="h-6 w-6 text-white" />
                             </motion.div>
-                            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <span className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                                 JobOrbit
                             </span>
                         </Link>
@@ -91,7 +90,7 @@ const Navbar = () => {
                                     to={item.to}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                                         isActive(item.to)
-                                            ? "text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg"
+                                            ? "text-white bg-linear-to-r from-blue-600 to-purple-600 shadow-lg"
                                             : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                                     }`}
                                 >
@@ -135,7 +134,7 @@ const Navbar = () => {
                                     >
                                         <Link
                                             to="/candidate/signup"
-                                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
+                                            className="bg-linear-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl text-sm font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300"
                                         >
                                             Get Started
                                         </Link>
@@ -151,7 +150,7 @@ const Navbar = () => {
                                             to="/candidate/jobs"
                                             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${
                                                 isActive("/candidate/jobs")
-                                                    ? "text-white bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg"
+                                                    ? "text-white bg-linear-to-r from-blue-600 to-purple-600 shadow-lg"
                                                     : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
                                             }`}
                                         >
@@ -177,7 +176,7 @@ const Navbar = () => {
                                     </Link>
                                 </motion.div>
 
-                                <div className="px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 rounded-full text-xs font-bold">
+                                <div className="px-3 py-1 bg-linear-to-r from-purple-100 to-blue-100 text-purple-700 rounded-full text-xs font-bold">
                                     {user.role}
                                 </div>
 

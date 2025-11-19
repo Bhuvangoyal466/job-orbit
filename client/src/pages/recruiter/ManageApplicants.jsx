@@ -299,7 +299,7 @@ const ManageApplicants = () => {
                     {/* Modal Header */}
                     <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
                         <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-                            <div className="bg-blue-100 rounded-full p-2 sm:p-3 flex-shrink-0">
+                            <div className="bg-blue-100 rounded-full p-2 sm:p-3 shrink-0">
                                 <User className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                             </div>
                             <div className="min-w-0 flex-1">
@@ -313,7 +313,7 @@ const ManageApplicants = () => {
                         </div>
                         <button
                             onClick={closeModal}
-                            className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-2 cursor-pointer"
+                            className="text-gray-400 hover:text-gray-600 transition-colors shrink-0 ml-2 cursor-pointer"
                         >
                             <XIcon className="h-5 w-5 sm:h-6 sm:w-6" />
                         </button>
@@ -687,7 +687,7 @@ const ManageApplicants = () => {
 
     return (
         <motion.div
-            className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50"
+            className="min-h-screen bg-linear-to-br from-blue-50 via-white to-purple-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
@@ -704,7 +704,7 @@ const ManageApplicants = () => {
                         <div className="space-y-2">
                             <div className="flex items-center gap-3">
                                 <motion.div
-                                    className="p-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl"
+                                    className="p-3 bg-linear-to-r from-blue-500 to-purple-600 rounded-xl"
                                     whileHover={{ scale: 1.05, rotate: 5 }}
                                     transition={{
                                         type: "spring",
@@ -714,7 +714,7 @@ const ManageApplicants = () => {
                                     <Users className="h-8 w-8 text-white" />
                                 </motion.div>
                                 <div>
-                                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent  mb-2">
+                                    <h1 className="text-4xl font-bold bg-linear-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent  mb-2">
                                         Manage Applicants
                                     </h1>
                                     <p className="text-gray-600 text-lg mt-1">
@@ -727,11 +727,11 @@ const ManageApplicants = () => {
                         <motion.button
                             onClick={fetchApplicants}
                             disabled={loading}
-                            className="group relative overflow-hidden px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:scale-105"
+                            className="group relative overflow-hidden px-6 py-3 bg-linear-to-r from-blue-500 to-purple-600 text-white font-medium rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:scale-105"
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                         >
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                             <div className="relative flex items-center gap-2">
                                 <motion.div
                                     animate={{ rotate: loading ? 360 : 0 }}
@@ -753,7 +753,7 @@ const ManageApplicants = () => {
                 <AnimatePresence>
                     {error && (
                         <motion.div
-                            className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm"
+                            className="bg-linear-to-r from-red-50 to-pink-50 border border-red-200/50 rounded-2xl p-6 shadow-lg backdrop-blur-sm"
                             initial={{ opacity: 0, y: -10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -764,7 +764,7 @@ const ManageApplicants = () => {
                                     animate={{ rotate: [0, -10, 10, -10, 0] }}
                                     transition={{ duration: 0.5, delay: 0.2 }}
                                 >
-                                    <AlertCircle className="h-6 w-6 text-red-500 flex-shrink-0" />
+                                    <AlertCircle className="h-6 w-6 text-red-500 shrink-0" />
                                 </motion.div>
                                 <div className="flex-1">
                                     <p className="text-red-800 font-semibold text-lg">
@@ -803,7 +803,7 @@ const ManageApplicants = () => {
                         >
                             <Filter className="h-6 w-6 text-blue-600" />
                         </motion.div>
-                        <h2 className="text-xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                        <h2 className="text-xl font-bold bg-linear-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
                             Filter & Sort Applications
                         </h2>
                     </div>
@@ -914,7 +914,7 @@ const ManageApplicants = () => {
                             >
                                 <TrendingUp className="h-6 w-6 text-blue-600" />
                             </motion.div>
-                            <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                            <h2 className="text-2xl font-bold bg-linear-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
                                 Applications ({applicants.length})
                             </h2>
                         </div>
@@ -935,13 +935,13 @@ const ManageApplicants = () => {
                                         }}
                                     >
                                         <div className="flex items-center space-x-4 animate-pulse">
-                                            <div className="bg-gradient-to-r from-gray-200 to-gray-300 rounded-full h-16 w-16"></div>
+                                            <div className="bg-linear-to-r from-gray-200 to-gray-300 rounded-full h-16 w-16"></div>
                                             <div className="flex-1 space-y-3">
-                                                <div className="h-5 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/3"></div>
-                                                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/2"></div>
-                                                <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-2/3"></div>
+                                                <div className="h-5 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-1/3"></div>
+                                                <div className="h-4 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-1/2"></div>
+                                                <div className="h-4 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-2/3"></div>
                                             </div>
-                                            <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-24"></div>
+                                            <div className="h-8 bg-linear-to-r from-gray-200 to-gray-300 rounded-lg w-24"></div>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -957,7 +957,7 @@ const ManageApplicants = () => {
                                     stiffness: 200,
                                     delay: 0.2,
                                 }}
-                                className="mx-auto mb-6 p-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl w-fit"
+                                className="mx-auto mb-6 p-6 bg-linear-to-br from-blue-100 to-purple-100 rounded-2xl w-fit"
                             >
                                 <User className="h-16 w-16 text-gray-400" />
                             </motion.div>

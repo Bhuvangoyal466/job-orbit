@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import {
     Briefcase,
     Mail,
@@ -19,7 +18,7 @@ const Footer = () => {
     };
 
     return (
-        <footer className="relative bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
+        <footer className="relative bg-linear-to-br from-gray-900 via-blue-900 to-purple-900 text-white overflow-hidden">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full -translate-x-48 -translate-y-48"></div>
@@ -38,13 +37,13 @@ const Footer = () => {
                     >
                         <div className="flex items-center space-x-3 mb-6">
                             <motion.div
-                                className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl"
+                                className="p-3 bg-linear-to-br from-blue-500 to-purple-600 rounded-2xl shadow-xl"
                                 whileHover={{ rotate: 360, scale: 1.1 }}
                                 transition={{ duration: 0.6 }}
                             >
                                 <Briefcase className="h-8 w-8 text-white" />
                             </motion.div>
-                            <span className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                            <span className="text-3xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                 JobOrbit
                             </span>
                         </div>
@@ -205,7 +204,7 @@ const Footer = () => {
             {/* Scroll to Top Button */}
             <motion.button
                 onClick={scrollToTop}
-                className="fixed bottom-8 left-8 p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-2xl hover:shadow-glow-hover transition-all duration-300 z-50"
+                className="fixed bottom-8 left-8 p-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full shadow-2xl hover:shadow-glow-hover transition-all duration-300 z-50"
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.9 }}
                 initial={{ opacity: 0, scale: 0 }}

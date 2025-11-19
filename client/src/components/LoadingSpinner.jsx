@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Briefcase, Loader } from "lucide-react";
 
 const LoadingSpinner = ({
@@ -27,7 +26,7 @@ const LoadingSpinner = ({
                         {[0, 1, 2].map((i) => (
                             <motion.div
                                 key={i}
-                                className="w-3 h-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"
+                                className="w-3 h-3 bg-linear-to-r from-blue-600 to-purple-600 rounded-full"
                                 animate={{
                                     y: ["0%", "-100%", "0%"],
                                     scale: [1, 0.8, 1],
@@ -60,7 +59,7 @@ const LoadingSpinner = ({
             <div className={containerClasses}>
                 <div className="text-center">
                     <motion.div
-                        className={`${sizeClasses[size]} bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4`}
+                        className={`${sizeClasses[size]} bg-linear-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-4`}
                         animate={{
                             scale: [1, 1.2, 1],
                             opacity: [0.7, 1, 0.7],

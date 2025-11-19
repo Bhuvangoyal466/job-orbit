@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { motion } from "framer-motion";
 import { AuthProvider } from "./context/AuthContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AppRoutes from "./routes/AppRoutes";
@@ -59,7 +58,7 @@ function App() {
                             theme="light"
                             toastClassName="backdrop-blur-sm bg-white/90 shadow-2xl border border-gray-200 rounded-xl"
                             bodyClassName="text-gray-700 font-medium"
-                            progressClassName="bg-gradient-to-r from-blue-500 to-purple-500"
+                            progressClassName="bg-linear-to-r from-blue-500 to-purple-500"
                         />
                     </motion.div>
                 </Router>
