@@ -1082,7 +1082,7 @@ const ManageApplicants = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 {/* Action Buttons - Moved to Left */}
                                                 <div className="flex items-center space-x-2 ml-6">
                                                     <button
@@ -1165,11 +1165,9 @@ const ManageApplicants = () => {
 
                                             <div className="flex items-center space-x-4">
                                                 <span
-                                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                        getStatusColor(
-                                                            applicant.status
-                                                        )
-                                                    } ${
+                                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(
+                                                        applicant.status
+                                                    )} ${
                                                         applicant.status ===
                                                         "hired"
                                                             ? "ring-2 ring-green-300"
@@ -1184,61 +1182,116 @@ const ManageApplicants = () => {
                                                         <Check className="h-3 w-3 ml-1" />
                                                     )}
                                                 </span>
-                                                
+
                                                 {/* Skill Matching - Moved to Right */}
                                                 {applicant.skillMatchDetails &&
-                                                    applicant.skillMatchDetails.totalJobSkills > 0 && (
+                                                    applicant.skillMatchDetails
+                                                        .totalJobSkills > 0 && (
                                                         <div className="bg-gray-50 rounded-lg p-3 border max-w-xs">
                                                             <div className="flex items-center gap-2 mb-2">
                                                                 <Star className="h-3 w-3 text-blue-600" />
                                                                 <span className="text-xs font-semibold text-gray-800">
-                                                                    Skill Match Analysis
+                                                                    Skill Match
+                                                                    Analysis
                                                                 </span>
                                                                 <span
                                                                     className={`text-xs font-bold ${
-                                                                        applicant.skillMatchDetails.percentage >= 70
+                                                                        applicant
+                                                                            .skillMatchDetails
+                                                                            .percentage >=
+                                                                        70
                                                                             ? "text-green-600"
-                                                                            : applicant.skillMatchDetails.percentage >= 50
+                                                                            : applicant
+                                                                                  .skillMatchDetails
+                                                                                  .percentage >=
+                                                                              50
                                                                             ? "text-yellow-600"
                                                                             : "text-red-600"
                                                                     }`}
                                                                 >
-                                                                    {applicant.skillMatchDetails.percentage}%
+                                                                    {
+                                                                        applicant
+                                                                            .skillMatchDetails
+                                                                            .percentage
+                                                                    }
+                                                                    %
                                                                 </span>
                                                             </div>
 
-                                                            {applicant.skillMatchDetails.matchedSkills.length > 0 && (
+                                                            {applicant
+                                                                .skillMatchDetails
+                                                                .matchedSkills
+                                                                .length > 0 && (
                                                                 <div className="mb-2">
                                                                     <p className="text-xs text-green-700 font-medium mb-1">
-                                                                        ✓ Matched Skills ({applicant.skillMatchDetails.matchedSkills.length})
+                                                                        ✓
+                                                                        Matched
+                                                                        Skills (
+                                                                        {
+                                                                            applicant
+                                                                                .skillMatchDetails
+                                                                                .matchedSkills
+                                                                                .length
+                                                                        }
+                                                                        )
                                                                     </p>
                                                                     <div className="flex flex-wrap gap-1">
-                                                                        {applicant.skillMatchDetails.matchedSkills.map((skill, idx) => (
-                                                                            <span
-                                                                                key={idx}
-                                                                                className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-md border border-green-200"
-                                                                            >
-                                                                                {skill}
-                                                                            </span>
-                                                                        ))}
+                                                                        {applicant.skillMatchDetails.matchedSkills.map(
+                                                                            (
+                                                                                skill,
+                                                                                idx
+                                                                            ) => (
+                                                                                <span
+                                                                                    key={
+                                                                                        idx
+                                                                                    }
+                                                                                    className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-md border border-green-200"
+                                                                                >
+                                                                                    {
+                                                                                        skill
+                                                                                    }
+                                                                                </span>
+                                                                            )
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             )}
 
-                                                            {applicant.skillMatchDetails.missingSkills.length > 0 && (
+                                                            {applicant
+                                                                .skillMatchDetails
+                                                                .missingSkills
+                                                                .length > 0 && (
                                                                 <div>
                                                                     <p className="text-xs text-red-700 font-medium mb-1">
-                                                                        ✗ Missing Skills ({applicant.skillMatchDetails.missingSkills.length})
+                                                                        ✗
+                                                                        Missing
+                                                                        Skills (
+                                                                        {
+                                                                            applicant
+                                                                                .skillMatchDetails
+                                                                                .missingSkills
+                                                                                .length
+                                                                        }
+                                                                        )
                                                                     </p>
                                                                     <div className="flex flex-wrap gap-1">
-                                                                        {applicant.skillMatchDetails.missingSkills.map((skill, idx) => (
-                                                                            <span
-                                                                                key={idx}
-                                                                                className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded-md border border-red-200"
-                                                                            >
-                                                                                {skill}
-                                                                            </span>
-                                                                        ))}
+                                                                        {applicant.skillMatchDetails.missingSkills.map(
+                                                                            (
+                                                                                skill,
+                                                                                idx
+                                                                            ) => (
+                                                                                <span
+                                                                                    key={
+                                                                                        idx
+                                                                                    }
+                                                                                    className="px-2 py-1 bg-red-50 text-red-700 text-xs rounded-md border border-red-200"
+                                                                                >
+                                                                                    {
+                                                                                        skill
+                                                                                    }
+                                                                                </span>
+                                                                            )
+                                                                        )}
                                                                     </div>
                                                                 </div>
                                                             )}
@@ -1264,14 +1317,18 @@ const ManageApplicants = () => {
                                                         <div className="flex items-center space-x-1 text-xs text-gray-500">
                                                             <Mail className="h-3 w-3 shrink-0" />
                                                             <span className="truncate">
-                                                                {applicant.email}
+                                                                {
+                                                                    applicant.email
+                                                                }
                                                             </span>
                                                         </div>
                                                         {applicant.phone && (
                                                             <div className="flex items-center space-x-1 text-xs text-gray-500">
                                                                 <Phone className="h-3 w-3 shrink-0" />
                                                                 <span>
-                                                                    {applicant.phone}
+                                                                    {
+                                                                        applicant.phone
+                                                                    }
                                                                 </span>
                                                             </div>
                                                         )}
@@ -1325,7 +1382,10 @@ const ManageApplicants = () => {
                                                         </div>
                                                         {/* Skill Matching for Mobile */}
                                                         {applicant.skillMatchDetails &&
-                                                            applicant.skillMatchDetails.totalJobSkills > 0 && (
+                                                            applicant
+                                                                .skillMatchDetails
+                                                                .totalJobSkills >
+                                                                0 && (
                                                                 <div className="bg-gray-50 rounded-lg p-2 mt-2 border">
                                                                     <div className="flex items-center gap-1 mb-1">
                                                                         <Star className="h-3 w-3 text-blue-600" />
@@ -1334,58 +1394,137 @@ const ManageApplicants = () => {
                                                                         </span>
                                                                         <span
                                                                             className={`text-xs font-bold ${
-                                                                                applicant.skillMatchDetails.percentage >= 70
+                                                                                applicant
+                                                                                    .skillMatchDetails
+                                                                                    .percentage >=
+                                                                                70
                                                                                     ? "text-green-600"
-                                                                                    : applicant.skillMatchDetails.percentage >= 50
+                                                                                    : applicant
+                                                                                          .skillMatchDetails
+                                                                                          .percentage >=
+                                                                                      50
                                                                                     ? "text-yellow-600"
                                                                                     : "text-red-600"
                                                                             }`}
                                                                         >
-                                                                            {applicant.skillMatchDetails.percentage}%
+                                                                            {
+                                                                                applicant
+                                                                                    .skillMatchDetails
+                                                                                    .percentage
+                                                                            }
+                                                                            %
                                                                         </span>
                                                                     </div>
 
                                                                     <div className="space-y-1">
-                                                                        {applicant.skillMatchDetails.matchedSkills.length > 0 && (
+                                                                        {applicant
+                                                                            .skillMatchDetails
+                                                                            .matchedSkills
+                                                                            .length >
+                                                                            0 && (
                                                                             <div>
                                                                                 <p className="text-xs text-green-700 font-medium">
-                                                                                    ✓ {applicant.skillMatchDetails.matchedSkills.length} matched
+                                                                                    ✓{" "}
+                                                                                    {
+                                                                                        applicant
+                                                                                            .skillMatchDetails
+                                                                                            .matchedSkills
+                                                                                            .length
+                                                                                    }{" "}
+                                                                                    matched
                                                                                 </p>
                                                                                 <div className="flex flex-wrap gap-1 mt-1">
-                                                                                    {applicant.skillMatchDetails.matchedSkills.slice(0, 3).map((skill, idx) => (
-                                                                                        <span
-                                                                                            key={idx}
-                                                                                            className="px-1 py-0.5 bg-green-100 text-green-800 text-xs rounded border border-green-200"
-                                                                                        >
-                                                                                            {skill}
-                                                                                        </span>
-                                                                                    ))}
-                                                                                    {applicant.skillMatchDetails.matchedSkills.length > 3 && (
+                                                                                    {applicant.skillMatchDetails.matchedSkills
+                                                                                        .slice(
+                                                                                            0,
+                                                                                            3
+                                                                                        )
+                                                                                        .map(
+                                                                                            (
+                                                                                                skill,
+                                                                                                idx
+                                                                                            ) => (
+                                                                                                <span
+                                                                                                    key={
+                                                                                                        idx
+                                                                                                    }
+                                                                                                    className="px-1 py-0.5 bg-green-100 text-green-800 text-xs rounded border border-green-200"
+                                                                                                >
+                                                                                                    {
+                                                                                                        skill
+                                                                                                    }
+                                                                                                </span>
+                                                                                            )
+                                                                                        )}
+                                                                                    {applicant
+                                                                                        .skillMatchDetails
+                                                                                        .matchedSkills
+                                                                                        .length >
+                                                                                        3 && (
                                                                                         <span className="text-xs text-green-600">
-                                                                                            +{applicant.skillMatchDetails.matchedSkills.length - 3}
+                                                                                            +
+                                                                                            {applicant
+                                                                                                .skillMatchDetails
+                                                                                                .matchedSkills
+                                                                                                .length -
+                                                                                                3}
                                                                                         </span>
                                                                                     )}
                                                                                 </div>
                                                                             </div>
                                                                         )}
 
-                                                                        {applicant.skillMatchDetails.missingSkills.length > 0 && (
+                                                                        {applicant
+                                                                            .skillMatchDetails
+                                                                            .missingSkills
+                                                                            .length >
+                                                                            0 && (
                                                                             <div>
                                                                                 <p className="text-xs text-red-700 font-medium">
-                                                                                    ✗ {applicant.skillMatchDetails.missingSkills.length} missing
+                                                                                    ✗{" "}
+                                                                                    {
+                                                                                        applicant
+                                                                                            .skillMatchDetails
+                                                                                            .missingSkills
+                                                                                            .length
+                                                                                    }{" "}
+                                                                                    missing
                                                                                 </p>
                                                                                 <div className="flex flex-wrap gap-1 mt-1">
-                                                                                    {applicant.skillMatchDetails.missingSkills.slice(0, 2).map((skill, idx) => (
-                                                                                        <span
-                                                                                            key={idx}
-                                                                                            className="px-1 py-0.5 bg-red-50 text-red-700 text-xs rounded border border-red-200"
-                                                                                        >
-                                                                                            {skill}
-                                                                                        </span>
-                                                                                    ))}
-                                                                                    {applicant.skillMatchDetails.missingSkills.length > 2 && (
+                                                                                    {applicant.skillMatchDetails.missingSkills
+                                                                                        .slice(
+                                                                                            0,
+                                                                                            2
+                                                                                        )
+                                                                                        .map(
+                                                                                            (
+                                                                                                skill,
+                                                                                                idx
+                                                                                            ) => (
+                                                                                                <span
+                                                                                                    key={
+                                                                                                        idx
+                                                                                                    }
+                                                                                                    className="px-1 py-0.5 bg-red-50 text-red-700 text-xs rounded border border-red-200"
+                                                                                                >
+                                                                                                    {
+                                                                                                        skill
+                                                                                                    }
+                                                                                                </span>
+                                                                                            )
+                                                                                        )}
+                                                                                    {applicant
+                                                                                        .skillMatchDetails
+                                                                                        .missingSkills
+                                                                                        .length >
+                                                                                        2 && (
                                                                                         <span className="text-xs text-red-600">
-                                                                                            +{applicant.skillMatchDetails.missingSkills.length - 2}
+                                                                                            +
+                                                                                            {applicant
+                                                                                                .skillMatchDetails
+                                                                                                .missingSkills
+                                                                                                .length -
+                                                                                                2}
                                                                                         </span>
                                                                                     )}
                                                                                 </div>
@@ -1478,7 +1617,7 @@ const ManageApplicants = () => {
                                                             </button>
                                                         )}
                                                 </div>
-                                                
+
                                                 {/* Status - Moved to Right */}
                                                 <span
                                                     className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
@@ -1499,7 +1638,6 @@ const ManageApplicants = () => {
                                                     )}
                                                 </span>
                                             </div>
-
                                         </div>
                                     </motion.div>
                                 );
