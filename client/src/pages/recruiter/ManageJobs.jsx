@@ -40,7 +40,7 @@ const ManageJobs = () => {
         try {
             setLoading(true);
             const response = await recruiterAPI.getMyJobs();
-            setJobs(response.data.jobs || []);
+            setJobs(response.jobs || []);
             setError(null);
         } catch (err) {
             setError(err.message || "Failed to fetch jobs");
@@ -56,7 +56,7 @@ const ManageJobs = () => {
             setDeleteLoading(true);
             await recruiterAPI.deleteJob(selectedJob._id);
             setJobs(
-                jobs.map((job) =>
+                (jobs || []).map((job) =>
                     job._id === selectedJob._id
                         ? { ...job, isActive: false }
                         : job
@@ -82,7 +82,7 @@ const ManageJobs = () => {
                 editFormData
             );
             setJobs(
-                jobs.map((job) =>
+                (jobs || []).map((job) =>
                     job._id === selectedJob._id ? response : job
                 )
             );
@@ -114,13 +114,13 @@ const ManageJobs = () => {
             salary: {
                 min: job.salary?.min || "",
                 max: job.salary?.max || "",
-                currency: job.salary?.currency || "USD",
+                currency: job.salary?.currency || "INR",
             },
         });
         setShowEditModal(true);
     };
 
-    const filteredJobs = jobs.filter((job) => {
+    const filteredJobs = (jobs || []).filter((job) => {
         const matchesSearch =
             job.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             job.company?.name?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -142,7 +142,7 @@ const ManageJobs = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto px-4 mt-10 sm:px-6 lg:px-8">
                 {/* Header */}
                 <motion.div
                     className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
@@ -295,12 +295,16 @@ const ManageJobs = () => {
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2 text-gray-500">
-                                            <DollarSign className="h-4 w-4" />
+                                            {/* <DollarSign className="h-4 w-4" /> */}
                                             <span>
-                                                $
-                                                {job.salary?.min?.toLocaleString()}{" "}
-                                                - $
-                                                {job.salary?.max?.toLocaleString()}
+                                                ₹
+                                                {job.salary?.min?.toLocaleString(
+                                                    "en-IN"
+                                                )}{" "}
+                                                - ₹
+                                                {job.salary?.max?.toLocaleString(
+                                                    "en-IN"
+                                                )}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-2 text-gray-500">
@@ -341,7 +345,7 @@ const ManageJobs = () => {
                                 {/* Action Buttons */}
                                 <div className="flex justify-between items-center pt-4 border-t border-gray-100">
                                     <Link
-                                        to={`/job/${job._id}`}
+                                        to={`/jobs/${job._id}`}
                                         className="flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                     >
                                         <Eye className="h-4 w-4" />

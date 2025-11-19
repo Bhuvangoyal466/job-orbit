@@ -10,6 +10,12 @@ router.get("/", optionalAuth, jobController.getAllJobs);
 router.get("/saved", protect, jobController.getSavedJobs);
 router.get("/applications", protect, jobController.getCandidateApplications);
 
+// Debug route - temporary
+router.get(
+    "/debug/applications/:candidateId",
+    jobController.debugCandidateApplications
+);
+
 // Recruiter authenticated routes - Place specific routes BEFORE wildcard routes
 router.get("/recruiter/myjobs", protect, jobController.getRecruiterJobs);
 router.get(

@@ -115,7 +115,9 @@ const JobDetails = () => {
     };
 
     const handleApplyJob = async (e) => {
-        e.preventDefault();
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
 
         // console.log("Handle Apply Job - User:", user);
         // console.log("Handle Apply Job - Is Candidate:", isCandidate());
@@ -127,6 +129,11 @@ const JobDetails = () => {
 
         if (!isCandidate()) {
             toast.info("Only candidates can apply for jobs");
+            return;
+        }
+
+        if (hasApplied()) {
+            toast.info("You have already applied for this job");
             return;
         }
 
@@ -161,8 +168,16 @@ const JobDetails = () => {
 
     const hasApplied = () => {
         if (!user || !job) return false;
+
+        // Check both id and _id to be safe
+        const userId = user.id || user._id;
+        if (!userId) return false;
+
         return job.applicants?.some(
-            (applicant) => applicant.candidateId === user.id
+            (applicant) =>
+                applicant.candidateId === userId ||
+                applicant.candidateId === userId.toString() ||
+                applicant.candidateId?.toString() === userId.toString()
         );
     };
 
@@ -438,25 +453,37 @@ const JobDetails = () => {
                                     Applied
                                 </button>
                             ) : (
-                                <a
-                                    href="#apply-section"
-                                    className={`inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 ${
-                                        !user || !isCandidate()
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : ""
-                                    }`}
+                                <button
                                     onClick={(e) => {
                                         if (!user || !isCandidate()) {
-                                            e.preventDefault();
                                             toast.info(
                                                 "Please login as a candidate to apply"
                                             );
+                                            return;
                                         }
+                                        handleApplyJob(e);
                                     }}
+                                    className={`inline-flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors ${
+                                        !user || !isCandidate() || isApplying
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                    disabled={
+                                        !user || !isCandidate() || isApplying
+                                    }
                                 >
-                                    <Briefcase className="h-4 w-4 mr-2" />
-                                    Apply Now
-                                </a>
+                                    {isApplying ? (
+                                        <>
+                                            <Loader className="h-4 w-4 animate-spin mr-2" />
+                                            Applying...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Briefcase className="h-4 w-4 mr-2" />
+                                            Apply Now
+                                        </>
+                                    )}
+                                </button>
                             )}
                         </div>
                     </div>

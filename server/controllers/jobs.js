@@ -75,6 +75,11 @@ exports.getAllJobs = async (req, res) => {
             }
         }
 
+        // Exclude jobs that the candidate has already applied for (if user is authenticated as candidate)
+        if (req.user && req.userType === "candidate") {
+            query["applicants.candidateId"] = { $ne: req.user._id };
+        }
+
         // Pagination
         const skip = (page - 1) * limit;
 
@@ -256,25 +261,45 @@ exports.applyToJob = async (req, res) => {
         await job.save();
         // console.log("Job saved successfully");
 
-        // Update recruiter's totalApplicationsReceived stat
+        // Update recruiter's totalApplicationsReceived stat using findByIdAndUpdate to avoid validation issues
         const Recruiter = require("../models/Recruiter");
-        const recruiter = await Recruiter.findById(job.recruiter);
-        if (recruiter) {
-            recruiter.stats.totalApplicationsReceived += 1;
-            await recruiter.save();
+        try {
+            await Recruiter.findByIdAndUpdate(
+                job.recruiter,
+                { $inc: { "stats.totalApplicationsReceived": 1 } },
+                { new: false, runValidators: false }
+            );
+        } catch (recruiterUpdateError) {
+            console.warn(
+                "Failed to update recruiter stats:",
+                recruiterUpdateError
+            );
+            // Don't fail the entire operation if recruiter stats update fails
         }
 
         // Also update the candidate's applications
         // console.log("Updating candidate applications...");
-        const candidateUpdate = await Candidate.findByIdAndUpdate(req.user.id, {
-            $push: {
-                applications: {
-                    jobId: job._id,
-                    appliedDate: new Date(),
-                    status: "applied",
+        try {
+            await Candidate.findByIdAndUpdate(
+                req.user.id,
+                {
+                    $push: {
+                        applications: {
+                            jobId: job._id,
+                            appliedDate: new Date(),
+                            status: "applied",
+                        },
+                    },
                 },
-            },
-        });
+                { new: false, runValidators: false }
+            );
+        } catch (candidateUpdateError) {
+            console.warn(
+                "Failed to update candidate applications:",
+                candidateUpdateError
+            );
+            // Don't fail the entire operation if candidate update fails
+        }
 
         res.json({ message: "Successfully applied to job", job });
     } catch (error) {
@@ -636,7 +661,7 @@ exports.getCandidateApplications = async (req, res) => {
 
         // Find all jobs where the candidate has applied
         const query = {
-            "applicants.candidateId": req.user.id,
+            "applicants.candidateId": req.user._id,
             isActive: true,
         };
 
@@ -653,7 +678,7 @@ exports.getCandidateApplications = async (req, res) => {
 
         jobs.forEach((job) => {
             const candidateApplication = job.applicants.find(
-                (app) => app.candidateId.toString() === req.user.id
+                (app) => app.candidateId.toString() === req.user._id.toString()
             );
 
             if (candidateApplication) {
@@ -882,7 +907,7 @@ exports.getRecruiterApplicants = async (req, res) => {
                 path: "applicants.candidateId",
                 select: "firstName lastName email phone dateOfBirth education experience skills profile profileCompleteness",
             })
-            .select("title applicants createdAt numberOfOpenings");
+            .select("title applicants createdAt numberOfOpenings skills");
 
         // Flatten all applicants from all jobs
         let allApplicants = [];
@@ -890,6 +915,15 @@ exports.getRecruiterApplicants = async (req, res) => {
         jobs.forEach((job) => {
             job.applicants.forEach((applicant) => {
                 if (applicant.candidateId) {
+                    // Calculate skill matching percentage
+                    const candidateSkills = applicant.candidateId.skills || [];
+                    const jobSkills = job.skills || [];
+                    const skillMatchData =
+                        calculateAdvancedSkillMatchPercentage(
+                            candidateSkills,
+                            jobSkills
+                        );
+
                     allApplicants.push({
                         id: applicant._id,
                         candidateId: applicant.candidateId._id,
@@ -902,6 +936,8 @@ exports.getRecruiterApplicants = async (req, res) => {
                         status: applicant.status,
                         appliedDate: applicant.appliedAt,
                         candidate: applicant.candidateId,
+                        skillMatchPercentage: skillMatchData.percentage,
+                        skillMatchDetails: skillMatchData,
                     });
                 }
             });
@@ -972,5 +1008,73 @@ exports.migrateCompanyInfo = async (req, res) => {
             message: "Server error",
             error: error.message,
         });
+    }
+};
+
+// @desc    Debug candidate applications - temporary function
+// @route   GET /api/jobs/debug/applications/:candidateId
+// @access  Private (Admin/Debug only)
+exports.debugCandidateApplications = async (req, res) => {
+    try {
+        const { candidateId } = req.params;
+
+        console.log(
+            "Debug: Checking applications for candidateId:",
+            candidateId
+        );
+
+        // Find all jobs where this candidate might have applied
+        const jobsWithCandidate = await Job.find({
+            "applicants.candidateId": candidateId,
+        }).populate("recruiter", "company");
+
+        console.log(
+            "Debug: Found jobs with candidate:",
+            jobsWithCandidate.length
+        );
+
+        // Also check jobs where candidateId might be stored as string
+        const jobsWithCandidateString = await Job.find({
+            "applicants.candidateId": candidateId.toString(),
+        }).populate("recruiter", "company");
+
+        console.log(
+            "Debug: Found jobs with candidate as string:",
+            jobsWithCandidateString.length
+        );
+
+        // Get candidate info
+        const candidate = await Candidate.findById(candidateId);
+
+        res.json({
+            candidateId,
+            candidateExists: !!candidate,
+            candidateName: candidate
+                ? `${candidate.firstName} ${candidate.lastName}`
+                : "Not found",
+            jobsWithCandidateId: jobsWithCandidate.length,
+            jobsWithCandidateIdString: jobsWithCandidateString.length,
+            jobDetails: jobsWithCandidate.map((job) => ({
+                jobId: job._id,
+                title: job.title,
+                applicants: job.applicants
+                    .filter(
+                        (app) =>
+                            app.candidateId.toString() ===
+                            candidateId.toString()
+                    )
+                    .map((app) => ({
+                        candidateId: app.candidateId,
+                        status: app.status,
+                        appliedAt: app.appliedAt,
+                    })),
+            })),
+            candidateApplicationsArray: candidate
+                ? candidate.applications
+                : null,
+        });
+    } catch (error) {
+        console.error("Debug error:", error);
+        res.status(500).json({ message: "Debug error", error: error.message });
     }
 };
